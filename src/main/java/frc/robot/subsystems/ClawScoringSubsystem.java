@@ -13,7 +13,7 @@ public class ClawScoringSubsystem extends SubsystemBase {
   /** Creates a new ClawScoringSubsystems. */
   public TalonFX scoringMotor;
 
-
+  
   public ClawScoringSubsystem() {
     scoringMotor = new TalonFX(scoringMotorPort);
   }
