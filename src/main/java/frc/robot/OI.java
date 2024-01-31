@@ -9,7 +9,7 @@ import edu.wpi.first.wpilibj.XboxController;
 //B = 2
 //X = 3
 //Y = 4
-//This class will handle all button inputs
+
 public class OI {
 
    static XboxController driverController;
