@@ -25,6 +25,7 @@ public class OI {
     //////////////////////////////////////DRIVER INPUTS//////////////////////////////////////
 
     ///////////////////Joystick///////////////////
+    //Analog Inputs
 
     public double getDLeftJoystickX() {
         return driverController.getLeftX();
@@ -43,6 +44,7 @@ public class OI {
     } 
 
     ///////////////////Triggers///////////////////
+    //Analog Inputs
 
     public double getDRightTrigger() {
         return driverController.getRightTriggerAxis();
@@ -83,6 +85,7 @@ public class OI {
     //////////////////////////////////////OPERATOR INPUTS//////////////////////////////////////
 
     ///////////////////Joystick///////////////////
+    //Analog Inputs
 
     public double getOLeftJoystickX() {
         return operatorController.getLeftX();
@@ -101,6 +104,7 @@ public class OI {
     } 
 
     ///////////////////Triggers///////////////////
+    //Analog Inputs
 
     public double getORightTrigger() {
         return operatorController.getRightTriggerAxis();
