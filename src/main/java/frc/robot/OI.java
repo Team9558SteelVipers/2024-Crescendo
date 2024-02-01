@@ -5,10 +5,6 @@ import static frc.robot.Constants.oiConstants.*;
 
 import edu.wpi.first.wpilibj.XboxController;
 
-//A = 1
-//B = 2
-//X = 3
-//Y = 4
 
 public class OI {
 
