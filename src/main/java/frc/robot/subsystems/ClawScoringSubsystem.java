@@ -4,6 +4,7 @@
 
 package frc.robot.subsystems;
 
+import edu.wpi.first.wpilibj.DigitalInput;
 import com.ctre.phoenix6.hardware.TalonFX;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import static frc.robot.Constants.ScoringConstants.*;
@@ -14,10 +15,12 @@ import static frc.robot.Constants.ScoringConstants.*;
 public class ClawScoringSubsystem extends SubsystemBase {
   /** Creates a new ClawScoringSubsystems. */
   public TalonFX scoringMotor;
+  public DigitalInput beamBreak;
 
   
   public ClawScoringSubsystem() {
     scoringMotor = new TalonFX(scoringMotorPort);
+    beamBreak = new DigitalInput(beamBreakMotorPort);
   }
 
   public void setIntakeMotorSpeed(double speed) {

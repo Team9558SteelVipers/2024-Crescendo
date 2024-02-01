@@ -20,6 +20,7 @@ public final class Constants {
 
   public static class ScoringConstants {
     final public static int scoringMotorPort = 0;
+    final public static int beamBreakMotorPort = 0;
   }
 
   public static class oiConstants {
