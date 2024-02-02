@@ -17,6 +17,8 @@ public class ClawScoringSubsystem extends SubsystemBase {
   public TalonFX scoringMotor;
   public DigitalInput beamBreak;
 
+  public double encoderOffset = 0;
+
   
   public ClawScoringSubsystem() {
     scoringMotor = new TalonFX(scoringMotorPort);
@@ -34,17 +36,18 @@ public class ClawScoringSubsystem extends SubsystemBase {
     return beamBreak.get();
   }
 
-  public void resetEncoder() {
-    scoringMotor.setPosition(0);
+  public void resetEndcoder() {
+    encoderOffset = getEncoder();
   }
 
   public void setEncoder(double encoderValue) {
     scoringMotor.setPosition(encoderValue);
   }
 
-  public double getEncoder() {
-    return scoringMotor.getPosition().getValue();
+  public double getEncoder(){
+    return scoringMotor.getPosition().getValue() - encoderOffset;
   }
+
 
   @Override
   public void periodic() {
