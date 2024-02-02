@@ -30,6 +30,10 @@ public class ClawScoringSubsystem extends SubsystemBase {
     return scoringMotor.get();
   }
 
+  public boolean getBeamBreak() {
+    return beamBreak.get()
+  }
+
 
 
   @Override
