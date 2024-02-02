@@ -34,6 +34,12 @@ public class ClawScoringSubsystem extends SubsystemBase {
     return beamBreak.get()
   }
 
+  public void setEncoder(double encoderValue) {
+    ;
+  }
+
+  
+
 
 
   @Override
