@@ -15,6 +15,8 @@ public final class Constants {
     final public static int intakeMotorPort = 0;
     final public static double intakeMotorSpeed = 0.25;
     final public static double timerLength = 2;
+    final public static double clawIntakeSpeed = 0.25;
+    final public static double intakeDistanceConstant = 0;
 
   }
 

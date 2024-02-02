@@ -3,40 +3,53 @@ package frc.robot.commands;
 
 import edu.wpi.first.wpilibj2.command.CommandBase;
 import frc.robot.OI;
+import frc.robot.subsystems.ClawScoringSubsystem;
 import frc.robot.subsystems.IntakeSubsystem;
 import static frc.robot.Constants.IntakeConstants.*;
 
 public class IntakeCommand extends CommandBase {
   
-  private static IntakeSubsystem m_IntakeSubsystem;
-  private static OI operatorController;
+  private static IntakeSubsystem m_intakeSubsystem;
+  private static OI m_operatorController;
+  private static ClawScoringSubsystem m_clawScoringSubsystem;
+  private static boolean beamBreakTriggered;
   
 
-  public IntakeCommand(IntakeSubsystem intakeSubsystem, OI operator){
-    m_IntakeSubsystem = intakeSubsystem;
-    operatorController = operator;
-    addRequirements(intakeSubsystem);
+  public IntakeCommand(IntakeSubsystem intakeSubsystem, OI operator, ClawScoringSubsystem clawScoringSubsystem){
+    m_intakeSubsystem = intakeSubsystem;
+    m_operatorController = operator;
+    m_clawScoringSubsystem = clawScoringSubsystem;
+    beamBreakTriggered = false;
+    addRequirements(intakeSubsystem, clawScoringSubsystem);
   }
 
   
   @Override
   public void initialize() {
-    m_IntakeSubsystem.setIntakeMotorSpeed(intakeMotorSpeed);
+    m_intakeSubsystem.setIntakeMotorSpeed(intakeMotorSpeed);
+    m_clawScoringSubsystem.setIntakeMotorSpeed(clawIntakeSpeed);
   }
 
  
   @Override
-  public void execute() {}
+  public void execute() {
+    if (!m_clawScoringSubsystem.getBeamBreak()) {
+      m_clawScoringSubsystem.resetEndcoder();
+      beamBreakTriggered = true;
+    }
+
+  }
 
   
   @Override
   public void end(boolean interrupted) {
-    m_IntakeSubsystem.setIntakeMotorSpeed(0.0);
+    m_intakeSubsystem.setIntakeMotorSpeed(0.0);
+    m_clawScoringSubsystem.setIntakeMotorSpeed(0.0);
   }
 
   
   @Override
   public boolean isFinished() {
-    return !operatorController.getDRightBumper();
+    return (!m_operatorController.getDRightBumper() || (beamBreakTriggered && m_clawScoringSubsystem.getEncoder()>=intakeDistanceConstant));
   }
 }
