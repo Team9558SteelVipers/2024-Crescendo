@@ -31,11 +31,19 @@ public class ClawScoringSubsystem extends SubsystemBase {
   }
 
   public boolean getBeamBreak() {
-    return beamBreak.get()
+    return beamBreak.get();
+  }
+
+  public void resetEncoder() {
+    scoringMotor.setPosition(0);
   }
 
   public void setEncoder(double encoderValue) {
-    ;
+    scoringMotor.setPosition(encoderValue);
+  }
+
+  public double getEncoder() {
+    return scoringMotor.getPosition().getValue();
   }
 
   
