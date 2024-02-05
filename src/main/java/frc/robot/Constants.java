@@ -3,6 +3,7 @@ package frc.robot;
 public final class Constants {
   
   public static class ElevatorConstants {
+    // The elevator heights will contain the encoder values for each of the heights
     final public static int clawElevatorPort = 0;
     final public static double[] elevatorHeights = {0,0,0};
     final public static int[] ratchetPistonPort = {1,2,3};
