@@ -17,15 +17,16 @@ public class ClimberCommand extends CommandBase {
   @SuppressWarnings({"PMD.UnusedPrivateField", "PMD.SingularField"})
   
   private final ClimberSubsystem m_subsystem;
-  public boolean isAuto = true;
+  private final OI m_controller;
   /**
    * Creates a new ExampleCommand.
    *
    * @param subsystem The subsystem used by this command.
    * @param i
    */
-  public ClimberCommand(ClimberSubsystem subsystem, int time) {
+  public ClimberCommand(ClimberSubsystem subsystem, OI driverController) {
     m_subsystem = subsystem;
+    m_controller = driverController;
     // Use addRequirements() here to declare subsystem dependencies.
     addRequirements(subsystem);
   }
@@ -35,35 +36,18 @@ public class ClimberCommand extends CommandBase {
   public void initialize() {
     
   }
-        public class ClimbUp {
-          private final Climber climber;
-          public ClimbUp(Climber subsystem) {
-            this.climber = subsystem;
-            addRequirements(climber);
-        }
-        public class ClimbDown extends CommandBase{
-         private final Climber climber;
- 
-        }
-          
-          public ClimbDown(Climber subsystem) {
-            this.climber = subsystem;
-            addRequirements(climber);
-
-        }
-
   // Called every time the scheduler runs while the command is scheduled.
   @Override
   public void execute() {
-    if (OI.getController().x().getAsBoolean()) {
-      m_subsystem.climberMotorSpeed(0.5);
-    } else if (OI.getController().y().getAsBoolean()){
-      m_subsystem.climberMotorSpeed(-0.5);
+    // Button Inputs
+    if (m_controller.getDXButton()) {
+      m_subsystem.climberUp(0);
+    } else if (m_controller.getDYButton()){
+      m_subsystem.climberDown(0);
     } else {
       //Do Nothing
     }
   }
-
   // Called once the command ends or is interrupted.
   @Override
   public void end(boolean interrupted) {}
@@ -71,9 +55,6 @@ public class ClimberCommand extends CommandBase {
   // Returns true when the command should end.
   @Override
   public boolean isFinished() {;
-    if (finished = true) {
-      isAuto = false;
-    }
-    return finished;
+    return false;
   }
 }
