@@ -1,60 +1,58 @@
-// Copyright (c) FIRST and other WPILib contributors.
-// Open Source Software; you can modify and/or share it under the terms of
-// the WPILib BSD license file in the root directory of this project.
-
 package frc.robot.commands;
 
 
 import frc.robot.OI;
 import frc.robot.subsystems.ClimberSubsystem;
-import edu.wpi.first.wpilibj.XboxController;
 import edu.wpi.first.wpilibj2.command.CommandBase;
-import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
+import edu.wpi.first.wpilibj.DigitalInput;
 
-
-/** An example command that uses an example subsystem. */
 public class ClimberCommand extends CommandBase {
-  @SuppressWarnings({"PMD.UnusedPrivateField", "PMD.SingularField"})
-  
-  private final ClimberSubsystem m_subsystem;
-  private final OI m_controller;
-  /**
-   * Creates a new ExampleCommand.
-   *
-   * @param subsystem The subsystem used by this command.
-   * @param i
-   */
-  public ClimberCommand(ClimberSubsystem subsystem, OI driverController) {
-    m_subsystem = subsystem;
-    m_controller = driverController;
-    // Use addRequirements() here to declare subsystem dependencies.
-    addRequirements(subsystem);
-  }
+@SuppressWarnings({"PMD.UnusedPrivateField", "PMD.SingularField"})
+DigitalInput toplimitSwitch = new DigitalInput(0);
+boolean toplimitSwitchBoolean;
 
-  // Called when the command is initially scheduled.
-  @Override
-  public void initialize() {
-    
+private final ClimberSubsystem m_subsystem;
+private final OI m_controller;
+
+public ClimberCommand(ClimberSubsystem subsystem, OI driverController) {
+  m_subsystem = subsystem;
+  m_controller = driverController;
+  addRequirements(subsystem);
+}
+
+@Override
+public void initialize() {}
+
+@Override
+public void execute() {
+// Button Inputs, CHANGE ALL THE BUTTONS LATER
+/* When the driver holds down the stop button, motor is set to 0
+* knock knock... whos there... chicken! the end!
+* first it checks if the stop, then up, then down buttons are held down
+* Limit switches = stops if boundaries are close to being overstepped, 
+* returns as true or false
+* ps. the chicken got ran over 
+*/
+  toplimitSwitchBoolean = toplimitSwitch.get();
+  if (m_controller.getDBButton()){
+    m_subsystem.climberStop(0);
   }
-  // Called every time the scheduler runs while the command is scheduled.
-  @Override
-  public void execute() {
-    // Button Inputs
-    if (m_controller.getDXButton()) {
+  else if (m_controller.getDXButton()) {
+    if (toplimitSwitchBoolean) {
       m_subsystem.climberUp(0);
-    } else if (m_controller.getDYButton()){
-      m_subsystem.climberDown(0);
-    } else {
-      //Do Nothing
-    }
+    } 
+  } else if (m_controller.getDYButton()){
+    m_subsystem.climberDown(0);
+  } else {
+    //Do Nothing
   }
-  // Called once the command ends or is interrupted.
-  @Override
-  public void end(boolean interrupted) {}
+}
 
-  // Returns true when the command should end.
-  @Override
-  public boolean isFinished() {;
+@Override
+public void end(boolean interrupted) {}
+
+@Override
+public boolean isFinished() {;
     return false;
   }
 }

@@ -7,30 +7,29 @@ import com.ctre.phoenix6.hardware.TalonFX;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 
 public class ClimberSubsystem extends SubsystemBase {
-  private static final int climberMotorPort = 0;
-  private final TalonFX climberMotor; 
+private static final int climberMotorPort = 0;
+private final TalonFX climberMotor; 
 
-  public ClimberSubsystem() {
-    climberMotor = new TalonFX(climberMotorPort);
-  }
+public ClimberSubsystem() {
+  climberMotor = new TalonFX(climberMotorPort);
+}
 
-  public void climberUp (double speed){
-    climberMotor.set(speed);
-  }
+public void climberUp (double speed){
+  climberMotor.set(speed);
+}
 
-  public void climberDown(double speed){
-    climberMotor.set(-speed);
-  }
+public void climberDown(double speed){
+  climberMotor.set(-speed);
+}
 
-  public void climberStop (double speed){
-    //digital input
-    if (topLimitSwitch.get()){
-      climberMotor.set(speed = 0);
-    }
-  }
+public void climberStop (double speed){
+  climberMotor.set(speed);
+}
+
 
   @Override
   public void periodic() {
-    // This method will be called once per scheduler run
+  // This method will be called once per scheduler run
   }
 }
+
