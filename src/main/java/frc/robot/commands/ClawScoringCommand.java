@@ -25,9 +25,10 @@ public class ClawScoringCommand extends CommandBase {
     //Checks if there is a beam break (COULD BE CHANGED)
     //Unsure if GetEncoder is updating..
     if (m_subsystem.getBeamBreak()) {
-      m_subsystem.setIntakeMotorSpeed(1);
       if (m_subsystem.getRingPosition() >= IntakeConstants.intakeDistanceConstant) {
-      m_subsystem.setIntakeMotorSpeed(0);
+        m_subsystem.setIntakeMotorSpeed(0);
+      } else {
+        m_subsystem.setIntakeMotorSpeed(1);
       }
     }
    
