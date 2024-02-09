@@ -34,7 +34,7 @@ public class IntakeCommand extends CommandBase {
   @Override
   public void execute() {
     if (!m_clawScoringSubsystem.getBeamBreak()) {
-      m_clawScoringSubsystem.resetEndcoder();
+      m_clawScoringSubsystem.resetEncoder();
       beamBreakTriggered = true;
     }
 
