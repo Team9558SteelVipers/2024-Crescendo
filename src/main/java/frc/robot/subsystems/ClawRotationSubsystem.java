@@ -13,7 +13,7 @@ public class ClawRotationSubsystem extends SubsystemBase {
   
   
   public ClawRotationSubsystem() {
-    clawRotationPiston = new Doublesolenoid( , , );
+    clawRotationPiston = new DoubleSolenoid( , , );
   }// have to fill in modle type, foward port, reverse port
 
   public void setClawRotationPiston(Boolean clawRotationPistonValue) {
