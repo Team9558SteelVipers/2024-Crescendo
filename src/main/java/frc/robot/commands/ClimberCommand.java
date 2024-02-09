@@ -24,7 +24,7 @@ public ClimberCommand(ClimberSubsystem subsystem, OI driverController) {
 public void initialize() {}
 
 @Override
-public void execute() {
+public void execute() { 
 // Button Inputs, CHANGE ALL THE BUTTONS LATER
 /* When the driver holds down the stop button, motor is set to 0
 * knock knock... whos there... chicken! the end!
