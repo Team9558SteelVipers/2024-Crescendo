@@ -5,24 +5,24 @@
 package frc.robot.commands;
 
 import edu.wpi.first.wpilibj2.command.CommandBase;
-import frc.robot.OI;
 import frc.robot.subsystems.ClawRotationSubsystem;
+import frc.robot.OI;
 
 public class ClawRotationCommand extends CommandBase {
-  
-  private static ClawRotationSubsystem m_clawRotationSubsystem;
-  private static OI m_operatorController;
-  
+
+  private final ClawRotationSubsystem m_clawRotationSubsystem;
+  private boolean clawRotationPistonValue;
+  private final OI m_operatorController;
+ 
   public ClawRotationCommand(ClawRotationSubsystem clawRotationSubsystem, OI operator) {
     m_clawRotationSubsystem = clawRotationSubsystem;
+    m_operatorController = operator;
     addRequirements(clawRotationSubsystem);
   }
 
   // Called when the command is initially scheduled.
   @Override
-  public void initialize() {
-    
-  }
+  public void initialize() {}
 
   // Called every time the scheduler runs while the command is scheduled.
   @Override
