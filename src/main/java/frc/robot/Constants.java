@@ -24,6 +24,8 @@ public final class Constants {
   public static class ScoringConstants {
     final public static int scoringMotorPort = 0;
     final public static int beamBreakMotorPort = 0;
+    // Circumference / Tick
+    final public static int EnMotorRatio = 0/4096;
   }
 
   public static class oiConstants {
@@ -32,6 +34,7 @@ public final class Constants {
     final public static int operatorControllerPort = 0;
     
     }
+
 
 
 
