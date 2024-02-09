@@ -4,29 +4,40 @@
 
 package frc.robot.commands;
 
-import edu.wpi.first.wpilibj2.command.CommandBase;
-import frc.robot.OI;
-import frc.robot.subsystems.ClawRotationSubsystem;
+import frc.robot.Constants.IntakeConstants;
 
-public class ClawRotationCommand extends CommandBase {
+import edu.wpi.first.wpilibj2.command.CommandBase;
+import frc.robot.Constants.IntakeConstants;
+import frc.robot.subsystems.ClawScoringSubsystem;
+
+public class ClawScoringCommand extends CommandBase {
   
-  private static ClawRotationSubsystem m_clawRotationSubsystem;
-  private static OI m_operatorController;
+  private static ClawScoringSubsystem m_subsystem;
   
-  public ClawRotationCommand(ClawRotationSubsystem clawRotationSubsystem, OI operator) {
-    m_clawRotationSubsystem = clawRotationSubsystem;
-    addRequirements(clawRotationSubsystem);
+  public ClawScoringCommand(ClawScoringSubsystem clawScoringSubsystem) {
+    m_subsystem = clawScoringSubsystem;
+    addRequirements(clawScoringSubsystem);
   }
 
   // Called when the command is initially scheduled.
   @Override
   public void initialize() {
-    
+    //Checks if there is a beam break (COULD BE CHANGED)
+    //Unsure if GetEncoder is updating..
+    if (m_subsystem.getBeamBreak()) {
+      m_subsystem.setIntakeMotorSpeed(1);
+      if (m_subsystem.getRingPosition() >= IntakeConstants.intakeDistanceConstant) {
+      m_subsystem.setIntakeMotorSpeed(0);
+      }
+    }
+   
   }
 
   // Called every time the scheduler runs while the command is scheduled.
   @Override
-  public void execute() {}
+  public void execute() {
+
+  }
 
   // Called once the command ends or is interrupted.
   @Override
