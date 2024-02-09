@@ -5,24 +5,16 @@
 package frc.robot.commands;
 
 import edu.wpi.first.wpilibj2.command.CommandBase;
-import frc.robot.OI;
-import frc.robot.subsystems.ClawRotationSubsystem;
 
 public class ClawRotationCommand extends CommandBase {
-  
-  private static ClawRotationSubsystem m_clawRotationSubsystem;
-  private static OI m_operatorController;
-  
-  public ClawRotationCommand(ClawRotationSubsystem clawRotationSubsystem, OI operator) {
-    m_clawRotationSubsystem = clawRotationSubsystem;
-    addRequirements(clawRotationSubsystem);
+  /** Creates a new ClawRotationCommand. */
+  public ClawRotationCommand() {
+    // Use addRequirements() here to declare subsystem dependencies.
   }
 
   // Called when the command is initially scheduled.
   @Override
-  public void initialize() {
-    
-  }
+  public void initialize() {}
 
   // Called every time the scheduler runs while the command is scheduled.
   @Override
