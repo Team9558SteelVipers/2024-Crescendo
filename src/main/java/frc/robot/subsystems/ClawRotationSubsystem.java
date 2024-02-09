@@ -13,14 +13,14 @@ public class ClawRotationSubsystem extends SubsystemBase {
   
   
   public ClawRotationSubsystem() {
-    clawRotationPiston = new DoubleSolenoid( , , );
+    clawRotationPiston = new DoubleSolenoid(null,0,0);
   }// have to fill in modle type, foward port, reverse port
 
   public void setClawRotationPiston(Boolean clawRotationPistonValue) {
     if (clawRotationPistonValue == false){
-      clawRotationPistonValue.set(DoubleSolenoid.Value.kReverse);
+      clawRotationPiston.set(DoubleSolenoid.Value.kReverse);
     } else if (clawRotationPistonValue == true){
-      clawRotationPistonValue.set(DoubleSolenoid.Value.kForward);
+      clawRotationPiston.set(DoubleSolenoid.Value.kForward);
     }
   }
 
