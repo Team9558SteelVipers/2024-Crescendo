@@ -4,11 +4,25 @@
 
 package frc.robot.subsystems;
 
+import edu.wpi.first.wpilibj.DoubleSolenoid;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 
 public class ClawRotationSubsystem extends SubsystemBase {
-  /** Creates a new ClawRotationSubsystem. */
-  public ClawRotationSubsystem() {}
+
+  static DoubleSolenoid clawRotationPiston;
+  
+  
+  public ClawRotationSubsystem() {
+    clawRotationPiston = new Doublesolenoid( , , );
+  }// have to fill in modle type, foward port, reverse port
+
+  public void setClawRotationPiston(Boolean clawRotationPistonValue) {
+    if (clawRotationPistonValue == false){
+      clawRotationPistonValue.set(DoubleSolenoid.Value.kReverse);
+    } else if (clawRotationPistonValue == true){
+      clawRotationPistonValue.set(DoubleSolenoid.Value.kForward);
+    }
+  }
 
   @Override
   public void periodic() {
