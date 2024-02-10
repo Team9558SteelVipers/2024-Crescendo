@@ -4,19 +4,20 @@
 
 package frc.robot.commands;
 
-import edu.wpi.first.wpilibj2.command.CommandBase;
-import frc.robot.subsystems.ClawRotationSubsystem;
+import edu.wpi.first.wpilibj.XboxController;
+import edu.wpi.first.wpilibj2.command.Command;
 import frc.robot.OI;
+import frc.robot.subsystems.ClawRotationSubsystem;
 
-public class ClawRotationCommand extends CommandBase {
+public class ClawRotationCommand extends Command {
 
   private final ClawRotationSubsystem m_clawRotationSubsystem;
   private boolean clawRotationPistonValue;
-  private final OI m_operatorController;
+  private final XboxController m_operatorController;
  
-  public ClawRotationCommand(ClawRotationSubsystem clawRotationSubsystem, OI operator) {
+  public ClawRotationCommand(ClawRotationSubsystem clawRotationSubsystem, OI operatorInput) {
     m_clawRotationSubsystem = clawRotationSubsystem;
-    m_operatorController = operator;
+    m_operatorController = operatorInput.getDriverController();
     addRequirements(clawRotationSubsystem);
   }
 

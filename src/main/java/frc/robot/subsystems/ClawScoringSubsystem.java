@@ -4,12 +4,12 @@
 
 package frc.robot.subsystems;
 
-import edu.wpi.first.wpilibj.DigitalInput;
 import com.ctre.phoenix6.hardware.TalonFX;
-import edu.wpi.first.wpilibj2.command.SubsystemBase;
-import frc.robot.Constants;
 
+import edu.wpi.first.wpilibj.DigitalInput;
+import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import static frc.robot.Constants.ScoringConstants.*;
+
 
 public class ClawScoringSubsystem extends SubsystemBase {
   /** Creates a new ClawScoringSubsystems. */
@@ -48,7 +48,7 @@ public class ClawScoringSubsystem extends SubsystemBase {
   }
 
   public double getRingPosition(){
-    return getEncoder() * Constants.ScoringConstants.EnMotorRatio;
+    return getEncoder() * EnMotorRatio;
   }
 
 
