@@ -1,22 +1,26 @@
+// Copyright (c) FIRST and other WPILib contributors.
+// Open Source Software; you can modify and/or share it under the terms of
+// the WPILib BSD license file in the root directory of this project.
+
 package frc.robot.commands;
 
-
+import edu.wpi.first.wpilibj.DigitalInput;
+import edu.wpi.first.wpilibj.XboxController;
+import edu.wpi.first.wpilibj2.command.Command;
 import frc.robot.OI;
 import frc.robot.subsystems.ClimberSubsystem;
-import edu.wpi.first.wpilibj2.command.CommandBase;
-import edu.wpi.first.wpilibj.DigitalInput;
 
-public class ClimberCommand extends CommandBase {
+public class ClimberCommand extends Command {
 @SuppressWarnings({"PMD.UnusedPrivateField", "PMD.SingularField"})
 DigitalInput toplimitSwitch = new DigitalInput(0);
 boolean toplimitSwitchBoolean;
 
 private final ClimberSubsystem m_subsystem;
-private final OI m_controller;
+private final XboxController m_controller;
 
-public ClimberCommand(ClimberSubsystem subsystem, OI driverController) {
+public ClimberCommand(ClimberSubsystem subsystem, OI operatorInput) {
   m_subsystem = subsystem;
-  m_controller = driverController;
+  m_controller = operatorInput.getDriverController();
   addRequirements(subsystem);
 }
 
@@ -34,14 +38,14 @@ public void execute() {
 * ps. the chicken got ran over 
 */
   toplimitSwitchBoolean = toplimitSwitch.get();
-  if (m_controller.getDBButton()){
+  if (m_controller.getBButton()){
     m_subsystem.climberStop(0);
   }
-  else if (m_controller.getDXButton()) {
+  else if (m_controller.getXButton()) {
     if (toplimitSwitchBoolean) {
       m_subsystem.climberUp(0);
     } 
-  } else if (m_controller.getDYButton()){
+  } else if (m_controller.getYButton()){
     m_subsystem.climberDown(0);
   } else {
     //Do Nothing
