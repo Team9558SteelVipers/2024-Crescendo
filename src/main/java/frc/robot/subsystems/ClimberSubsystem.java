@@ -25,7 +25,7 @@ public void climberDown(double speed){
 }
 
 public void climberStop (double speed){
-  climberMotor.set(speed);
+  climberMotor.set(speed = 0);
 }
 
 
