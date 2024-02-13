@@ -30,17 +30,23 @@ public class ElevatorPosition extends Command {
 
     m_elevatorSubsystem.setElevatorMotorPosition(elevatorPosition);
     
+    PIDController.reset();
   }
 
   
   @Override
-  public void execute() {}
+  public void execute() {
+    double speed = PIDController.calculate(elevatorSubsystem.getEncoderPosition());
+    elevatorSubsystem.setMotor(speed);
+  }
 
 
   @Override
-  public void end(boolean interrupted) {}
-
+  public void end(boolean interrupted) {
+    elevatorSubsystem.setMotor(0);
+  }
   
+
   @Override
   public boolean isFinished() {
     return false;
