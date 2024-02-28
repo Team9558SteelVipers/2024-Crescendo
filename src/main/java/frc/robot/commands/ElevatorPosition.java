@@ -21,8 +21,12 @@ public class ElevatorPosition extends Command {
 
   //Iterates through the positions
   @Override
-  public void initialize() {
-    elevatorPosition = m_elevatorSubsystem.getElevatorPosition();
+  public void initialize() {}
+
+  
+  @Override
+  public void execute() {
+   elevatorPosition = m_elevatorSubsystem.getElevatorPosition();
     
     if (m_elevatorSubsystem.getElevatorPosition() == 0) {m_elevatorSubsystem.setElevatorMotorPosition(1);}
     else if (m_elevatorSubsystem.getElevatorPosition() == 1) {m_elevatorSubsystem.setElevatorMotorPosition(2);}
@@ -31,10 +35,6 @@ public class ElevatorPosition extends Command {
     m_elevatorSubsystem.setElevatorMotorPosition(elevatorPosition);
     
   }
-
-  
-  @Override
-  public void execute() {}
 
 
   @Override
