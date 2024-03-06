@@ -38,17 +38,10 @@ public void execute() {
 * ps. the chicken got ran over 
 */
   toplimitSwitchBoolean = toplimitSwitch.get();
-  if (m_controller.getBButton()){
-    m_subsystem.climberStop(0);
-  }
-  else if (m_controller.getXButton()) {
     if (toplimitSwitchBoolean) {
       m_subsystem.climberUp(0);
-    } 
-  } else if (m_controller.getYButton()){
-    m_subsystem.climberDown(0);
-  } else {
-    //Do Nothing
+    } else {
+      //Do Nothing
   }
 }
 
