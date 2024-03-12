@@ -1,0 +1,37 @@
+{
+  "version": 1.0,
+  "startingPose": {
+    "position": {
+      "x": 1.43,
+      "y": 7.37
+    },
+    "rotation": 90.0
+  },
+  "command": {
+    "type": "sequential",
+    "data": {
+      "commands": [
+        {
+          "type": "path",
+          "data": {
+            "pathName": "SH-A_stop_stop"
+          }
+        },
+        {
+          "type": "path",
+          "data": {
+            "pathName": "A-F1c_stop"
+          }
+        },
+        {
+          "type": "path",
+          "data": {
+            "pathName": "F1c-A"
+          }
+        }
+      ]
+    }
+  },
+  "folder": null,
+  "choreoAuto": false
+}

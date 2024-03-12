@@ -1,0 +1,49 @@
+{
+  "version": 1.0,
+  "startingPose": {
+    "position": {
+      "x": 1.43,
+      "y": 7.37
+    },
+    "rotation": 90.0
+  },
+  "command": {
+    "type": "sequential",
+    "data": {
+      "commands": [
+        {
+          "type": "path",
+          "data": {
+            "pathName": "SH-A_stop_stop"
+          }
+        },
+        {
+          "type": "path",
+          "data": {
+            "pathName": "A-F1b_stop"
+          }
+        },
+        {
+          "type": "path",
+          "data": {
+            "pathName": "F1b-F2b"
+          }
+        },
+        {
+          "type": "path",
+          "data": {
+            "pathName": "F2b-F3c"
+          }
+        },
+        {
+          "type": "path",
+          "data": {
+            "pathName": "F3c-A"
+          }
+        }
+      ]
+    }
+  },
+  "folder": null,
+  "choreoAuto": false
+}
