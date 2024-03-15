@@ -41,7 +41,7 @@ public final class Constants {
   public static class swerveConstants {
 
     final public static double maxRotation = 0;
-    final public static double maxSpeed = 0;
+    final public static double maxSpeed = 5.64;
 
     final public static double ksVolts = 0;
     final public static double kvVoltSecondsPerMeter = 0;

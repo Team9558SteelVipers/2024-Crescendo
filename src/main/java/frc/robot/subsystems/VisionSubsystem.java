@@ -15,30 +15,30 @@ public class VisionSubsystem extends SubsystemBase {
  
 //RED TRAP OFFSETS//
 
-public redLeftTrapOffset() {
-
+public double redLeftTrapOffset() {
+  return 0;
 }
 
-public redRightTrapOffset() {
-  Math.sqrt( math.pow(Constants.redRightTrapX - odom.getpose.x,2) + math.pow(Constants.redRightTrapY - odom.getpose.y,2))
+public double redRightTrapOffset() {
+  return 0;
 }
 
-public redBackTrapOffset() {
-  
+public double redBackTrapOffset() {
+  return 0;
 }
 
 //BLUE TRAP OFFSETS//
 
-public blueLeftTrapOffset() {
-
+public double blueLeftTrapOffset() {
+  return 0;
 }
 
-public blueRightTrapOffset() {
-  
+public double blueRightTrapOffset() {
+  return 0;
 }
 
-public blueBackTrapOffset() {
-  
+public double blueBackTrapOffset() {
+  return 0;
 }
 
 }
