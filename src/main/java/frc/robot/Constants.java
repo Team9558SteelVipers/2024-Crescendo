@@ -77,6 +77,27 @@ public final class Constants {
     final public static int pigeonID = 0;
   }
 
+  ///////////////////////////////////////TRAP OPTIMIZATION CONSTANTS/////////////////////////////////////////
+
+//RED TEAM//
+  public static class redTrapPositions {
+    final public static double redLeftTrapX = 0;
+    final public static double redLeftTrapY = 0;
+    final public static double redRightTrapX = 0;
+    final public static double redRightTrapY = 0;
+    final public static double redBackTrapX = 0;
+    final public static double redBackTrapY = 0;
+  }
+
+//Blue TEAM//
+public static class blueTrapPositions {
+  final public static double blueLeftTrapX = 0;
+  final public static double blueLeftTrapY = 0;
+  final public static double blueRightTrapX = 0;
+  final public static double blueRightTrapY = 0;
+  final public static double blueBackTrapX = 0;
+  final public static double blueBackTrapY = 0;
+}
 
 
 }
