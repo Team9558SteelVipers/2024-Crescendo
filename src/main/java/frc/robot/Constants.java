@@ -38,45 +38,6 @@ public final class Constants {
     
     }
 
-  public static class swerveConstants {
-
-    final public static double maxRotation = 0;
-    final public static double maxSpeed = 5.64;
-
-    final public static double ksVolts = 0;
-    final public static double kvVoltSecondsPerMeter = 0;
-    final public static double kaVoltSecondsSquaredPerMeter = 0;
-    final public static double kvVoltSecondsPerRadian = 0;
-    final public static double kaVoltSecondsSquaredPerRadian = 0;
-
-    
-    final public static double driveDistancePerPulse = 0;
-    final public static double MagEncoderCPR = 0;
-    final public static double turnDistancePerPulse = 0;
-
-    final public static int frontLeftDrivePort = 0;
-    final public static int frontLeftRotatePort = 0;
-
-    final public static int frontRightDrivePort = 0;
-    final public static int frontRightRotatePort = 0;
-
-    final public static int backLeftDrivePort = 0;
-    final public static int backLeftRotatePort = 0;
-
-    final public static int backRightDrivePort = 0;
-    final public static int backRightRotatePort = 0;
-
-    final public static double frameSize = 10;
-    final public static SwerveDriveKinematics kinematics = new SwerveDriveKinematics(
-      new Translation2d(frameSize / 2, frameSize / 2),
-      new Translation2d(frameSize / 2, -frameSize / 2),
-      new Translation2d(-frameSize / 2, frameSize / 2),
-      new Translation2d(-frameSize / 2, -frameSize / 2)
-    );
-
-    final public static int pigeonID = 0;
-  }
-
   ///////////////////////////////////////TRAP OPTIMIZATION CONSTANTS/////////////////////////////////////////
 // 0 = left red
 // 1 = right red

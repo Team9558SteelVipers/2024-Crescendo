@@ -13,7 +13,8 @@ import edu.wpi.first.wpilibj2.command.button.Trigger;
 import frc.robot.subsystems.ClawScoringSubsystem;
 import frc.robot.subsystems.ClimberSubsystem;
 import frc.robot.subsystems.IntakeSubsystem;
-import frc.robot.subsystems.SwerveDriveTrain;
+import frc.robot.subsystems.CTRESwerve.CommandSwerveDrivetrain;
+import frc.robot.subsystems.CTRESwerve.generated.TunerConstants;
 
 /**
  * This class is where the bulk of the robot should be declared. Since Command-based is a
@@ -23,7 +24,7 @@ import frc.robot.subsystems.SwerveDriveTrain;
  */
 public class RobotContainer {
   // The robot's subsystems and commands are defined here...
-  public SwerveDriveTrain m_SwerveDriveTrain = new SwerveDriveTrain();
+  public CommandSwerveDrivetrain m_SwerveDriveTrain = TunerConstants.DriveTrain;
   public IntakeSubsystem m_IntakeSubsystem = new IntakeSubsystem();
   public ClimberSubsystem m_ClimberSubsystem = new ClimberSubsystem();
   public ClawScoringSubsystem m_ClawScoringSubsystem = new ClawScoringSubsystem();

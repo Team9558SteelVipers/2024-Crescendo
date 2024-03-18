@@ -11,13 +11,14 @@ import edu.wpi.first.wpilibj.DriverStation.Alliance;
 import edu.wpi.first.wpilibj2.command.Command;
 import frc.robot.Constants;
 import frc.robot.Constants.TrapPositions;
-import frc.robot.subsystems.SwerveDriveTrain;
+
+import frc.robot.subsystems.CTRESwerve.CommandSwerveDrivetrain;
 
 public class NearestTrapCommand extends Command {
-  private SwerveDriveTrain m_SwerveDriveTrain;
+  private CommandSwerveDrivetrain m_SwerveDriveTrain;
   public double smallestOffset;
   /** Creates a new NearestTrapCommand. */
-  public NearestTrapCommand(SwerveDriveTrain swerveDriveTrain) {
+  public NearestTrapCommand(CommandSwerveDrivetrain swerveDriveTrain) {
     m_SwerveDriveTrain = swerveDriveTrain;
     addRequirements(swerveDriveTrain);
     // Use addRequirements() here to declare subsystem dependencies.
@@ -29,8 +30,8 @@ public class NearestTrapCommand extends Command {
             for (int i = 0; i<6; i++) {
               
               smallestOffset = Math.min(
-                                  Math.sqrt(Math.pow(Constants.TrapPositions.TrapX[i]-m_SwerveDriveTrain.getPose().getX(),2)+
-                                            Math.pow(Constants.TrapPositions.TrapY[i]-m_SwerveDriveTrain.getPose().getY(),2)), 
+                                  Math.sqrt(Math.pow(Constants.TrapPositions.TrapX[i]-m_SwerveDriveTrain.getState().Pose.getX(),2)+
+                                            Math.pow(Constants.TrapPositions.TrapY[i]-m_SwerveDriveTrain.getState().Pose.getY(),2)), 
                                   smallestOffset);
             }
           }
