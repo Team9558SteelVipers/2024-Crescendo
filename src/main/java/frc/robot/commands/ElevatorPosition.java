@@ -5,13 +5,18 @@
 package frc.robot.commands;
 
 
+import com.pathplanner.lib.util.PIDConstants;
+
+import edu.wpi.first.math.controller.PIDController;
 import edu.wpi.first.wpilibj2.command.Command;
+import edu.wpi.first.wpilibj2.command.PIDCommand;
 import frc.robot.subsystems.ClawElevatorSubsystem;
 
 public class ElevatorPosition extends Command {
  
-  private static ClawElevatorSubsystem m_elevatorSubsystem;
-  private static int elevatorPosition;
+  private ClawElevatorSubsystem m_elevatorSubsystem;
+  private int elevatorPosition;
+  private PIDController pidController = new PIDController(0, 0, 0);
 
   public ElevatorPosition(ClawElevatorSubsystem elevatorSubsystem) {
     m_elevatorSubsystem = elevatorSubsystem;
@@ -26,14 +31,14 @@ public class ElevatorPosition extends Command {
 
   @Override
   public void execute() {
-    double speed = PIDController.calculate(elevatorSubsystem.getEncoderPosition());
-    elevatorSubsystem.setMotor(speed);
+    double speed = pidController.calculate(m_elevatorSubsystem.getEncoderPosition());
+    m_elevatorSubsystem.setElevatorMotor(speed);
   }
 
   
   @Override
   public void end(boolean interrupted) {
-    elevatorSubsystem.setMotor(0);
+    m_elevatorSubsystem.setElevatorMotor(0);
   }
   
 
