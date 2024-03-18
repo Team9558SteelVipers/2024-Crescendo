@@ -5,13 +5,24 @@
 package frc.robot;
 
 
+import org.ietf.jgss.Oid;
+
 import com.pathplanner.lib.commands.PathPlannerAuto;
 
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.button.Trigger;
+import frc.robot.commands.ClawRotationCommand;
+import frc.robot.commands.ClawScoringCommand;
+import frc.robot.commands.ClimberCommand;
+import frc.robot.commands.ElevatorPosition;
+import frc.robot.commands.IntakeCommand;
+import frc.robot.commands.NearestTrapCommand;
+import frc.robot.subsystems.ClawElevatorSubsystem;
+import frc.robot.subsystems.ClawRotationSubsystem;
 import frc.robot.subsystems.ClawScoringSubsystem;
 import frc.robot.subsystems.ClimberSubsystem;
 import frc.robot.subsystems.IntakeSubsystem;
+import frc.robot.subsystems.VisionSubsystem;
 import frc.robot.subsystems.CTRESwerve.CommandSwerveDrivetrain;
 import frc.robot.subsystems.CTRESwerve.generated.TunerConstants;
 
@@ -23,11 +34,22 @@ import frc.robot.subsystems.CTRESwerve.generated.TunerConstants;
  */
 public class RobotContainer {
   // The robot's subsystems and commands are defined here...
+  public OI operatorInput = new OI();
+
   public CommandSwerveDrivetrain m_SwerveDriveTrain = TunerConstants.DriveTrain;
   public IntakeSubsystem m_IntakeSubsystem = new IntakeSubsystem();
   public ClimberSubsystem m_ClimberSubsystem = new ClimberSubsystem();
   public ClawScoringSubsystem m_ClawScoringSubsystem = new ClawScoringSubsystem();
+  public ClawRotationSubsystem m_ClawRotationSubsystem = new ClawRotationSubsystem();
+  public ClawElevatorSubsystem m_ClawElevatorSubsystem = new ClawElevatorSubsystem();
+  public VisionSubsystem m_VisionSubsystem = new VisionSubsystem();
 
+  public ClawRotationCommand m_ClawRotationCommand = new ClawRotationCommand(m_ClawRotationSubsystem, operatorInput);
+  public ClawScoringCommand m_ClawScoringCommand = new ClawScoringCommand(m_ClawScoringSubsystem);
+  public ClimberCommand m_ClimberCommand = new ClimberCommand(m_ClimberSubsystem, operatorInput);
+  public ElevatorPosition m_ElevatorPosition = new ElevatorPosition(m_ClawElevatorSubsystem);
+  public IntakeCommand m_IntakeCommand = new IntakeCommand(m_IntakeSubsystem, operatorInput, m_ClawScoringSubsystem);
+  public NearestTrapCommand m_NearestTrapCommand = new NearestTrapCommand(m_SwerveDriveTrain);
 
   // Replace with CommandPS4Controller or CommandJoystick if needed
   
