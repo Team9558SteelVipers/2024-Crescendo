@@ -21,26 +21,16 @@ public class ElevatorPosition extends Command {
 
   //Iterates through the positions
   @Override
-  public void initialize() {
-    elevatorPosition = m_elevatorSubsystem.getElevatorPosition();
-    
-    if (m_elevatorSubsystem.getElevatorPosition() == 0) {m_elevatorSubsystem.setElevatorMotorPosition(1);}
-    else if (m_elevatorSubsystem.getElevatorPosition() == 1) {m_elevatorSubsystem.setElevatorMotorPosition(2);}
-    else if (m_elevatorSubsystem.getElevatorPosition() == 2) {m_elevatorSubsystem.setElevatorMotorPosition(0);}
-
-    m_elevatorSubsystem.setElevatorMotorPosition(elevatorPosition);
-    
-    PIDController.reset();
-  }
-
+  public void initialize() {}
   
+
   @Override
   public void execute() {
     double speed = PIDController.calculate(elevatorSubsystem.getEncoderPosition());
     elevatorSubsystem.setMotor(speed);
   }
 
-
+  
   @Override
   public void end(boolean interrupted) {
     elevatorSubsystem.setMotor(0);

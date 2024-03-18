@@ -5,9 +5,16 @@
 package frc.robot;
 
 
+import com.pathplanner.lib.commands.PathPlannerAuto;
+
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
 import edu.wpi.first.wpilibj2.command.button.Trigger;
+import frc.robot.subsystems.ClawScoringSubsystem;
+import frc.robot.subsystems.ClimberSubsystem;
+import frc.robot.subsystems.IntakeSubsystem;
+import frc.robot.subsystems.CTRESwerve.CommandSwerveDrivetrain;
+import frc.robot.subsystems.CTRESwerve.generated.TunerConstants;
 
 /**
  * This class is where the bulk of the robot should be declared. Since Command-based is a
@@ -17,15 +24,22 @@ import edu.wpi.first.wpilibj2.command.button.Trigger;
  */
 public class RobotContainer {
   // The robot's subsystems and commands are defined here...
-  
+  public CommandSwerveDrivetrain m_SwerveDriveTrain = TunerConstants.DriveTrain;
+  public IntakeSubsystem m_IntakeSubsystem = new IntakeSubsystem();
+  public ClimberSubsystem m_ClimberSubsystem = new ClimberSubsystem();
+  public ClawScoringSubsystem m_ClawScoringSubsystem = new ClawScoringSubsystem();
+
 
   // Replace with CommandPS4Controller or CommandJoystick if needed
   
 
-  /** The container for the robot. Contains subsystems, OI devices, and commands. */
+  /** The  container for the robot. Contains subsystems, OI devices, and commands. */
   public RobotContainer() {
+    
+    
 
-   
+
+    
     // Configure the trigger bindings
     configureBindings();
   }
@@ -35,7 +49,7 @@ public class RobotContainer {
    * {@link Trigger#Trigger(java.util.function.BooleanSupplier)} constructor with an arbitrary
    * predicate, or via the named factories in {@link
    * edu.wpi.first.wpilibj2.command.button.CommandGenericHID}'s subclasses for {@link
-   * CommandXboxController Xbox}/{@link edu.wpi.first.wpilibj2.command.button.CommandPS4Controller
+   * https://3015rangerrobotics.github.io/pathplannerlib/PathplannerLib.jsonCommandXboxController Xbox}/{@link edu.wpi.first.wpilibj2.command.button.CommandPS4Controller
    * PS4} controllers or {@link edu.wpi.first.wpilibj2.command.button.CommandJoystick Flight
    * joysticks}.
    */
@@ -55,6 +69,6 @@ public class RobotContainer {
    */
   public Command getAutonomousCommand() {
     // An example command will be run in autonomous
-    return null;
+    return new PathPlannerAuto("SH-A-F1c-A ver2");
   }
 }

@@ -5,9 +5,8 @@
 package frc.robot.commands;
 
 import edu.wpi.first.wpilibj2.command.Command;
+import frc.robot.Constants.IntakeConstants;
 import frc.robot.subsystems.ClawScoringSubsystem;
-import static frc.robot.Constants.IntakeConstants.*;
-
 
 public class ClawScoringCommand extends Command {
   
@@ -24,7 +23,7 @@ public class ClawScoringCommand extends Command {
     //Checks if there is a beam break (COULD BE CHANGED)
     //Unsure if GetEncoder is updating..
     if (m_subsystem.getBeamBreak()) {
-      if (m_subsystem.getRingPosition() >= intakeDistanceConstant) {
+      if (m_subsystem.getRingPosition() >= IntakeConstants.intakeDistanceConstant) {
         m_subsystem.setIntakeMotorSpeed(0);
       } else {
         m_subsystem.setIntakeMotorSpeed(1);

@@ -1,5 +1,8 @@
 package frc.robot;
 
+import edu.wpi.first.math.geometry.Translation2d;
+import edu.wpi.first.math.kinematics.SwerveDriveKinematics;
+
 public final class Constants {
   
   public static class ElevatorConstants {
@@ -35,8 +38,17 @@ public final class Constants {
     
     }
 
-
-
+  ///////////////////////////////////////TRAP OPTIMIZATION CONSTANTS/////////////////////////////////////////
+// 0 = left red
+// 1 = right red
+// 2 = far red
+// 3 = left blue
+// 4 = right blue
+// 5 = far blue
+  public static class TrapPositions {
+    final public static double[] TrapX = {0,0,0,0,0,0};
+    final public static double[] TrapY = {0,0,0,0,0,0};
+  }
 
 
 }
