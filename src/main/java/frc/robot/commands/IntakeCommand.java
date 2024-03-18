@@ -23,7 +23,6 @@ public class IntakeCommand extends Command {
     m_intakeSubsystem = intakeSubsystem;
     m_operatorController = operatorInput.getDriverController();
     m_clawScoringSubsystem = clawScoringSubsystem;
-    beamBreakTriggered = false;
     addRequirements(intakeSubsystem, clawScoringSubsystem);
   }
 
@@ -32,12 +31,14 @@ public class IntakeCommand extends Command {
   public void initialize() {
     m_intakeSubsystem.setIntakeMotorSpeed(intakeMotorSpeed);
     m_clawScoringSubsystem.setIntakeMotorSpeed(clawIntakeSpeed);
+
+    beamBreakTriggered = false;
   }
 
  
   @Override
   public void execute() {
-    if (!m_clawScoringSubsystem.getBeamBreak()) {
+    if (!m_clawScoringSubsystem.getBeamBreak() && beamBreakTriggered == false) {
       m_clawScoringSubsystem.resetEncoder();
       beamBreakTriggered = true;
     }
