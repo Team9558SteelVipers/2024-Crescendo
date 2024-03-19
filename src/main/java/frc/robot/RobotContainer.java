@@ -5,8 +5,11 @@
 package frc.robot;
 
 
+import java.util.function.Supplier;
+
 import org.ietf.jgss.Oid;
 
+import com.ctre.phoenix6.mechanisms.swerve.SwerveRequest;
 import com.pathplanner.lib.commands.PathPlannerAuto;
 
 import edu.wpi.first.wpilibj2.command.Command;
@@ -50,6 +53,8 @@ public class RobotContainer {
   public ElevatorPosition m_ElevatorPosition = new ElevatorPosition(m_ClawElevatorSubsystem);
   public IntakeCommand m_IntakeCommand = new IntakeCommand(m_IntakeSubsystem, operatorInput, m_ClawScoringSubsystem);
   public NearestTrapCommand m_NearestTrapCommand = new NearestTrapCommand(m_SwerveDriveTrain);
+
+  
 
   // Replace with CommandPS4Controller or CommandJoystick if needed
   
