@@ -5,27 +5,21 @@
 package frc.robot;
 
 
-import java.util.function.Supplier;
-
-import org.ietf.jgss.Oid;
-
 import com.ctre.phoenix6.mechanisms.swerve.SwerveModule.DriveRequestType;
 import com.ctre.phoenix6.Utils;
 import com.ctre.phoenix6.mechanisms.swerve.SwerveRequest;
-import com.pathplanner.lib.commands.PathPlannerAuto;
+import com.pathplanner.lib.auto.AutoBuilder;
+import com.pathplanner.lib.path.PathPlannerPath;
 
 import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.math.geometry.Translation2d;
 import edu.wpi.first.wpilibj2.command.Command;
-import edu.wpi.first.wpilibj2.command.Commands;
-import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
-import edu.wpi.first.wpilibj2.command.button.Trigger;
-//import frc.robot.commands.ClawRotationCommand;
+import frc.robot.commands.ClawRotationCommand;
 import frc.robot.commands.ClawScoringCommand;
-//import frc.robot.commands.ClimberCommand;
+import frc.robot.commands.ClimberCommand;
 import frc.robot.commands.ElevatorPosition;
-//import frc.robot.commands.IntakeCommand;
+import frc.robot.commands.IntakeCommand;
 import frc.robot.commands.NearestTrapCommand;
 import frc.robot.subsystems.ClawElevatorSubsystem;
 import frc.robot.subsystems.ClawRotationSubsystem;
@@ -55,11 +49,11 @@ public class RobotContainer {
   public ClawElevatorSubsystem m_ClawElevatorSubsystem = new ClawElevatorSubsystem();
   public VisionSubsystem m_VisionSubsystem = new VisionSubsystem();
 
-  //public ClawRotationCommand m_ClawRotationCommand = new ClawRotationCommand(m_ClawRotationSubsystem, operatorInput);
+  public ClawRotationCommand m_ClawRotationCommand = new ClawRotationCommand(m_ClawRotationSubsystem);
   public ClawScoringCommand m_ClawScoringCommand = new ClawScoringCommand(m_ClawScoringSubsystem);
-  //public ClimberCommand m_ClimberCommand = new ClimberCommand(m_ClimberSubsystem, operatorInput);
+  public ClimberCommand m_ClimberCommand = new ClimberCommand(m_ClimberSubsystem);
   public ElevatorPosition m_ElevatorPosition = new ElevatorPosition(m_ClawElevatorSubsystem);
-  //public IntakeCommand m_IntakeCommand = new IntakeCommand(m_IntakeSubsystem, operatorInput, m_ClawScoringSubsystem);
+  public IntakeCommand m_IntakeCommand = new IntakeCommand(m_IntakeSubsystem, operatorInput, m_ClawScoringSubsystem);
   public NearestTrapCommand m_NearestTrapCommand = new NearestTrapCommand(m_SwerveDriveTrain);
 
    private double MaxSpeed = TunerConstants.kSpeedAt12VoltsMps; // kSpeedAt12VoltsMps desired top speed
@@ -89,6 +83,12 @@ public class RobotContainer {
 
     // reset the field-centric heading on left bumper press
     operatorInput.getDriverController().leftBumper(null).onTrue(m_SwerveDriveTrain.runOnce(() -> m_SwerveDriveTrain.seedFieldRelative()));
+    operatorInput.getDriverController().rightBumper().onTrue(m_IntakeCommand);
+    operatorInput.getDriverController().x().whileTrue(m_ClawScoringCommand);
+    operatorInput.getDriverController().y().whileTrue(m_ClimberCommand);
+    operatorInput.getDriverController().rightTrigger(0.5);
+    operatorInput.getDriverController().leftTrigger(0.5);
+
 
     if (Utils.isSimulation()) {
       m_SwerveDriveTrain.seedFieldRelative(new Pose2d(new Translation2d(), Rotation2d.fromDegrees(90)));
@@ -101,7 +101,8 @@ public class RobotContainer {
   }
 
   public Command getAutonomousCommand() {
-    return Commands.print("No autonomous command configured");
+    PathPlannerPath path = PathPlannerPath.fromPathFile("Forward");
+    return AutoBuilder.followPath(path);
   }
   
 
