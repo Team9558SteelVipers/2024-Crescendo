@@ -4,21 +4,22 @@ package frc.robot;
 import static frc.robot.Constants.oiConstants.*;
 
 import edu.wpi.first.wpilibj.XboxController;
+import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
 
 
 public class OI {
 
-   static XboxController driverController;
+    static CommandXboxController driverController;
     static XboxController operatorController;
 
     public OI(){
-        driverController = new XboxController(driverControllerPort);
+        driverController = new CommandXboxController(driverControllerPort);
         operatorController = new XboxController(operatorControllerPort);
         
         
     }
 
-    public XboxController getDriverController() {
+    public CommandXboxController getDriverController() {
         return driverController;
     }
 
