@@ -4,7 +4,7 @@ public final class Constants {
   
   public static class ElevatorConstants {
     // The elevator heights will contain the encoder values for each of the heights
-    final public static int clawElevatorPort = 0;
+    final public static int clawElevatorPort = 23;
     final public static double[] elevatorHeights = {0,0,0};
     final public static int[] ratchetPistonPort = {1,2,3};
     final public static double P = 1.0;
@@ -13,7 +13,7 @@ public final class Constants {
   }
 
   public static class IntakeConstants {
-    final public static int intakeMotorPort = 0;
+    final public static int intakeMotorPort = 21;
     final public static double intakeMotorSpeed = 0.25;
     final public static double timerLength = 2;
     final public static double clawIntakeSpeed = 0.25;
@@ -22,7 +22,7 @@ public final class Constants {
   }
 
   public static class ScoringConstants {
-    final public static int scoringMotorPort = 0;
+    final public static int scoringMotorPort = 22;
     final public static int beamBreakMotorPort = 0;
     // Circumference / Tick
     final public static int EnMotorRatio = 0/4096;
@@ -31,7 +31,7 @@ public final class Constants {
   public static class oiConstants {
     
     final public static int driverControllerPort = 0;
-    final public static int operatorControllerPort = 0;
+    final public static int operatorControllerPort = 1;
     
     }
 

@@ -11,10 +11,10 @@ import static frc.robot.Constants.IntakeConstants.*;
 
 public class IntakeSubsystem extends SubsystemBase {
   
-  static TalonFX intakeMotor;
+  TalonFX intakeMotor;
   
   public IntakeSubsystem() {
-    intakeMotor = new TalonFX(intakeMotorPort);
+    intakeMotor = new TalonFX(intakeMotorPort, "Canivore");
   }
 
   public void setIntakeMotorSpeed(double speed) {

@@ -11,18 +11,19 @@ import edu.wpi.first.wpilibj.DoubleSolenoid;
 import edu.wpi.first.wpilibj.PneumaticsModuleType;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import static frc.robot.Constants.ElevatorConstants.*;
+import static frc.robot.Constants.IntakeConstants.intakeMotorPort;
 
 
 public class ClawElevatorSubsystem extends SubsystemBase {
 
-  static TalonFX elevatorMotor;
+  TalonFX elevatorMotor;
   static DoubleSolenoid ratchetPiston;
   static PIDController ElevatorPID;
   private static int currentPosition;
 
   
   public ClawElevatorSubsystem() {
-    elevatorMotor = new TalonFX(clawElevatorPort);
+    elevatorMotor = new TalonFX(clawElevatorPort, "Canivore");
     ratchetPiston = new DoubleSolenoid(ratchetPistonPort[0], PneumaticsModuleType.CTREPCM, ratchetPistonPort[1], ratchetPistonPort[2]);
 
 

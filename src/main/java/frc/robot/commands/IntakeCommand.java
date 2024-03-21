@@ -17,7 +17,7 @@ public class IntakeCommand extends Command {
   private static boolean beamBreakTriggered;
   
 
-  public IntakeCommand(IntakeSubsystem intakeSubsystem, OI operatorInput, ClawScoringSubsystem clawScoringSubsystem){
+  public IntakeCommand(IntakeSubsystem intakeSubsystem, ClawScoringSubsystem clawScoringSubsystem){
     m_intakeSubsystem = intakeSubsystem;
     m_clawScoringSubsystem = clawScoringSubsystem;
     addRequirements(intakeSubsystem, clawScoringSubsystem);
@@ -26,8 +26,6 @@ public class IntakeCommand extends Command {
   
   @Override
   public void initialize() {
-    m_intakeSubsystem.setIntakeMotorSpeed(intakeMotorSpeed);
-    m_clawScoringSubsystem.setIntakeMotorSpeed(clawIntakeSpeed);
 
     beamBreakTriggered = false;
   }
@@ -35,6 +33,10 @@ public class IntakeCommand extends Command {
  
   @Override
   public void execute() {
+
+    m_intakeSubsystem.setIntakeMotorSpeed(intakeMotorSpeed);
+    m_clawScoringSubsystem.setIntakeMotorSpeed(clawIntakeSpeed);
+
     if (!m_clawScoringSubsystem.getBeamBreak() && beamBreakTriggered == false) {
       m_clawScoringSubsystem.resetEncoder();
       beamBreakTriggered = true;
@@ -52,6 +54,6 @@ public class IntakeCommand extends Command {
   
   @Override
   public boolean isFinished() {
-    return beamBreakTriggered;
+    return false;
   }
 }

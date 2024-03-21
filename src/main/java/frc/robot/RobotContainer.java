@@ -58,13 +58,12 @@ public class RobotContainer {
   public ClawScoringCommand m_ClawScoringCommand = new ClawScoringCommand(m_ClawScoringSubsystem);
   public ClimberCommand m_ClimberCommand = new ClimberCommand(m_ClimberSubsystem);
   public ElevatorPosition m_ElevatorPosition = new ElevatorPosition(m_ClawElevatorSubsystem);
-  public IntakeCommand m_IntakeCommand = new IntakeCommand(m_IntakeSubsystem, operatorInput, m_ClawScoringSubsystem);
+  public IntakeCommand m_IntakeCommand = new IntakeCommand(m_IntakeSubsystem, m_ClawScoringSubsystem);
   public NearestTrapCommand m_NearestTrapCommand = new NearestTrapCommand(m_SwerveDriveTrain);
 
-  public Compressor m_compressor = new Compressor(0, PneumaticsModuleType.CTREPCM);
-  
+  public Compressor m_compressor = new Compressor(0, PneumaticsModuleType.CTREPCM);  
 
-   private double MaxSpeed = TunerConstants.kSpeedAt12VoltsMps; // kSpeedAt12VoltsMps desired top speed
+  private double MaxSpeed = TunerConstants.kSpeedAt12VoltsMps; // kSpeedAt12VoltsMps desired top speed
   private double MaxAngularRate = 1.5 * Math.PI; // 3/4 of a rotation per second max angular velocity
 
   /* Setting up bindings for necessary control of the swerve drive platform */ 
@@ -89,10 +88,12 @@ public class RobotContainer {
     operatorInput.getDriverController().b().whileTrue(m_SwerveDriveTrain
         .applyRequest(() -> point.withModuleDirection(new Rotation2d(-operatorInput.getDriverController().getLeftY(), -operatorInput.getDriverController().getLeftX()))));
 
-    // reset the field-centric heading on left bumper press
+    //reset the field-centric heading on left bumper press
     operatorInput.getDriverController().leftBumper().onTrue(m_SwerveDriveTrain.runOnce(() -> m_SwerveDriveTrain.seedFieldRelative()));
     
-    operatorInput.getDriverController().leftTrigger(0.5).onTrue(m_IntakeCommand);
+    
+    
+    operatorInput.getDriverController().leftTrigger(0.5).whileTrue(m_IntakeCommand);
     
 
 
@@ -104,6 +105,7 @@ public class RobotContainer {
 
   public RobotContainer() {
     configureBindings();
+    m_compressor.enableAnalog(0, 60);
   }
 
   public Command getAutonomousCommand() {

@@ -20,7 +20,7 @@ public class ClawScoringSubsystem extends SubsystemBase {
 
   
   public ClawScoringSubsystem() {
-    scoringMotor = new TalonFX(scoringMotorPort);
+    scoringMotor = new TalonFX(scoringMotorPort, "Canivore");
     beamBreak = new DigitalInput(beamBreakMotorPort);
   }
 
