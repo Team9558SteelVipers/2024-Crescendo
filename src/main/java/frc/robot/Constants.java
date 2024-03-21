@@ -7,7 +7,7 @@ public final class Constants {
     final public static int clawElevatorPort = 0;
     final public static double[] elevatorHeights = {0,0,0};
     final public static int[] ratchetPistonPort = {1,2,3};
-    final public static double P = 0.0;
+    final public static double P = 1.0;
     final public static double I = 0.0;
     final public static double D = 0.0;
   }
