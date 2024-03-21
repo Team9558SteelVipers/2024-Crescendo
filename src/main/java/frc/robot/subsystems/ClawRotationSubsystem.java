@@ -4,16 +4,21 @@
 
 package frc.robot.subsystems;
 
+import edu.wpi.first.wpilibj.Compressor;
 import edu.wpi.first.wpilibj.DoubleSolenoid;
+import edu.wpi.first.wpilibj.PneumaticsModuleType;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 
 public class ClawRotationSubsystem extends SubsystemBase {
 
   static DoubleSolenoid clawRotationPiston;
+  static Compressor compressor;
   
   
   public ClawRotationSubsystem() {
-    clawRotationPiston = new DoubleSolenoid(null,0,0);
+    clawRotationPiston = new DoubleSolenoid(PneumaticsModuleType.CTREPCM,0,0);
+    compressor = new Compressor(PneumaticsModuleType.CTREPCM);
+    
   }// have to fill in modle type, foward port, reverse port
 
   public void setClawRotationPiston(Boolean clawRotationPistonValue) {

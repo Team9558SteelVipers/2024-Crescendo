@@ -10,7 +10,6 @@ import frc.robot.subsystems.ClimberSubsystem;
 
 public class ClimberCommand extends Command {
 @SuppressWarnings({"PMD.UnusedPrivateField", "PMD.SingularField"})
-DigitalInput toplimitSwitch = new DigitalInput(0);
 boolean toplimitSwitchBoolean;
 
 private final ClimberSubsystem m_subsystem;
@@ -34,12 +33,7 @@ public void execute() {
 * returns as true or false
 * ps. the chicken got ran over 
 */
-  toplimitSwitchBoolean = toplimitSwitch.get();
-    if (toplimitSwitchBoolean) {
-      m_subsystem.climberUp(0);
-    } else {
-      //Do Nothing
-  }
+ 
 }
 
 @Override

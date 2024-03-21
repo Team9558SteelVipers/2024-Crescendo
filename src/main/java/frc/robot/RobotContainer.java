@@ -6,6 +6,9 @@ package frc.robot;
 
 
 import com.ctre.phoenix6.mechanisms.swerve.SwerveModule.DriveRequestType;
+
+import javax.print.attribute.standard.Compression;
+
 import com.ctre.phoenix6.Utils;
 import com.ctre.phoenix6.mechanisms.swerve.SwerveRequest;
 import com.pathplanner.lib.auto.AutoBuilder;
@@ -14,6 +17,8 @@ import com.pathplanner.lib.path.PathPlannerPath;
 import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.math.geometry.Translation2d;
+import edu.wpi.first.wpilibj.Compressor;
+import edu.wpi.first.wpilibj.PneumaticsModuleType;
 import edu.wpi.first.wpilibj2.command.Command;
 import frc.robot.commands.ClawRotationCommand;
 import frc.robot.commands.ClawScoringCommand;
@@ -56,6 +61,9 @@ public class RobotContainer {
   public IntakeCommand m_IntakeCommand = new IntakeCommand(m_IntakeSubsystem, operatorInput, m_ClawScoringSubsystem);
   public NearestTrapCommand m_NearestTrapCommand = new NearestTrapCommand(m_SwerveDriveTrain);
 
+  public Compressor m_compressor = new Compressor(0, PneumaticsModuleType.CTREPCM);
+  
+
    private double MaxSpeed = TunerConstants.kSpeedAt12VoltsMps; // kSpeedAt12VoltsMps desired top speed
   private double MaxAngularRate = 1.5 * Math.PI; // 3/4 of a rotation per second max angular velocity
 
@@ -82,12 +90,10 @@ public class RobotContainer {
         .applyRequest(() -> point.withModuleDirection(new Rotation2d(-operatorInput.getDriverController().getLeftY(), -operatorInput.getDriverController().getLeftX()))));
 
     // reset the field-centric heading on left bumper press
-    operatorInput.getDriverController().leftBumper(null).onTrue(m_SwerveDriveTrain.runOnce(() -> m_SwerveDriveTrain.seedFieldRelative()));
-    operatorInput.getDriverController().rightBumper().onTrue(m_IntakeCommand);
-    operatorInput.getDriverController().x().whileTrue(m_ClawScoringCommand);
-    operatorInput.getDriverController().y().whileTrue(m_ClimberCommand);
-    operatorInput.getDriverController().rightTrigger(0.5);
-    operatorInput.getDriverController().leftTrigger(0.5);
+    operatorInput.getDriverController().leftBumper().onTrue(m_SwerveDriveTrain.runOnce(() -> m_SwerveDriveTrain.seedFieldRelative()));
+    
+    operatorInput.getDriverController().leftTrigger(0.5).onTrue(m_IntakeCommand);
+    
 
 
     if (Utils.isSimulation()) {
