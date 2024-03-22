@@ -11,13 +11,15 @@ import javax.print.attribute.standard.Compression;
 
 import com.ctre.phoenix6.Utils;
 import com.ctre.phoenix6.mechanisms.swerve.SwerveRequest;
+import com.ctre.phoenix6.mechanisms.swerve.utility.PhoenixPIDController;
 import com.pathplanner.lib.auto.AutoBuilder;
 import com.pathplanner.lib.path.PathPlannerPath;
 
+import edu.wpi.first.math.filter.SlewRateLimiter;
 import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.math.geometry.Translation2d;
-import edu.wpi.first.wpilibj.Compressor;
+import edu.wpi.first.wpilibj.PneumaticsControlModule;
 import edu.wpi.first.wpilibj.PneumaticsModuleType;
 import edu.wpi.first.wpilibj2.command.Command;
 import frc.robot.commands.ClawRotationCommand;
@@ -25,6 +27,7 @@ import frc.robot.commands.ClawScoringCommand;
 import frc.robot.commands.ClimberCommand;
 import frc.robot.commands.ElevatorPosition;
 import frc.robot.commands.IntakeCommand;
+import frc.robot.commands.InverseIntake;
 import frc.robot.commands.NearestTrapCommand;
 import frc.robot.subsystems.ClawElevatorSubsystem;
 import frc.robot.subsystems.ClawRotationSubsystem;
@@ -53,48 +56,64 @@ public class RobotContainer {
   public ClawRotationSubsystem m_ClawRotationSubsystem = new ClawRotationSubsystem();
   public ClawElevatorSubsystem m_ClawElevatorSubsystem = new ClawElevatorSubsystem();
   public VisionSubsystem m_VisionSubsystem = new VisionSubsystem();
+  public PneumaticsControlModule m_PCM = new PneumaticsControlModule(30);
 
   public ClawRotationCommand m_ClawRotationCommand = new ClawRotationCommand(m_ClawRotationSubsystem);
   public ClawScoringCommand m_ClawScoringCommand = new ClawScoringCommand(m_ClawScoringSubsystem);
   public ClimberCommand m_ClimberCommand = new ClimberCommand(m_ClimberSubsystem);
   public ElevatorPosition m_ElevatorPosition = new ElevatorPosition(m_ClawElevatorSubsystem);
   public IntakeCommand m_IntakeCommand = new IntakeCommand(m_IntakeSubsystem, m_ClawScoringSubsystem);
+  public InverseIntake m_InverseIntakeCommand = new InverseIntake(m_IntakeSubsystem, m_ClawScoringSubsystem);
   public NearestTrapCommand m_NearestTrapCommand = new NearestTrapCommand(m_SwerveDriveTrain);
 
-  public Compressor m_compressor = new Compressor(0, PneumaticsModuleType.CTREPCM);  
+  /* ====================================================================================== SWERVE DRIVE CONFIGURATION | START */
+  // PARAMETERS
+  private static double MaxSpeed = TunerConstants.kSpeedAt12VoltsMps; // kSpeedAt12VoltsMps desired top speed
+  private static double PercentMinSpeed = 0.2;
+  private static double MaxAngularRate = 1.5 * Math.PI; // 3/4 of a rotation per second max angular velocity
+  private static double PercentLimit = 0.60; // base speed is percent of maxspeed
+  private static double ZeroToMaxTime = 0.7; // time to reach max speed in seconds
+  private static double PercentDeadband = 0.1;
 
-  private double MaxSpeed = TunerConstants.kSpeedAt12VoltsMps; // kSpeedAt12VoltsMps desired top speed
-  private double MaxAngularRate = 1.5 * Math.PI; // 3/4 of a rotation per second max angular velocity
-
-  /* Setting up bindings for necessary control of the swerve drive platform */ 
-
+  private static PhoenixPIDController HeadingController = new PhoenixPIDController(5, 0, 0);
+  /* ======================================================================================== SWERVE DRIVE CONFIGURATION | END */
+  
+  private static double PercentGas = (1.0 - PercentLimit) > 0.0 ? 1.0 - PercentLimit : 0.0; // Make sure gas mulitplier doesn't become negative
+  private static double PercentBrake = (PercentLimit - PercentMinSpeed) > 0.0 ? PercentLimit - PercentMinSpeed : 0.0; // Make sure PercentLimit >= PercentMinSpeed;
+  private static double Acceleration = MaxSpeed/ZeroToMaxTime;
+  
+  private static SlewRateLimiter xVelRateLimited = new SlewRateLimiter(Acceleration);
+  private static SlewRateLimiter yVelRateLimited = new SlewRateLimiter(Acceleration);
+  
   private final SwerveRequest.FieldCentric drive = new SwerveRequest.FieldCentric()
-      .withDeadband(MaxSpeed * 0.1).withRotationalDeadband(MaxAngularRate * 0.1) // Add a 10% deadband
-      .withDriveRequestType(DriveRequestType.OpenLoopVoltage); // I want field-centric
-                                                               // driving in open loop
-  private final SwerveRequest.SwerveDriveBrake brake = new SwerveRequest.SwerveDriveBrake();
-  private final SwerveRequest.PointWheelsAt point = new SwerveRequest.PointWheelsAt();
+      .withDeadband(MaxSpeed * PercentDeadband).withRotationalDeadband(MaxAngularRate * PercentDeadband) // Add a 10% deadband
+      .withDriveRequestType(DriveRequestType.OpenLoopVoltage);
+
+  private final SwerveRequest.FieldCentricFacingAngle driveFacing = new SwerveRequest.FieldCentricFacingAngle()
+      .withDeadband(MaxSpeed * PercentDeadband) // Add a 10% deadband
+      .withDriveRequestType(DriveRequestType.OpenLoopVoltage);
+  
   private final Telemetry logger = new Telemetry(MaxSpeed);
 
   private void configureBindings() {
-    m_SwerveDriveTrain.setDefaultCommand( // Drivetrain will execute this command periodically
-        m_SwerveDriveTrain.applyRequest(() -> drive.withVelocityX(-operatorInput.getDriverController().getLeftY() * MaxSpeed) // Drive forward with
-                                                                                           // negative Y (forward)
-            .withVelocityY(-operatorInput.getDriverController().getLeftX() * MaxSpeed) // Drive left with negative X (left)
-            .withRotationalRate(-operatorInput.getDriverController().getRightX() * MaxAngularRate) // Drive counterclockwise with negative X (left)
-        ));
+    // m_SwerveDriveTrain.setDefaultCommand( // Drivetrain will execute this command periodically
+    //     m_SwerveDriveTrain.applyRequest(() -> drive.withVelocityX(-operatorInput.getDriverController().getLeftY() * MaxSpeed) // Drive forward with
+    //                                                                                        // negative Y (forward)
+    //         .withVelocityY(-operatorInput.getDriverController().getLeftX() * MaxSpeed) // Drive left with negative X (left)
+    //         .withRotationalRate(-operatorInput.getDriverController().getRightX() * MaxAngularRate) // Drive counterclockwise with negative X (left)
+    //     ));
 
-    operatorInput.getDriverController().a().whileTrue(m_SwerveDriveTrain.applyRequest(() -> brake));
-    operatorInput.getDriverController().b().whileTrue(m_SwerveDriveTrain
-        .applyRequest(() -> point.withModuleDirection(new Rotation2d(-operatorInput.getDriverController().getLeftY(), -operatorInput.getDriverController().getLeftX()))));
+    // operatorInput.getDriverController().a().whileTrue(m_SwerveDriveTrain.applyRequest(() -> brake));
+    // operatorInput.getDriverController().b().whileTrue(m_SwerveDriveTrain
+    //     .applyRequest(() -> point.withModuleDirection(new Rotation2d(-operatorInput.getDriverController().getLeftY(), -operatorInput.getDriverController().getLeftX()))));
 
     //reset the field-centric heading on left bumper press
-    operatorInput.getDriverController().leftBumper().onTrue(m_SwerveDriveTrain.runOnce(() -> m_SwerveDriveTrain.seedFieldRelative()));
+    // operatorInput.getDriverController().leftBumper().onTrue(m_SwerveDriveTrain.runOnce(() -> m_SwerveDriveTrain.seedFieldRelative()));
     
     
-    
-    operatorInput.getDriverController().leftTrigger(0.5).whileTrue(m_IntakeCommand);
-    
+    operatorInput.getOperatorController().leftTrigger(0.5).whileTrue(m_IntakeCommand);
+    operatorInput.getOperatorController().rightTrigger(0.5).whileTrue(m_InverseIntakeCommand);
+    //operatorInput.getOperatorController().leftBumper().runOnce(m_ClawRotationCommand);
 
 
     if (Utils.isSimulation()) {
@@ -105,7 +124,69 @@ public class RobotContainer {
 
   public RobotContainer() {
     configureBindings();
-    m_compressor.enableAnalog(0, 60);
+    configureDrivetrain();
+  }
+
+  private void configureDrivetrain() {
+    driveFacing.HeadingController = HeadingController;
+    
+    operatorInput.getDriverController().x().onTrue(m_SwerveDriveTrain.runOnce(() -> 
+    {
+      m_SwerveDriveTrain.seedFieldRelative();
+    }
+    ));
+    
+    operatorInput.getDriverController().y().onTrue(m_SwerveDriveTrain.runOnce(() -> m_SwerveDriveTrain.setHeadingToMaintain(new Rotation2d(0.0, 1.0))));
+    operatorInput.getDriverController().a().onTrue(m_SwerveDriveTrain.runOnce(() -> m_SwerveDriveTrain.setHeadingToMaintain(new Rotation2d(0.0, -1.0))));
+
+
+    //m_drivetrainSubsystem.setHeadingToMaintain(m_drivetrainSubsystem.getCurrentRobotHeading());
+
+    m_SwerveDriveTrain.setDefaultCommand( // Drivetrain will execute this command periodically
+      m_SwerveDriveTrain.applyRequest(
+
+        operatorInput.getDriverController(), // provide controller inputs to know when to use FieldCentricFacingAngle
+
+        () -> drive
+          .withVelocityX(
+            xVelRateLimited.calculate( // control acceleration
+              (-operatorInput.getDriverController().getLeftY() * MaxSpeed) // Drive forward with negative Y (forward)
+              * (PercentLimit // limit base speed
+              + (operatorInput.getDriverController().getRightTriggerAxis()*PercentGas) // Right Trigger to increase to max speed
+              - (operatorInput.getDriverController().getLeftTriggerAxis()*PercentBrake)) // Left Trigger to decrease to min speed
+            )
+          ) 
+          .withVelocityY(
+            yVelRateLimited.calculate(
+              (-operatorInput.getDriverController().getLeftX() * MaxSpeed) // Drive left with negative X (left)
+              * (PercentLimit // limit base speed
+              + (operatorInput.getDriverController().getRightTriggerAxis()*PercentGas) // Right Trigger to increase to max speed
+              - (operatorInput.getDriverController().getLeftTriggerAxis()*PercentBrake)) // Left Trigger to decrease to min speed
+            )
+          ) 
+          .withRotationalRate(-operatorInput.getDriverController().getRightX()*MaxAngularRate), // Drive counterclockwise with negative X (left)
+       
+       
+          () -> driveFacing
+          .withVelocityX(
+            xVelRateLimited.calculate( // control acceleration
+              (-operatorInput.getDriverController().getLeftY() * MaxSpeed) // Drive forward with negative Y (forward)
+              * (PercentLimit // limit base speed
+              + (operatorInput.getDriverController().getRightTriggerAxis()*PercentGas) // Right Trigger to increase to max speed
+              - (operatorInput.getDriverController().getLeftTriggerAxis()*PercentBrake)) // Left Trigger to decrease to min speed
+            )
+          )
+          .withVelocityY(
+            yVelRateLimited.calculate(
+              (-operatorInput.getDriverController().getLeftX() * MaxSpeed) // Drive left with negative X (left)
+              * (PercentLimit // limit base speed
+              + (operatorInput.getDriverController().getRightTriggerAxis()*PercentGas) // Right Trigger to increase to max speed
+              - (operatorInput.getDriverController().getLeftTriggerAxis()*PercentBrake)) // Left Trigger to decrease to min speed
+            )
+          ) 
+          .withTargetDirection(m_SwerveDriveTrain.getHeadingToMaintain()) // Maintain last known heading
+      )
+    );
   }
 
   public Command getAutonomousCommand() {

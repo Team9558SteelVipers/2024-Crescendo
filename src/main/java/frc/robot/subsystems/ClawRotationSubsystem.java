@@ -7,6 +7,7 @@ package frc.robot.subsystems;
 import edu.wpi.first.wpilibj.DoubleSolenoid;
 import edu.wpi.first.wpilibj.PneumaticsModuleType;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
+import frc.robot.Constants;
 
 public class ClawRotationSubsystem extends SubsystemBase {
 
@@ -14,7 +15,7 @@ public class ClawRotationSubsystem extends SubsystemBase {
   
   
   public ClawRotationSubsystem() {
-    clawRotationPiston = new DoubleSolenoid(PneumaticsModuleType.CTREPCM,0,0);
+    clawRotationPiston = new DoubleSolenoid(PneumaticsModuleType.CTREPCM,Constants.ScoringConstants.ClawPistonPorts[0],Constants.ScoringConstants.ClawPistonPorts[1]);
     
   }// have to fill in modle type, foward port, reverse port
 

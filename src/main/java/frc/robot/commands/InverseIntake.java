@@ -10,14 +10,14 @@ import frc.robot.subsystems.ClawScoringSubsystem;
 import frc.robot.subsystems.IntakeSubsystem;
 import static frc.robot.Constants.IntakeConstants.*;
 
-public class IntakeCommand extends Command {
+public class InverseIntake extends Command {
   
   private static IntakeSubsystem m_intakeSubsystem;
   private static ClawScoringSubsystem m_clawScoringSubsystem;
   private static boolean beamBreakTriggered;
   
 
-  public IntakeCommand(IntakeSubsystem intakeSubsystem, ClawScoringSubsystem clawScoringSubsystem){
+  public InverseIntake(IntakeSubsystem intakeSubsystem, ClawScoringSubsystem clawScoringSubsystem){
     m_intakeSubsystem = intakeSubsystem;
     m_clawScoringSubsystem = clawScoringSubsystem;
     addRequirements(intakeSubsystem, clawScoringSubsystem);
@@ -34,8 +34,8 @@ public class IntakeCommand extends Command {
   @Override
   public void execute() {
 
-    m_intakeSubsystem.setIntakeMotorSpeed(0.5);
-    m_clawScoringSubsystem.setIntakeMotorSpeed(0.5);
+    m_intakeSubsystem.setIntakeMotorSpeed(-0.5);
+    m_clawScoringSubsystem.setIntakeMotorSpeed(-0.5);
 
     if (!m_clawScoringSubsystem.getBeamBreak() && beamBreakTriggered == false) {
       m_clawScoringSubsystem.resetEncoder();

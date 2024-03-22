@@ -24,7 +24,7 @@ public class ClawElevatorSubsystem extends SubsystemBase {
   
   public ClawElevatorSubsystem() {
     elevatorMotor = new TalonFX(clawElevatorPort, "Canivore");
-    ratchetPiston = new DoubleSolenoid(ratchetPistonPort[0], PneumaticsModuleType.CTREPCM, ratchetPistonPort[1], ratchetPistonPort[2]);
+    ratchetPiston = new DoubleSolenoid(PneumaticsModuleType.CTREPCM, ratchetPistonPort[0], ratchetPistonPort[1]);
 
 
     ElevatorPID = new PIDController(P, I, D);
