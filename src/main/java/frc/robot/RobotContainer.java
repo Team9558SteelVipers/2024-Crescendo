@@ -61,7 +61,7 @@ public class RobotContainer {
   public ClawRotationCommand m_ClawRotationCommand = new ClawRotationCommand(m_ClawRotationSubsystem);
   public ClawScoringCommand m_ClawScoringCommand = new ClawScoringCommand(m_ClawScoringSubsystem);
   public ClimberCommand m_ClimberCommand = new ClimberCommand(m_ClimberSubsystem);
-  public ElevatorPosition m_ElevatorPosition = new ElevatorPosition(m_ClawElevatorSubsystem);
+  public ElevatorPosition m_ElevatorPosition = new ElevatorPosition(m_ClawElevatorSubsystem, m_ClawRotationSubsystem);
   public IntakeCommand m_IntakeCommand = new IntakeCommand(m_IntakeSubsystem, m_ClawScoringSubsystem);
   public InverseIntake m_InverseIntakeCommand = new InverseIntake(m_IntakeSubsystem, m_ClawScoringSubsystem);
   public NearestTrapCommand m_NearestTrapCommand = new NearestTrapCommand(m_SwerveDriveTrain);
@@ -113,6 +113,7 @@ public class RobotContainer {
     
     operatorInput.getOperatorController().leftTrigger(0.5).whileTrue(m_IntakeCommand);
     operatorInput.getOperatorController().rightTrigger(0.5).whileTrue(m_InverseIntakeCommand);
+    operatorInput.getOperatorController().x().onTrue(m_ElevatorPosition);
     //operatorInput.getOperatorController().leftBumper().runOnce(m_ClawRotationCommand);
 
 

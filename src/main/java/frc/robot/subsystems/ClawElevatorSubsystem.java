@@ -4,14 +4,18 @@
 
 package frc.robot.subsystems;
 
+import com.ctre.phoenix6.configs.MotorOutputConfigs;
+import com.ctre.phoenix6.configs.TalonFXConfiguration;
+import com.ctre.phoenix6.controls.ControlRequest;
+import com.ctre.phoenix6.controls.PositionVoltage;
 import com.ctre.phoenix6.hardware.TalonFX;
+import com.ctre.phoenix6.signals.NeutralModeValue;
 
 import edu.wpi.first.math.controller.PIDController;
 import edu.wpi.first.wpilibj.DoubleSolenoid;
 import edu.wpi.first.wpilibj.PneumaticsModuleType;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import static frc.robot.Constants.ElevatorConstants.*;
-import static frc.robot.Constants.IntakeConstants.intakeMotorPort;
 
 
 public class ClawElevatorSubsystem extends SubsystemBase {
@@ -20,21 +24,30 @@ public class ClawElevatorSubsystem extends SubsystemBase {
   static DoubleSolenoid ratchetPiston;
   static PIDController ElevatorPID;
   private static int currentPosition;
-
+  private static boolean isAtBottom;
+  MotorOutputConfigs motorConfig;
+  
   
   public ClawElevatorSubsystem() {
     elevatorMotor = new TalonFX(clawElevatorPort, "Canivore");
+    motorConfig = new MotorOutputConfigs();
     ratchetPiston = new DoubleSolenoid(PneumaticsModuleType.CTREPCM, ratchetPistonPort[0], ratchetPistonPort[1]);
+    elevatorMotor.getConfigurator().apply(motorConfig);
+    ElevatorPID = new PIDController(P, I, D);   
+    elevatorMotor.setNeutralMode(NeutralModeValue.Brake);
+    elevatorMotor.setPosition(0.0);
+    isAtBottom = true;
+    motorConfig.PeakForwardDutyCycle = 0.3;
+    motorConfig.PeakReverseDutyCycle = -0.3;
+    
+    elevatorMotor.setInverted(true);
 
-
-    ElevatorPID = new PIDController(P, I, D);
   }
 
   // Uses the PID to calculate motor speed based on how far it is from desired position
-  public void setElevatorMotorPosition(int index){
-    setElevatorMotor(ElevatorPID.calculate(elevatorHeights[index] - getEncoderPosition()));
-    currentPosition = index;
-  }
+  public void setElevatorMotorPosition(double position){
+    elevatorMotor.setControl(new PositionVoltage(position));
+  } 
 
 
   public double getEncoderPosition() {
@@ -49,6 +62,23 @@ public class ClawElevatorSubsystem extends SubsystemBase {
 
   public void setElevatorMotor(double speed) {
     elevatorMotor.set(speed);
+  }
+
+  public void setElevatorToTop()
+  {
+    setElevatorMotorPosition(29); // TODO save as constant
+    isAtBottom = false;
+  }
+
+  public boolean isAtBottom()
+  {
+    return isAtBottom;
+  }
+  
+  public void setElevatortoBotom()
+  {
+    setElevatorMotorPosition(0); // TODO save as constant
+    isAtBottom = true;
   }
 
 

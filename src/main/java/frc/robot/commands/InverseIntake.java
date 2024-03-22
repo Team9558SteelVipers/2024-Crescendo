@@ -37,11 +37,6 @@ public class InverseIntake extends Command {
     m_intakeSubsystem.setIntakeMotorSpeed(-0.5);
     m_clawScoringSubsystem.setIntakeMotorSpeed(-0.5);
 
-    if (!m_clawScoringSubsystem.getBeamBreak() && beamBreakTriggered == false) {
-      m_clawScoringSubsystem.resetEncoder();
-      beamBreakTriggered = true;
-    }
-
   }
 
   

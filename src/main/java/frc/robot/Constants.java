@@ -5,9 +5,9 @@ public final class Constants {
   public static class ElevatorConstants {
     // The elevator heights will contain the encoder values for each of the heights
     final public static int clawElevatorPort = 23;
-    final public static double[] elevatorHeights = {-0.307617,-21.181641};
+    final public static double[] elevatorHeights = {-0.157617,-20.81641};
     final public static int[] ratchetPistonPort = {2,5};
-    final public static double P = 1.0;
+    final public static double P = 0.1;
     final public static double I = 0.0;
     final public static double D = 0.0;
   }
@@ -32,7 +32,7 @@ public final class Constants {
   public static class oiConstants {
     
     final public static int driverControllerPort = 0;
-    final public static int operatorControllerPort = 2;
+    final public static int operatorControllerPort = 1;
     
     }
 

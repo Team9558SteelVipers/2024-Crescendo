@@ -34,14 +34,8 @@ public class IntakeCommand extends Command {
   @Override
   public void execute() {
 
-    m_intakeSubsystem.setIntakeMotorSpeed(0.5);
-    m_clawScoringSubsystem.setIntakeMotorSpeed(0.5);
-
-    if (!m_clawScoringSubsystem.getBeamBreak() && beamBreakTriggered == false) {
-      m_clawScoringSubsystem.resetEncoder();
-      beamBreakTriggered = true;
-    }
-
+    m_intakeSubsystem.setIntakeMotorSpeed(0.50);
+    m_clawScoringSubsystem.setIntakeMotorSpeed(0.50);
   }
 
   
@@ -54,6 +48,6 @@ public class IntakeCommand extends Command {
   
   @Override
   public boolean isFinished() {
-    return false;
+    return !m_clawScoringSubsystem.getBeamBreak();
   }
 }
