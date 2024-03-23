@@ -15,6 +15,7 @@ import edu.wpi.first.math.filter.SlewRateLimiter;
 import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.math.geometry.Translation2d;
+import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.InstantCommand;
 import frc.robot.commands.ClawRotationCommand;
@@ -44,21 +45,21 @@ public class RobotContainer {
   // The robot's subsystems and commands are defined here...
   public OI operatorInput = new OI();
 
-  public CommandSwerveDrivetrain m_SwerveDriveTrain = TunerConstants.DriveTrain;
-  public IntakeSubsystem m_IntakeSubsystem = new IntakeSubsystem();
-  public ClimberSubsystem m_ClimberSubsystem = new ClimberSubsystem();
-  public ClawScoringSubsystem m_ClawScoringSubsystem = new ClawScoringSubsystem();
-  public ClawRotationSubsystem m_ClawRotationSubsystem = new ClawRotationSubsystem();
-  public ClawElevatorSubsystem m_ClawElevatorSubsystem = new ClawElevatorSubsystem();
-  public VisionSubsystem m_VisionSubsystem = new VisionSubsystem();
+  public static final CommandSwerveDrivetrain m_SwerveDriveTrain = TunerConstants.DriveTrain;
+  public static final IntakeSubsystem m_IntakeSubsystem = new IntakeSubsystem();
+  public static final ClimberSubsystem m_ClimberSubsystem = new ClimberSubsystem();
+  public static final ClawScoringSubsystem m_ClawScoringSubsystem = new ClawScoringSubsystem();
+  public static final ClawRotationSubsystem m_ClawRotationSubsystem = new ClawRotationSubsystem();
+  public static final ClawElevatorSubsystem m_ClawElevatorSubsystem = new ClawElevatorSubsystem();
+  public static final VisionSubsystem m_VisionSubsystem = new VisionSubsystem();
 
-  public ClawRotationCommand m_ClawRotationCommand = new ClawRotationCommand(m_ClawRotationSubsystem);
-  public ScoringCommand m_ScoringCommand = new ScoringCommand(m_ClawScoringSubsystem);
-  public ClimberCommand m_ClimberCommand = new ClimberCommand(m_ClimberSubsystem);
-  public ElevatorPosition m_ElevatorPosition = new ElevatorPosition(m_ClawElevatorSubsystem, m_ClawRotationSubsystem);
-  public IntakeCommand m_IntakeCommand = new IntakeCommand(m_IntakeSubsystem, m_ClawScoringSubsystem);
-  public InverseIntake m_InverseIntakeCommand = new InverseIntake(m_IntakeSubsystem, m_ClawScoringSubsystem);
-  public NearestTrapCommand m_NearestTrapCommand = new NearestTrapCommand(m_SwerveDriveTrain);
+  public static final ClawRotationCommand m_ClawRotationCommand = new ClawRotationCommand(m_ClawRotationSubsystem);
+  public static final ScoringCommand m_ScoringCommand = new ScoringCommand(m_ClawScoringSubsystem);
+  public static final ClimberCommand m_ClimberCommand = new ClimberCommand(m_ClimberSubsystem);
+  public static final ElevatorPosition m_ElevatorPosition = new ElevatorPosition(m_ClawElevatorSubsystem, m_ClawRotationSubsystem);
+  public static final IntakeCommand m_IntakeCommand = new IntakeCommand(m_IntakeSubsystem, m_ClawScoringSubsystem);
+  public static final InverseIntake m_InverseIntakeCommand = new InverseIntake(m_IntakeSubsystem, m_ClawScoringSubsystem);
+  public static final NearestTrapCommand m_NearestTrapCommand = new NearestTrapCommand(m_SwerveDriveTrain);
 
   /* ====================================================================================== SWERVE DRIVE CONFIGURATION | START */
   // PARAMETERS
@@ -70,6 +71,8 @@ public class RobotContainer {
   private static double PercentDeadband = 0.1;
 
   private static PhoenixPIDController HeadingController = new PhoenixPIDController(5, 0, 0);
+
+  private final SendableChooser<Command> m_autoChooser = new SendableChooser<Command>();
   /* ======================================================================================== SWERVE DRIVE CONFIGURATION | END */
   
   private static double PercentGas = (1.0 - PercentLimit) > 0.0 ? 1.0 - PercentLimit : 0.0; // Make sure gas mulitplier doesn't become negative
@@ -190,15 +193,45 @@ public class RobotContainer {
     );
   }
 
-  public Command getAutonomousCommand() {
-    
-    try {
-      return m_SwerveDriveTrain.getAutoPath("forward");
-    } catch (Exception e){
-      return null;
-    }
-    
-  }
+  public Command getAutonomousCommand(double speed) {
+    return m_SwerveDriveTrain.getAutoPath("forward");
+    // return m_SwerveDriveTrain.applyRequest(
+
+    //     operatorInput.getDriverController(), // provide controller inputs to know when to use FieldCentricFacingAngle
+
+    //     () -> drive
+    //       .withVelocityX(
+    //         xVelRateLimited.calculate( // control acceleration
+    //           (speed* MaxSpeed) // Drive forward with negative Y (forward)
+    //           * (PercentLimit)// limit base speed
+
+    //         )
+    //       ) 
+    //       .withVelocityY(
+    //         yVelRateLimited.calculate(
+    //           (-0 * MaxSpeed) // Drive left with negative X (left)
+    //           * (PercentLimit) // limit base speed // Left Trigger to decrease to min speed
+    //         )
+    //       ) 
+    //       .withRotationalRate(-0*MaxAngularRate), // Drive counterclockwise with negative X (left)
+       
+       
+    //       () -> driveFacing
+    //       .withVelocityX(
+    //         xVelRateLimited.calculate( // control acceleration
+    //           (speed * MaxSpeed) // Drive forward with negative Y (forward)
+    //           * (PercentLimit) // limit base speed // Left Trigger to decrease to min speed
+    //         )
+    //       )
+    //       .withVelocityY(i
+    //         yVelRateLimited.calculate(
+    //           (-0 * MaxSpeed) // Drive left with negative X (left)
+    //           * (PercentLimit) // limit base speed // Left Trigger to decrease to min speed
+    //         )
+    //       ) 
+    //       .withTargetDirection(m_SwerveDriveTrain.getHeadingToMaintain()) // Maintain last known heading
+    //   );
+   }
   
 
   // Replace with CommandPS4Controller or CommandJoystick if needed

@@ -4,6 +4,8 @@
 
 package frc.robot.commands;
 
+import javax.swing.text.StyleContext.SmallAttributeSet;
+
 import edu.wpi.first.wpilibj.Timer;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
@@ -74,6 +76,7 @@ public class ElevatorPosition extends Command {
     SmartDashboard.putBoolean("Target is bottom: ", targetPositionIsBottom);
     SmartDashboard.putNumber("Encoder Position: ", m_elevatorSubsystem.getEncoderPosition());
     SmartDashboard.putNumber("Timer Value: ", m_timer.get());
+    //SmartDashboard.putBoolean("Piston extended", )
   }
 
   

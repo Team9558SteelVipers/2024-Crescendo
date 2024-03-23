@@ -5,6 +5,7 @@
 package frc.robot;
 
 import edu.wpi.first.wpilibj.TimedRobot;
+import edu.wpi.first.wpilibj.Timer;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.CommandScheduler;
@@ -17,7 +18,8 @@ import edu.wpi.first.wpilibj2.command.CommandScheduler;
  * project.
  */
 public class Robot extends TimedRobot {
-  private Command m_autonomousCommand;
+  private Command m_autonomousCommand, m_donothing;
+  private Timer m_autonTimer = new Timer();
 
   private RobotContainer m_robotContainer;
 
@@ -61,19 +63,26 @@ public class Robot extends TimedRobot {
   /** This autonomous runs the autonomous command selected by your {@link RobotContainer} class. */
   @Override
   public void autonomousInit() {
-    m_autonomousCommand = m_robotContainer.getAutonomousCommand();
-    SmartDashboard.putData("Selected Command", m_autonomousCommand);
+    m_autonTimer.reset();
+    m_autonTimer.start();
+    m_autonomousCommand = m_robotContainer.getAutonomousCommand(0.3);
+    m_donothing = m_robotContainer.getAutonomousCommand(0);
+  }
+
+  /** This function is called periodically during autonomous. */
+  @Override
+  public void autonomousPeriodic() {
 
 
     // schedule the autonomous command (example)
     if (m_autonomousCommand != null) {
       m_autonomousCommand.schedule();
     }
+    if (m_autonTimer.get() > 3) {
+      m_autonomousCommand.end(true);
+      m_donothing.schedule();
+    }
   }
-
-  /** This function is called periodically during autonomous. */
-  @Override
-  public void autonomousPeriodic() {}
 
   @Override
   public void teleopInit() {
