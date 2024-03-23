@@ -4,16 +4,11 @@
 
 package frc.robot.commands;
 
-
-import edu.wpi.first.math.MathUtil;
-import edu.wpi.first.math.controller.PIDController;
 import edu.wpi.first.wpilibj.Timer;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
 import frc.robot.subsystems.ClawElevatorSubsystem;
 import frc.robot.subsystems.ClawRotationSubsystem;
-
-import static frc.robot.Constants.ElevatorConstants.*;
 
 public class ElevatorPosition extends Command {
  
@@ -36,33 +31,45 @@ public class ElevatorPosition extends Command {
   //Iterates through the positions
   @Override
   public void initialize() {
+    // m_timer.reset();
+    // m_timer.start();
+    // if (m_elevatorSubsystem.isAtBottom())
+    // {
+    //   targetPositionIsBottom = false;
+    // }
+    // else
+    // {
+    targetPositionIsBottom = true;
+    // }
+  }
+
+  public void toggleElevatorPosition()
+  {
     m_timer.reset();
     m_timer.start();
-    if (m_elevatorSubsystem.isAtBottom())
-    {
-      targetPositionIsBottom = false;
-    }
-    else
-    {
-      targetPositionIsBottom = true;
-    }
+    targetPositionIsBottom = !targetPositionIsBottom;
   }
   
 
   @Override
   public void execute() {
-    if (m_timer.get() > 0.25){
-      //m_ClawRotationSubsystem.setClawRotationPiston(true);
-    }
+     
+  
+     
     if (targetPositionIsBottom)
     {
+      m_ClawRotationSubsystem.setClawRotationPiston(false);
       m_elevatorSubsystem.setElevatortoBotom();
 
     }
     else
     {
       m_elevatorSubsystem.setElevatorToTop();
-    }
+      if (m_timer.get()> 0.125) {
+        m_ClawRotationSubsystem.setClawRotationPiston(true);
+      }
+    } 
+    
 
     SmartDashboard.putBoolean("Target is bottom: ", targetPositionIsBottom);
     SmartDashboard.putNumber("Encoder Position: ", m_elevatorSubsystem.getEncoderPosition());
@@ -72,8 +79,8 @@ public class ElevatorPosition extends Command {
   
   @Override
   public void end(boolean interrupted) {
-    m_elevatorSubsystem.setElevatorMotor(0);
-    m_ClawRotationSubsystem.setClawRotationPiston(false);
+    //m_elevatorSubsystem.setElevatorMotor(0);
+    //m_ClawRotationSubsystem.setClawRotationPiston(false);
   }
   
 
@@ -81,7 +88,7 @@ public class ElevatorPosition extends Command {
   public boolean isFinished() {
 
     // if (targetPositionIsBottom) return m_elevatorSubsystem.getElevatorPosition() < 1;
-    return m_elevatorSubsystem.getEncoderPosition() > 19.5;
+    return false;
 
   }
 }
