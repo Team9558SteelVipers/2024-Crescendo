@@ -5,16 +5,18 @@
 package frc.robot.subsystems;
 
 import com.ctre.phoenix6.configs.MotorOutputConfigs;
+import com.ctre.phoenix6.configs.Slot0Configs;
 import com.ctre.phoenix6.configs.TalonFXConfiguration;
-import com.ctre.phoenix6.controls.ControlRequest;
 import com.ctre.phoenix6.controls.PositionVoltage;
 import com.ctre.phoenix6.hardware.TalonFX;
+import com.ctre.phoenix6.signals.GravityTypeValue;
 import com.ctre.phoenix6.signals.NeutralModeValue;
 
-import edu.wpi.first.math.controller.PIDController;
 import edu.wpi.first.wpilibj.DoubleSolenoid;
 import edu.wpi.first.wpilibj.PneumaticsModuleType;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
+import frc.robot.Constants;
+
 import static frc.robot.Constants.ElevatorConstants.*;
 
 
@@ -22,7 +24,7 @@ public class ClawElevatorSubsystem extends SubsystemBase {
 
   TalonFX elevatorMotor;
   static DoubleSolenoid ratchetPiston;
-  static PIDController ElevatorPID;
+  // static PIDController ElevatorPID;
   private static int currentPosition;
   private static boolean isAtBottom;
   MotorOutputConfigs motorConfig;
@@ -30,18 +32,35 @@ public class ClawElevatorSubsystem extends SubsystemBase {
   
   public ClawElevatorSubsystem() {
     elevatorMotor = new TalonFX(clawElevatorPort, "Canivore");
+    ratchetPiston = new DoubleSolenoid(Constants.PCM_ID, PneumaticsModuleType.CTREPCM, ratchetPistonPort[0], ratchetPistonPort[1]);
+    
+    // Modify Config Firs
     motorConfig = new MotorOutputConfigs();
-    ratchetPiston = new DoubleSolenoid(PneumaticsModuleType.CTREPCM, ratchetPistonPort[0], ratchetPistonPort[1]);
-    elevatorMotor.getConfigurator().apply(motorConfig);
-    ElevatorPID = new PIDController(P, I, D);   
+    motorConfig.PeakForwardDutyCycle = maxElevatorSpeed;
+    motorConfig.PeakReverseDutyCycle = maxReverseElevatorSpeed;
+
+    // Use this for On-Board PID Control
+    Slot0Configs elevatorPID = new Slot0Configs();
+    elevatorPID.kP = Constants.ElevatorConstants.kElevatorP;
+    elevatorPID.kI = Constants.ElevatorConstants.kElevatorI;
+    elevatorPID.kD = Constants.ElevatorConstants.kElevatorD;
+    elevatorPID.kG = Constants.ElevatorConstants.kElevatorG; // motor output to beat gravity
+    elevatorPID.GravityType = GravityTypeValue.Elevator_Static;
+    
+    TalonFXConfiguration elevatorConfigs = new TalonFXConfiguration();
+    elevatorConfigs.CurrentLimits.StatorCurrentLimit = Constants.kStatorCurrentLimit;
+    elevatorConfigs.MotorOutput = motorConfig;
+    elevatorConfigs.Slot0 = elevatorPID;
+    
+    // Then Apply Config
+    // elevatorMotor.getConfigurator().apply(motorConfig);
+    elevatorMotor.getConfigurator().apply(elevatorConfigs);
     elevatorMotor.setNeutralMode(NeutralModeValue.Brake);
     elevatorMotor.setPosition(0.0);
-    isAtBottom = true;
-    motorConfig.PeakForwardDutyCycle = 0.3;
-    motorConfig.PeakReverseDutyCycle = -0.3;
-    
     elevatorMotor.setInverted(true);
 
+    // ElevatorPID = new PIDController(P, I, D);   
+    isAtBottom = true;
   }
 
   // Uses the PID to calculate motor speed based on how far it is from desired position
@@ -66,7 +85,7 @@ public class ClawElevatorSubsystem extends SubsystemBase {
 
   public void setElevatorToTop()
   {
-    setElevatorMotorPosition(29); // TODO save as constant
+    setElevatorMotorPosition(maxHeight); 
     isAtBottom = false;
   }
 
@@ -77,7 +96,7 @@ public class ClawElevatorSubsystem extends SubsystemBase {
   
   public void setElevatortoBotom()
   {
-    setElevatorMotorPosition(0); // TODO save as constant
+    setElevatorMotorPosition(minHeight); 
     isAtBottom = true;
   }
 

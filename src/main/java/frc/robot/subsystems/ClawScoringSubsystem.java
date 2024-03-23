@@ -47,10 +47,6 @@ public class ClawScoringSubsystem extends SubsystemBase {
     return scoringMotor.getPosition().getValue() - encoderOffset;
   }
 
-  public double getRingPosition(){
-    return getEncoder() * EnMotorRatio;
-  }
-
 
   @Override
   public void periodic() {

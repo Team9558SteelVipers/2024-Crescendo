@@ -7,28 +7,23 @@ package frc.robot;
 
 import com.ctre.phoenix6.mechanisms.swerve.SwerveModule.DriveRequestType;
 
-import javax.print.attribute.standard.Compression;
 
 import com.ctre.phoenix6.Utils;
 import com.ctre.phoenix6.mechanisms.swerve.SwerveRequest;
 import com.ctre.phoenix6.mechanisms.swerve.utility.PhoenixPIDController;
-import com.pathplanner.lib.auto.AutoBuilder;
-import com.pathplanner.lib.path.PathPlannerPath;
-
 import edu.wpi.first.math.filter.SlewRateLimiter;
 import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.math.geometry.Translation2d;
-import edu.wpi.first.wpilibj.PneumaticsControlModule;
-import edu.wpi.first.wpilibj.PneumaticsModuleType;
 import edu.wpi.first.wpilibj2.command.Command;
+import edu.wpi.first.wpilibj2.command.InstantCommand;
 import frc.robot.commands.ClawRotationCommand;
-import frc.robot.commands.ClawScoringCommand;
 import frc.robot.commands.ClimberCommand;
 import frc.robot.commands.ElevatorPosition;
 import frc.robot.commands.IntakeCommand;
 import frc.robot.commands.InverseIntake;
 import frc.robot.commands.NearestTrapCommand;
+import frc.robot.commands.ScoringCommand;
 import frc.robot.subsystems.ClawElevatorSubsystem;
 import frc.robot.subsystems.ClawRotationSubsystem;
 import frc.robot.subsystems.ClawScoringSubsystem;
@@ -56,10 +51,9 @@ public class RobotContainer {
   public ClawRotationSubsystem m_ClawRotationSubsystem = new ClawRotationSubsystem();
   public ClawElevatorSubsystem m_ClawElevatorSubsystem = new ClawElevatorSubsystem();
   public VisionSubsystem m_VisionSubsystem = new VisionSubsystem();
-  public PneumaticsControlModule m_PCM = new PneumaticsControlModule(30);
 
   public ClawRotationCommand m_ClawRotationCommand = new ClawRotationCommand(m_ClawRotationSubsystem);
-  public ClawScoringCommand m_ClawScoringCommand = new ClawScoringCommand(m_ClawScoringSubsystem);
+  public ScoringCommand m_ScoringCommand = new ScoringCommand(m_ClawScoringSubsystem);
   public ClimberCommand m_ClimberCommand = new ClimberCommand(m_ClimberSubsystem);
   public ElevatorPosition m_ElevatorPosition = new ElevatorPosition(m_ClawElevatorSubsystem, m_ClawRotationSubsystem);
   public IntakeCommand m_IntakeCommand = new IntakeCommand(m_IntakeSubsystem, m_ClawScoringSubsystem);
@@ -113,7 +107,11 @@ public class RobotContainer {
     
     operatorInput.getOperatorController().leftTrigger(0.5).whileTrue(m_IntakeCommand);
     operatorInput.getOperatorController().rightTrigger(0.5).whileTrue(m_InverseIntakeCommand);
-    operatorInput.getOperatorController().x().onTrue(m_ElevatorPosition);
+    operatorInput.getOperatorController().x().onTrue(new InstantCommand(() ->
+    {
+      m_ElevatorPosition.toggleElevatorPosition();
+    }));
+    operatorInput.getOperatorController().rightBumper().whileTrue(m_ScoringCommand);
     //operatorInput.getOperatorController().leftBumper().runOnce(m_ClawRotationCommand);
 
 
@@ -124,6 +122,8 @@ public class RobotContainer {
   }
 
   public RobotContainer() {
+    m_ClawElevatorSubsystem.setDefaultCommand(m_ElevatorPosition);
+
     configureBindings();
     configureDrivetrain();
   }
@@ -191,8 +191,13 @@ public class RobotContainer {
   }
 
   public Command getAutonomousCommand() {
-    PathPlannerPath path = PathPlannerPath.fromPathFile("Forward");
-    return AutoBuilder.followPath(path);
+    
+    try {
+      return m_SwerveDriveTrain.getAutoPath("Forward");
+    } catch (Exception e){
+      return null;
+    }
+    
   }
   
 

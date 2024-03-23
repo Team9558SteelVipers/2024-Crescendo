@@ -5,7 +5,6 @@
 package frc.robot.commands;
 
 import edu.wpi.first.wpilibj2.command.Command;
-import frc.robot.OI;
 import frc.robot.subsystems.ClawScoringSubsystem;
 import frc.robot.subsystems.IntakeSubsystem;
 import static frc.robot.Constants.IntakeConstants.*;
@@ -14,7 +13,7 @@ public class IntakeCommand extends Command {
   
   private static IntakeSubsystem m_intakeSubsystem;
   private static ClawScoringSubsystem m_clawScoringSubsystem;
-  private static boolean beamBreakTriggered;
+
   
 
   public IntakeCommand(IntakeSubsystem intakeSubsystem, ClawScoringSubsystem clawScoringSubsystem){
@@ -27,15 +26,15 @@ public class IntakeCommand extends Command {
   @Override
   public void initialize() {
 
-    beamBreakTriggered = false;
+    
   }
 
  
   @Override
   public void execute() {
 
-    m_intakeSubsystem.setIntakeMotorSpeed(0.50);
-    m_clawScoringSubsystem.setIntakeMotorSpeed(0.50);
+    m_intakeSubsystem.setIntakeMotorSpeed(intakeMotorSpeed);
+    m_clawScoringSubsystem.setIntakeMotorSpeed(clawIntakeSpeed);
   }
 
   

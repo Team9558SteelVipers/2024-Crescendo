@@ -11,7 +11,6 @@ import frc.robot.subsystems.ClawRotationSubsystem;
 public class ClawRotationCommand extends Command {
 
   private final ClawRotationSubsystem m_clawRotationSubsystem;
-  private boolean clawRotationPistonValue;
   private Timer m_timer = new Timer();
   
   public ClawRotationCommand(ClawRotationSubsystem clawRotationSubsystem) {
