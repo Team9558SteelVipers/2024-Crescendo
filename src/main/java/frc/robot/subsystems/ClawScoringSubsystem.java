@@ -32,7 +32,7 @@ public class ClawScoringSubsystem extends SubsystemBase {
   }
 
   public boolean getBeamBreak() {
-    return beamBreak.get();
+    return !beamBreak.get(); // invert here so that we can expect the function use to behave as written instead of inverting everywhere else in our code.
   }
 
   public void resetEncoder() {

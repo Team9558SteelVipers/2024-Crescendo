@@ -48,6 +48,6 @@ public class IntakeCommand extends Command {
   
   @Override
   public boolean isFinished() {
-    return !m_clawScoringSubsystem.getBeamBreak();
+    return m_clawScoringSubsystem.getBeamBreak();
   }
 }

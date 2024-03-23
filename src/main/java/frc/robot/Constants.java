@@ -1,6 +1,10 @@
 package frc.robot;
 
 public final class Constants {
+
+  final public static int PCM_ID = 0; // TODO: This needs to be defined. Your PCM should show up on the Phoenix X CAN Device list.
+
+  final public static double kStatorCurrentLimit = 30.0; // TODO: This is generally a good start. Double check on phoenix tuner the current required to move your elevator
   
   public static class ElevatorConstants {
     // The elevator heights will contain the encoder values for each of the heights
@@ -10,6 +14,12 @@ public final class Constants {
     final public static double P = 0.1;
     final public static double I = 0.0;
     final public static double D = 0.0;
+
+    // TODO: double check these values for your robot
+    public static final double kElevatorP = 1.2;
+    public static final double kElevatorI = 0;
+    public static final double kElevatorD = 0.01;
+    public static final double kElevatorG = 0.5; //motor output required to hold elevator at constant height, fights gravity
   }
 
   public static class IntakeConstants {
