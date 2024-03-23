@@ -193,7 +193,7 @@ public class RobotContainer {
   public Command getAutonomousCommand() {
     
     try {
-      return m_SwerveDriveTrain.getAutoPath("Forward");
+      return m_SwerveDriveTrain.getAutoPath("forward");
     } catch (Exception e){
       return null;
     }

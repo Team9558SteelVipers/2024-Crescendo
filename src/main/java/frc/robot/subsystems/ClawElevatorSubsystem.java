@@ -18,6 +18,7 @@ import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.Constants;
 
 import static frc.robot.Constants.ElevatorConstants.*;
+import static frc.robot.Constants.ScoringConstants.ClawPistonPorts;
 
 
 public class ClawElevatorSubsystem extends SubsystemBase {
@@ -32,7 +33,7 @@ public class ClawElevatorSubsystem extends SubsystemBase {
   
   public ClawElevatorSubsystem() {
     elevatorMotor = new TalonFX(clawElevatorPort, "Canivore");
-    ratchetPiston = new DoubleSolenoid(Constants.PCM_ID, PneumaticsModuleType.CTREPCM, ratchetPistonPort[0], ratchetPistonPort[1]);
+    ratchetPiston = new DoubleSolenoid(Constants.PCM_ID, PneumaticsModuleType.CTREPCM, ClawPistonPorts[0], ClawPistonPorts[1]);
     
     // Modify Config Firs
     motorConfig = new MotorOutputConfigs();
