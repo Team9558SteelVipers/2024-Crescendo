@@ -14,8 +14,10 @@ public final class Constants {
     final public static int[] ratchetPistonPort = {2,5};
     final public static double maxHeight = 21;
     final public static double minHeight = 0;
+    final public static double maxElevatorSpeed = 0.5;
+    final public static double maxReverseElevatorSpeed = -0.5;
 
-    // TODO: double check these values for your robot
+    
     public static final double kElevatorP = 0.35;
     public static final double kElevatorI = 0;
     public static final double kElevatorD = 0.0;
@@ -24,9 +26,9 @@ public final class Constants {
 
   public static class IntakeConstants {
     final public static int intakeMotorPort = 21;
-    final public static double intakeMotorSpeed = 0.25;
+    final public static double intakeMotorSpeed = 0.50;
     final public static double timerLength = 2;
-    final public static double clawIntakeSpeed = 0.25;
+    final public static double clawIntakeSpeed = 0.50;
     final public static double intakeDistanceConstant = 0;
 
   }
@@ -36,6 +38,7 @@ public final class Constants {
     final public static int beamBreakMotorPort = 0;
     // Circumference / Tick
     final public static int[] ClawPistonPorts = {3,4};
+    final public static double motorScoringSpeed = -0.75;
   }
 
   public static class oiConstants {

@@ -7,13 +7,11 @@ package frc.robot.subsystems;
 import com.ctre.phoenix6.configs.MotorOutputConfigs;
 import com.ctre.phoenix6.configs.Slot0Configs;
 import com.ctre.phoenix6.configs.TalonFXConfiguration;
-import com.ctre.phoenix6.controls.ControlRequest;
 import com.ctre.phoenix6.controls.PositionVoltage;
 import com.ctre.phoenix6.hardware.TalonFX;
 import com.ctre.phoenix6.signals.GravityTypeValue;
 import com.ctre.phoenix6.signals.NeutralModeValue;
 
-import edu.wpi.first.math.controller.PIDController;
 import edu.wpi.first.wpilibj.DoubleSolenoid;
 import edu.wpi.first.wpilibj.PneumaticsModuleType;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
@@ -38,8 +36,8 @@ public class ClawElevatorSubsystem extends SubsystemBase {
     
     // Modify Config Firs
     motorConfig = new MotorOutputConfigs();
-    motorConfig.PeakForwardDutyCycle = 0.5;
-    motorConfig.PeakReverseDutyCycle = -0.5;
+    motorConfig.PeakForwardDutyCycle = maxElevatorSpeed;
+    motorConfig.PeakReverseDutyCycle = maxReverseElevatorSpeed;
 
     // Use this for On-Board PID Control
     Slot0Configs elevatorPID = new Slot0Configs();
@@ -87,7 +85,7 @@ public class ClawElevatorSubsystem extends SubsystemBase {
 
   public void setElevatorToTop()
   {
-    setElevatorMotorPosition(29); // TODO save as constant
+    setElevatorMotorPosition(maxHeight); 
     isAtBottom = false;
   }
 
@@ -98,7 +96,7 @@ public class ClawElevatorSubsystem extends SubsystemBase {
   
   public void setElevatortoBotom()
   {
-    setElevatorMotorPosition(0); // TODO save as constant
+    setElevatorMotorPosition(minHeight); 
     isAtBottom = true;
   }
 

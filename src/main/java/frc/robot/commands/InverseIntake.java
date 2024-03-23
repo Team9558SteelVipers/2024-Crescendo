@@ -5,17 +5,13 @@
 package frc.robot.commands;
 
 import edu.wpi.first.wpilibj2.command.Command;
-import frc.robot.OI;
 import frc.robot.subsystems.ClawScoringSubsystem;
 import frc.robot.subsystems.IntakeSubsystem;
-import static frc.robot.Constants.IntakeConstants.*;
 
 public class InverseIntake extends Command {
   
   private static IntakeSubsystem m_intakeSubsystem;
   private static ClawScoringSubsystem m_clawScoringSubsystem;
-  private static boolean beamBreakTriggered;
-  
 
   public InverseIntake(IntakeSubsystem intakeSubsystem, ClawScoringSubsystem clawScoringSubsystem){
     m_intakeSubsystem = intakeSubsystem;
@@ -27,7 +23,7 @@ public class InverseIntake extends Command {
   @Override
   public void initialize() {
 
-    beamBreakTriggered = false;
+    
   }
 
  

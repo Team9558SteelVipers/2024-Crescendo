@@ -4,6 +4,9 @@
 
 package frc.robot.commands;
 
+import static frc.robot.Constants.ScoringConstants.motorScoringSpeed;
+import static frc.robot.Constants.ScoringConstants.scoringMotorPort;
+
 import edu.wpi.first.wpilibj2.command.Command;
 import frc.robot.subsystems.ClawScoringSubsystem;
 
@@ -33,7 +36,7 @@ public class ScoringCommand extends Command {
   public void execute() {
 
     
-    m_clawScoringSubsystem.setIntakeMotorSpeed(-0.75);
+    m_clawScoringSubsystem.setIntakeMotorSpeed(motorScoringSpeed);
 
   }
 
