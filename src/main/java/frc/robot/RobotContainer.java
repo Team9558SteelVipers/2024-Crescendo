@@ -19,9 +19,12 @@ import edu.wpi.first.math.filter.SlewRateLimiter;
 import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.math.geometry.Translation2d;
+import edu.wpi.first.wpilibj.DriverStation;
+import edu.wpi.first.wpilibj.DriverStation.Alliance;
 import edu.wpi.first.wpilibj.PneumaticsControlModule;
 import edu.wpi.first.wpilibj.PneumaticsModuleType;
 import edu.wpi.first.wpilibj2.command.Command;
+import edu.wpi.first.wpilibj2.command.InstantCommand;
 import frc.robot.commands.ClawRotationCommand;
 import frc.robot.commands.ClawScoringCommand;
 import frc.robot.commands.ClimberCommand;
@@ -124,24 +127,54 @@ public class RobotContainer {
   }
 
   public RobotContainer() {
+    
+
     configureBindings();
     configureDrivetrain();
   }
 
   private void configureDrivetrain() {
     driveFacing.HeadingController = HeadingController;
-    
-    operatorInput.getDriverController().x().onTrue(m_SwerveDriveTrain.runOnce(() -> 
-    {
-      m_SwerveDriveTrain.seedFieldRelative();
-    }
-    ));
-    
-    operatorInput.getDriverController().y().onTrue(m_SwerveDriveTrain.runOnce(() -> m_SwerveDriveTrain.setHeadingToMaintain(new Rotation2d(0.0, 1.0))));
-    operatorInput.getDriverController().a().onTrue(m_SwerveDriveTrain.runOnce(() -> m_SwerveDriveTrain.setHeadingToMaintain(new Rotation2d(0.0, -1.0))));
-
-
     //m_drivetrainSubsystem.setHeadingToMaintain(m_drivetrainSubsystem.getCurrentRobotHeading());
+
+    // reset the field-centric heading on x press
+    operatorInput.getDriverController().x().onTrue(m_SwerveDriveTrain.runOnce(() -> 
+      {
+        m_SwerveDriveTrain.seedFieldRelative();
+      }));
+    
+    // Point Forwards
+    operatorInput.getDriverController().y().onTrue(m_SwerveDriveTrain.runOnce(() -> 
+      m_SwerveDriveTrain.setHeadingToMaintain(new Rotation2d(1.0, 0.0))));
+    
+    // Point Backwards
+    operatorInput.getDriverController().a().onTrue(m_SwerveDriveTrain.runOnce(() -> 
+      m_SwerveDriveTrain.setHeadingToMaintain(new Rotation2d(-1.0, 0.0))));
+
+    // Point Shooter at Amp Side
+    operatorInput.getDriverController().b().onTrue(new InstantCommand(() -> 
+    {
+      double val = 1.0;
+      if (DriverStation.getAlliance().get() == Alliance.Red)
+      {
+        val = -val;
+      } else { /* do nothing */}
+      m_SwerveDriveTrain.setHeadingToMaintain(new Rotation2d(0.0, val));
+    }));
+
+    // Boost / FT
+    operatorInput.getDriverController().rightBumper().onTrue(new InstantCommand(() ->
+    {
+      xVelRateLimited.reset(-operatorInput.getDriverController().getLeftY() * MaxSpeed * 1.33);
+      yVelRateLimited.reset(-operatorInput.getDriverController().getLeftX() * MaxSpeed * 1.33);
+    }));
+
+    // Stop
+    operatorInput.getDriverController().leftBumper().onTrue(new InstantCommand(() ->
+    {
+      xVelRateLimited.reset(0.0);
+      yVelRateLimited.reset(0.0);
+    }));
 
     m_SwerveDriveTrain.setDefaultCommand( // Drivetrain will execute this command periodically
       m_SwerveDriveTrain.applyRequest(
