@@ -13,19 +13,15 @@ import com.ctre.phoenix6.signals.GravityTypeValue;
 import com.ctre.phoenix6.signals.NeutralModeValue;
 
 import edu.wpi.first.wpilibj.DoubleSolenoid;
-import edu.wpi.first.wpilibj.PneumaticsModuleType;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.Constants;
 
 import static frc.robot.Constants.ElevatorConstants.*;
-import static frc.robot.Constants.ScoringConstants.ClawPistonPorts;
-
 
 public class ClawElevatorSubsystem extends SubsystemBase {
 
   TalonFX elevatorMotor;
   static DoubleSolenoid ratchetPiston;
-  // static PIDController ElevatorPID;
   private static int currentPosition;
   private static boolean isAtBottom;
   MotorOutputConfigs motorConfig;
@@ -54,13 +50,11 @@ public class ClawElevatorSubsystem extends SubsystemBase {
     elevatorConfigs.Slot0 = elevatorPID;
     
     // Then Apply Config
-    // elevatorMotor.getConfigurator().apply(motorConfig);
     elevatorMotor.getConfigurator().apply(elevatorConfigs);
     elevatorMotor.setNeutralMode(NeutralModeValue.Brake);
     elevatorMotor.setPosition(0.0);
     elevatorMotor.setInverted(true);
 
-    // ElevatorPID = new PIDController(P, I, D);   
     isAtBottom = true;
   }
 
@@ -75,7 +69,7 @@ public class ClawElevatorSubsystem extends SubsystemBase {
   }
 
 
-  public void setEncoderPosition() {
+  public void resetEncoderPosition() {
     elevatorMotor.setPosition(0);
   }
 
@@ -84,24 +78,19 @@ public class ClawElevatorSubsystem extends SubsystemBase {
     elevatorMotor.set(speed);
   }
 
-  public void setElevatorToTop()
-  {
+  public void setElevatorToTop() {
     setElevatorMotorPosition(maxHeight); 
     isAtBottom = false;
   }
 
-  public boolean isAtBottom()
-  {
+  public boolean isAtBottom() {
     return isAtBottom;
   }
   
-  public void setElevatortoBotom()
-  {
+  public void setElevatortoBotom() {
     setElevatorMotorPosition(minHeight); 
     isAtBottom = true;
   }
-
-
 
   public void setRatchetPiston(int pistonValue) {
 

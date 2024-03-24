@@ -15,8 +15,6 @@ public class ScoringCommand extends Command {
  
   private static ClawScoringSubsystem m_clawScoringSubsystem;
   
-  
-
   public ScoringCommand(ClawScoringSubsystem clawScoringSubsystem){
     
     m_clawScoringSubsystem = clawScoringSubsystem;
@@ -34,7 +32,6 @@ public class ScoringCommand extends Command {
   @Override
   public void execute() {
 
-    
     m_clawScoringSubsystem.setIntakeMotorSpeed(motorScoringSpeed);
 
   }

@@ -9,25 +9,30 @@ import frc.robot.subsystems.ClimberSubsystem;
 
 public class ClimberCommand extends Command {
 
-private final ClimberSubsystem m_subsystem;
+  private final ClimberSubsystem m_subsystem;
 
+  public ClimberCommand(ClimberSubsystem subsystem) {
+    m_subsystem = subsystem;
+    addRequirements(subsystem);
+  }
 
-public ClimberCommand(ClimberSubsystem subsystem) {
-  m_subsystem = subsystem;
-  addRequirements(subsystem);
-}
+  @Override
+  public void initialize() {
 
-@Override
-public void initialize() {}
+  }
 
-@Override
-public void execute() {}
+  @Override
+  public void execute() {
 
-@Override
-public void end(boolean interrupted) {}
+  }
 
-@Override
-public boolean isFinished() {;
+  @Override
+  public void end(boolean interrupted) {
+    
+  }
+
+  @Override
+  public boolean isFinished() {
     return false;
   }
 }

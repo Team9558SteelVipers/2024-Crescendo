@@ -4,8 +4,6 @@
 
 package frc.robot.commands;
 
-import javax.swing.text.StyleContext.SmallAttributeSet;
-
 import edu.wpi.first.wpilibj.Timer;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
@@ -18,11 +16,6 @@ public class ElevatorPosition extends Command {
   private ClawRotationSubsystem m_ClawRotationSubsystem;
   private boolean targetPositionIsBottom;
   private Timer m_timer = new Timer();
-  
-
-
-  //-0.307617 bottom
-  // -21.181641 top
 
   public ElevatorPosition(ClawElevatorSubsystem elevatorSubsystem, ClawRotationSubsystem clawRotationSubsystem) {
     m_elevatorSubsystem = elevatorSubsystem;
@@ -33,45 +26,27 @@ public class ElevatorPosition extends Command {
   //Iterates through the positions
   @Override
   public void initialize() {
-    // m_timer.reset();
-    // m_timer.start();
-    // if (m_elevatorSubsystem.isAtBottom())
-    // {
-    //   targetPositionIsBottom = false;
-    // }
-    // else
-    // {
     targetPositionIsBottom = true;
-    // }
   }
 
-  public void toggleElevatorPosition()
-  {
+  public void toggleElevatorPosition() {
     m_timer.reset();
     m_timer.start();
     targetPositionIsBottom = !targetPositionIsBottom;
   }
-  
 
   @Override
   public void execute() {
      
-  
-     
-    if (targetPositionIsBottom)
-    {
+    if (targetPositionIsBottom) {
       m_ClawRotationSubsystem.setClawRotationPiston(false);
       m_elevatorSubsystem.setElevatortoBotom();
-
-    }
-    else
-    {
+    } else {
       m_elevatorSubsystem.setElevatorToTop();
       if (m_timer.get()> 0.125) {
         m_ClawRotationSubsystem.setClawRotationPiston(true);
       }
     } 
-    
 
     SmartDashboard.putBoolean("Target is bottom: ", targetPositionIsBottom);
     SmartDashboard.putNumber("Encoder Position: ", m_elevatorSubsystem.getEncoderPosition());
@@ -82,8 +57,8 @@ public class ElevatorPosition extends Command {
   
   @Override
   public void end(boolean interrupted) {
-    //m_elevatorSubsystem.setElevatorMotor(0);
-    //m_ClawRotationSubsystem.setClawRotationPiston(false);
+    // m_elevatorSubsystem.setElevatorMotor(0);
+    // m_ClawRotationSubsystem.setClawRotationPiston(false);
   }
   
 

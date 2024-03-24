@@ -4,6 +4,8 @@
 
 package frc.robot.commands;
 
+import static frc.robot.Constants.IntakeConstants.intakeMotorSpeed;
+
 import edu.wpi.first.wpilibj2.command.Command;
 import frc.robot.subsystems.ClawScoringSubsystem;
 import frc.robot.subsystems.IntakeSubsystem;
@@ -19,19 +21,17 @@ public class InverseIntake extends Command {
     addRequirements(intakeSubsystem, clawScoringSubsystem);
   }
 
-  
   @Override
   public void initialize() {
 
-    
   }
 
  
   @Override
   public void execute() {
 
-    m_intakeSubsystem.setIntakeMotorSpeed(-0.5);
-    m_clawScoringSubsystem.setIntakeMotorSpeed(-0.5);
+    m_intakeSubsystem.setIntakeMotorSpeed(-intakeMotorSpeed);
+    m_clawScoringSubsystem.setIntakeMotorSpeed(-intakeMotorSpeed);
 
   }
 
