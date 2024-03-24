@@ -11,24 +11,29 @@ import com.ctre.phoenix6.mechanisms.swerve.SwerveModule.DriveRequestType;
 import com.ctre.phoenix6.Utils;
 import com.ctre.phoenix6.mechanisms.swerve.SwerveRequest;
 import com.ctre.phoenix6.mechanisms.swerve.utility.PhoenixPIDController;
+import com.pathplanner.lib.auto.NamedCommands;
+
 import edu.wpi.first.math.filter.SlewRateLimiter;
 import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.math.geometry.Translation2d;
+import edu.wpi.first.wpilibj.DriverStation;
+import edu.wpi.first.wpilibj.DriverStation.Alliance;
 import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.InstantCommand;
 import frc.robot.commands.ClawRotationCommand;
-import frc.robot.commands.ClimberCommand;
 import frc.robot.commands.ElevatorPosition;
 import frc.robot.commands.IntakeCommand;
 import frc.robot.commands.InverseIntake;
 import frc.robot.commands.NearestTrapCommand;
 import frc.robot.commands.ScoringCommand;
+import frc.robot.commands.autoElevatorPosition;
+import frc.robot.commands.autoScoringCommand;
+import frc.robot.commands.sequentialCommands.ampAuton;
 import frc.robot.subsystems.ClawElevatorSubsystem;
 import frc.robot.subsystems.ClawRotationSubsystem;
 import frc.robot.subsystems.ClawScoringSubsystem;
-import frc.robot.subsystems.ClimberSubsystem;
 import frc.robot.subsystems.IntakeSubsystem;
 import frc.robot.subsystems.VisionSubsystem;
 import frc.robot.subsystems.CTRESwerve.CommandSwerveDrivetrain;
@@ -43,11 +48,11 @@ import frc.robot.subsystems.CTRESwerve.generated.TunerConstants;
  */
 public class RobotContainer {
   // The robot's subsystems and commands are defined here...
-  public OI operatorInput = new OI();
+  public static OI operatorInput = new OI();
 
   public static final CommandSwerveDrivetrain m_SwerveDriveTrain = TunerConstants.DriveTrain;
   public static final IntakeSubsystem m_IntakeSubsystem = new IntakeSubsystem();
-  public static final ClimberSubsystem m_ClimberSubsystem = new ClimberSubsystem();
+  //public static final ClimberSubsystem m_ClimberSubsystem = new ClimberSubsystem();
   public static final ClawScoringSubsystem m_ClawScoringSubsystem = new ClawScoringSubsystem();
   public static final ClawRotationSubsystem m_ClawRotationSubsystem = new ClawRotationSubsystem();
   public static final ClawElevatorSubsystem m_ClawElevatorSubsystem = new ClawElevatorSubsystem();
@@ -55,7 +60,7 @@ public class RobotContainer {
 
   public static final ClawRotationCommand m_ClawRotationCommand = new ClawRotationCommand(m_ClawRotationSubsystem);
   public static final ScoringCommand m_ScoringCommand = new ScoringCommand(m_ClawScoringSubsystem);
-  public static final ClimberCommand m_ClimberCommand = new ClimberCommand(m_ClimberSubsystem);
+  //public static final ClimberCommand m_ClimberCommand = new ClimberCommand(m_ClimberSubsystem);
   public static final ElevatorPosition m_ElevatorPosition = new ElevatorPosition(m_ClawElevatorSubsystem, m_ClawRotationSubsystem);
   public static final IntakeCommand m_IntakeCommand = new IntakeCommand(m_IntakeSubsystem, m_ClawScoringSubsystem);
   public static final InverseIntake m_InverseIntakeCommand = new InverseIntake(m_IntakeSubsystem, m_ClawScoringSubsystem);
@@ -125,7 +130,11 @@ public class RobotContainer {
   }
 
   public RobotContainer() {
+
+    
     m_ClawElevatorSubsystem.setDefaultCommand(m_ElevatorPosition);
+    NamedCommands.registerCommand("toggleElevator", new autoElevatorPosition(m_ClawElevatorSubsystem, m_ClawRotationSubsystem));
+    NamedCommands.registerCommand("shoot", new autoScoringCommand(m_ClawScoringSubsystem));
 
     configureBindings();
     configureDrivetrain();
@@ -140,8 +149,18 @@ public class RobotContainer {
     }
     ));
     
-    operatorInput.getDriverController().y().onTrue(m_SwerveDriveTrain.runOnce(() -> m_SwerveDriveTrain.setHeadingToMaintain(new Rotation2d(0.0, 1.0))));
-    operatorInput.getDriverController().a().onTrue(m_SwerveDriveTrain.runOnce(() -> m_SwerveDriveTrain.setHeadingToMaintain(new Rotation2d(0.0, -1.0))));
+    operatorInput.getDriverController().y().onTrue(m_SwerveDriveTrain.runOnce(() -> m_SwerveDriveTrain.setHeadingToMaintain(new Rotation2d(1.0, 0.0))));
+    operatorInput.getDriverController().a().onTrue(m_SwerveDriveTrain.runOnce(() -> m_SwerveDriveTrain.setHeadingToMaintain(new Rotation2d(-1.0, 0.0))));
+    operatorInput.getDriverController().b().onTrue(m_SwerveDriveTrain.runOnce(() -> 
+    {
+      double val = 1.0;
+      if (DriverStation.getAlliance().get() == Alliance.Red)
+      {
+        val = -val;
+      }
+      m_SwerveDriveTrain.setHeadingToMaintain(new Rotation2d(0.0, val));
+    }));
+    
 
 
     //m_drivetrainSubsystem.setHeadingToMaintain(m_drivetrainSubsystem.getCurrentRobotHeading());
@@ -194,43 +213,44 @@ public class RobotContainer {
   }
 
   public Command getAutonomousCommand(double speed) {
-    return m_SwerveDriveTrain.getAutoPath("SH-A-F1c-A ver2");
-    // return m_SwerveDriveTrain.applyRequest(
+    //return new ampAuton(m_ClawElevatorSubsystem,m_ClawScoringSubsystem,m_SwerveDriveTrain,m_ClawRotationSubsystem);
+    //return m_SwerveDriveTrain.getAutoPath("Amp");
+    return m_SwerveDriveTrain.applyRequest(
 
-    //     operatorInput.getDriverController(), // provide controller inputs to know when to use FieldCentricFacingAngle
+        operatorInput.getDriverController(), // provide controller inputs to know when to use FieldCentricFacingAngle
 
-    //     () -> drive
-    //       .withVelocityX(
-    //         xVelRateLimited.calculate( // control acceleration
-    //           (speed* MaxSpeed) // Drive forward with negative Y (forward)
-    //           * (PercentLimit)// limit base speed
+        () -> drive
+          .withVelocityX(
+            xVelRateLimited.calculate( // control acceleration
+              (speed* MaxSpeed) // Drive forward with negative Y (forward)
+              * (PercentLimit)// limit base speed
 
-    //         )
-    //       ) 
-    //       .withVelocityY(
-    //         yVelRateLimited.calculate(
-    //           (-0 * MaxSpeed) // Drive left with negative X (left)
-    //           * (PercentLimit) // limit base speed // Left Trigger to decrease to min speed
-    //         )
-    //       ) 
-    //       .withRotationalRate(-0*MaxAngularRate), // Drive counterclockwise with negative X (left)
+            )
+          ) 
+          .withVelocityY(
+            yVelRateLimited.calculate(
+              (-0 * MaxSpeed) // Drive left with negative X (left)
+              * (PercentLimit) // limit base speed // Left Trigger to decrease to min speed
+            )
+          ) 
+          .withRotationalRate(-0*MaxAngularRate), // Drive counterclockwise with negative X (left)
        
        
-    //       () -> driveFacing
-    //       .withVelocityX(
-    //         xVelRateLimited.calculate( // control acceleration
-    //           (speed * MaxSpeed) // Drive forward with negative Y (forward)
-    //           * (PercentLimit) // limit base speed // Left Trigger to decrease to min speed
-    //         )
-    //       )
-    //       .withVelocityY(i
-    //         yVelRateLimited.calculate(
-    //           (-0 * MaxSpeed) // Drive left with negative X (left)
-    //           * (PercentLimit) // limit base speed // Left Trigger to decrease to min speed
-    //         )
-    //       ) 
-    //       .withTargetDirection(m_SwerveDriveTrain.getHeadingToMaintain()) // Maintain last known heading
-    //   );
+          () -> driveFacing
+          .withVelocityX(
+            xVelRateLimited.calculate( // control acceleration
+              (speed * MaxSpeed) // Drive forward with negative Y (forward)
+              * (PercentLimit) // limit base speed // Left Trigger to decrease to min speed
+            )
+          )
+          .withVelocityY(
+            yVelRateLimited.calculate(
+              (-0 * MaxSpeed) // Drive left with negative X (left)
+              * (PercentLimit) // limit base speed // Left Trigger to decrease to min speed
+            )
+          ) 
+          .withTargetDirection(m_SwerveDriveTrain.getHeadingToMaintain()) // Maintain last known heading
+      );
    }
   
 

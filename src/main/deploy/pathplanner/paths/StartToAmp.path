@@ -3,25 +3,25 @@
   "waypoints": [
     {
       "anchor": {
-        "x": 8.14,
-        "y": 2.69
+        "x": 1.4194172322716794,
+        "y": 7.22612025115556
       },
       "prevControl": null,
       "nextControl": {
-        "x": 6.454352956441918,
-        "y": 3.0881369638747973
+        "x": 1.5248147611837126,
+        "y": 7.366650289704937
       },
       "isLocked": false,
       "linkedName": null
     },
     {
       "anchor": {
-        "x": 1.76,
-        "y": 7.73
+        "x": 1.82,
+        "y": 7.581294350779302
       },
       "prevControl": {
-        "x": 2.269879480096396,
-        "y": 6.877848791508477
+        "x": 1.7146024710879664,
+        "y": 7.511029331504612
       },
       "nextControl": null,
       "isLocked": false,
@@ -30,7 +30,28 @@
   ],
   "rotationTargets": [],
   "constraintZones": [],
-  "eventMarkers": [],
+  "eventMarkers": [
+    {
+      "name": "Shoot",
+      "waypointRelativePos": 1.0,
+      "command": {
+        "type": "parallel",
+        "data": {
+          "commands": []
+        }
+      }
+    },
+    {
+      "name": "RIse Elevator",
+      "waypointRelativePos": 0,
+      "command": {
+        "type": "parallel",
+        "data": {
+          "commands": []
+        }
+      }
+    }
+  ],
   "globalConstraints": {
     "maxVelocity": 1.0,
     "maxAcceleration": 0.5,
@@ -45,7 +66,7 @@
   "reversed": false,
   "folder": null,
   "previewStartingState": {
-    "rotation": -76.20999999999998,
+    "rotation": 90.0,
     "velocity": 0
   },
   "useDefaultConstraints": true

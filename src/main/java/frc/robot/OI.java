@@ -8,8 +8,8 @@ import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
 
 public class OI {
 
-    static CommandXboxController driverController;
-    static CommandXboxController operatorController;
+    public static CommandXboxController driverController;
+    public static CommandXboxController operatorController;
 
     public OI(){
         driverController = new CommandXboxController(driverControllerPort);
