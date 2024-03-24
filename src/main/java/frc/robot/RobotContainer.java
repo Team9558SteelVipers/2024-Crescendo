@@ -194,7 +194,7 @@ public class RobotContainer {
   }
 
   public Command getAutonomousCommand(double speed) {
-    return m_SwerveDriveTrain.getAutoPath("forward");
+    return m_SwerveDriveTrain.getAutoPath("SH-A-F1c-A ver2");
     // return m_SwerveDriveTrain.applyRequest(
 
     //     operatorInput.getDriverController(), // provide controller inputs to know when to use FieldCentricFacingAngle
