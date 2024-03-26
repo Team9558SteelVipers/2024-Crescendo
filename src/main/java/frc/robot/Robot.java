@@ -5,13 +5,8 @@
 package frc.robot;
 
 import edu.wpi.first.wpilibj.TimedRobot;
-import edu.wpi.first.wpilibj.Timer;
-import edu.wpi.first.wpilibj.GenericHID.RumbleType;
-import edu.wpi.first.wpilibj.event.BooleanEvent;
-import edu.wpi.first.wpilibj.event.EventLoop;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.CommandScheduler;
-import edu.wpi.first.wpilibj2.command.InstantCommand;
 
 
 /**
@@ -21,12 +16,11 @@ import edu.wpi.first.wpilibj2.command.InstantCommand;
  * project.
  */
 public class Robot extends TimedRobot {
-  private Command m_autonomousCommand, m_donothing;
-  private Timer m_autonTimer = new Timer();
+  private Command m_autonomousCommand;
 
   private RobotContainer m_robotContainer;
-  private EventLoop m_loop = new EventLoop();
-  private BooleanEvent rumble = new BooleanEvent(m_loop, RobotContainer.m_ClawScoringSubsystem::getBeamBreak);
+  // private EventLoop m_loop = new EventLoop();
+  // private BooleanEvent rumble = new BooleanEvent(m_loop, RobotContainer.m_ClawScoringSubsystem::getBeamBreak);
   
   /**
    * This function is run when the robot is first started up and should be used for any
@@ -38,8 +32,6 @@ public class Robot extends TimedRobot {
     // Instantiate our RobotContainer.  This will perform all our button bindings, and put our
     // autonomous chooser on the dashboard.
     m_robotContainer = new RobotContainer();
-
-
     
   }
 
@@ -70,10 +62,10 @@ public class Robot extends TimedRobot {
   /** This autonomous runs the autonomous command selected by your {@link RobotContainer} class. */
   @Override
   public void autonomousInit() {
-    m_autonTimer.reset();
-    m_autonTimer.start();
-    m_autonomousCommand = m_robotContainer.getAutonomousCommand(0.3);
-    m_donothing = m_robotContainer.getAutonomousCommand(0);
+    m_autonomousCommand = m_robotContainer.getAutonomousCommand();
+    if (m_autonomousCommand != null) {
+      m_autonomousCommand.schedule();
+    }
   }
 
   /** This function is called periodically during autonomous. */
@@ -82,14 +74,9 @@ public class Robot extends TimedRobot {
 
 
     // schedule the autonomous command (example)
-    if (m_autonomousCommand != null) {
-      m_autonomousCommand.schedule();
-    }
-    if (m_autonTimer.get() > 3) {
-      m_autonomousCommand.end(true);
-      m_donothing.schedule();
-    }
+    
   }
+
 
   @Override
   public void teleopInit() {
@@ -100,8 +87,7 @@ public class Robot extends TimedRobot {
     if (m_autonomousCommand != null) {
       m_autonomousCommand.cancel();
     }
-   
-
+    //RobotContainer.m_SwerveDriveTrain.setHeadingToMaintain(RobotContainer.m_SwerveDriveTrain.getCurrentRobotHeading());
   }
 
   /** This function is called periodically during operator control. */

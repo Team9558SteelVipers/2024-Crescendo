@@ -12,15 +12,15 @@
     "data": {
       "commands": [
         {
-          "type": "named",
-          "data": {
-            "name": "toggleElevator"
-          }
-        },
-        {
           "type": "path",
           "data": {
             "pathName": "StartToAmp"
+          }
+        },
+        {
+          "type": "named",
+          "data": {
+            "name": "toggleElevator"
           }
         },
         {
@@ -32,19 +32,19 @@
         {
           "type": "wait",
           "data": {
-            "waitTime": 1.0
-          }
-        },
-        {
-          "type": "path",
-          "data": {
-            "pathName": "awayFromAmp"
+            "waitTime": 0.25
           }
         },
         {
           "type": "named",
           "data": {
             "name": "toggleElevator"
+          }
+        },
+        {
+          "type": "path",
+          "data": {
+            "pathName": "awayFromAmp"
           }
         }
       ]

@@ -11,7 +11,7 @@ public final class Constants {
     // The elevator heights will contain the encoder values for each of the heights
     final public static int clawElevatorPort = 23;
     final public static double[] elevatorHeights = {-0.157617,-20.81641};
-    final public static double maxHeight = 21;
+    final public static double maxHeight = 22;
     final public static double minHeight = 0;
     final public static double maxElevatorSpeed = 0.5;
     final public static double maxReverseElevatorSpeed = -0.5;
@@ -24,6 +24,7 @@ public final class Constants {
   }
 
   public static class ClimberConstants {
+    final public static int climberMotorPort = 20;
     final public static int[] ratchetPistonPort = {2,5};
     final public static double maxSpeed = 0.3;
   }

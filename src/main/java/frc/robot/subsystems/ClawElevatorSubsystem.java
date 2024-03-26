@@ -12,7 +12,6 @@ import com.ctre.phoenix6.hardware.TalonFX;
 import com.ctre.phoenix6.signals.GravityTypeValue;
 import com.ctre.phoenix6.signals.NeutralModeValue;
 
-import edu.wpi.first.wpilibj.DoubleSolenoid;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.Constants;
 
@@ -21,7 +20,6 @@ import static frc.robot.Constants.ElevatorConstants.*;
 public class ClawElevatorSubsystem extends SubsystemBase {
 
   TalonFX elevatorMotor;
-  static DoubleSolenoid ratchetPiston;
   private static int currentPosition;
   private static boolean isAtBottom;
   MotorOutputConfigs motorConfig;
@@ -29,8 +27,7 @@ public class ClawElevatorSubsystem extends SubsystemBase {
   
   public ClawElevatorSubsystem() {
     elevatorMotor = new TalonFX(clawElevatorPort, "Canivore");
-    //ratchetPiston = new DoubleSolenoid(Constants.PCM_ID, PneumaticsModuleType.CTREPCM, ClawPistonPorts[0], ClawPistonPorts[1]);
-    
+   
     // Modify Config Firs
     motorConfig = new MotorOutputConfigs();
     motorConfig.PeakForwardDutyCycle = maxElevatorSpeed;
@@ -90,14 +87,6 @@ public class ClawElevatorSubsystem extends SubsystemBase {
   public void setElevatortoBotom() {
     setElevatorMotorPosition(minHeight); 
     isAtBottom = true;
-  }
-
-  public void setRatchetPiston(int pistonValue) {
-
-    if (pistonValue == 0){ratchetPiston.set(DoubleSolenoid.Value.kOff);}
-    if (pistonValue == -1){ratchetPiston.set(DoubleSolenoid.Value.kReverse);}
-    if (pistonValue == 1){ratchetPiston.set(DoubleSolenoid.Value.kForward);}
-    
   }
 
   public int getElevatorPosition() {

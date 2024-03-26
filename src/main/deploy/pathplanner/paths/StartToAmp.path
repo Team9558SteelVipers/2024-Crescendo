@@ -4,12 +4,12 @@
     {
       "anchor": {
         "x": 1.4194172322716794,
-        "y": 7.22612025115556
+        "y": 7.23
       },
       "prevControl": null,
       "nextControl": {
         "x": 1.5248147611837126,
-        "y": 7.366650289704937
+        "y": 7.3705300385493775
       },
       "isLocked": false,
       "linkedName": null
@@ -17,11 +17,11 @@
     {
       "anchor": {
         "x": 1.82,
-        "y": 7.581294350779302
+        "y": 7.81
       },
       "prevControl": {
         "x": 1.7146024710879664,
-        "y": 7.511029331504612
+        "y": 7.739734980725309
       },
       "nextControl": null,
       "isLocked": false,
@@ -53,8 +53,8 @@
     }
   ],
   "globalConstraints": {
-    "maxVelocity": 1.0,
-    "maxAcceleration": 0.5,
+    "maxVelocity": 3.5,
+    "maxAcceleration": 1.75,
     "maxAngularVelocity": 540.0,
     "maxAngularAcceleration": 720.0
   },
@@ -64,7 +64,7 @@
     "rotateFast": false
   },
   "reversed": false,
-  "folder": null,
+  "folder": "Amp Auton testing",
   "previewStartingState": {
     "rotation": 90.0,
     "velocity": 0

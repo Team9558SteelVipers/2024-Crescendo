@@ -32,7 +32,7 @@ public class ClawScoringSubsystem extends SubsystemBase {
   }
 
   public boolean getBeamBreak() {
-    return beamBreak.get();
+    return !beamBreak.get();
   }
 
   public void resetEncoder() {

@@ -7,9 +7,12 @@ package frc.robot.commands;
 import edu.wpi.first.wpilibj2.command.Command;
 import frc.robot.subsystems.ClimberSubsystem;
 
-public class ratchetPistonCommand extends Command {
+public class RatchetPistonCommand extends Command {
+  ClimberSubsystem m_ClimberSubsystem;
+  
   /** Creates a new ratchetPistonCommand. */
-  public ratchetPistonCommand(ClimberSubsystem climberSubsystem) {
+
+  public RatchetPistonCommand(ClimberSubsystem climberSubsystem) {
     // Use addRequirements() here to declare subsystem dependencies.
     
   }

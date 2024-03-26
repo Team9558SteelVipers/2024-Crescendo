@@ -5,6 +5,7 @@
 package frc.robot.commands;
 
 import edu.wpi.first.wpilibj2.command.Command;
+import frc.robot.RobotContainer;
 import frc.robot.subsystems.ClawScoringSubsystem;
 import frc.robot.subsystems.IntakeSubsystem;
 import static frc.robot.Constants.IntakeConstants.*;
@@ -33,20 +34,29 @@ public class IntakeCommand extends Command {
   @Override
   public void execute() {
 
-    m_intakeSubsystem.setIntakeMotorSpeed(intakeMotorSpeed);
-    m_clawScoringSubsystem.setIntakeMotorSpeed(clawIntakeSpeed);
+    if (!m_clawScoringSubsystem.getBeamBreak()) {
+      m_intakeSubsystem.setIntakeMotorSpeed(intakeMotorSpeed);
+      m_clawScoringSubsystem.setIntakeMotorSpeed(clawIntakeSpeed);
+    }
+    else
+    {
+      RobotContainer.rumbleControllers();
+      m_intakeSubsystem.setIntakeMotorSpeed(0.0);
+      m_clawScoringSubsystem.setIntakeMotorSpeed(0.0);
+    }
   }
 
   
   @Override
   public void end(boolean interrupted) {
-    m_intakeSubsystem.setIntakeMotorSpeed(0.0);
-    m_clawScoringSubsystem.setIntakeMotorSpeed(0.0);
+      RobotContainer.stopRumbleControllers();
+      m_intakeSubsystem.setIntakeMotorSpeed(0.0);
+      m_clawScoringSubsystem.setIntakeMotorSpeed(0.0);
   }
 
   
   @Override
   public boolean isFinished() {
-    return !m_clawScoringSubsystem.getBeamBreak();
+    return false;
   }
 }
