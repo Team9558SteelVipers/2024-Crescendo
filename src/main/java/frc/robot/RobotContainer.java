@@ -85,6 +85,8 @@ public class RobotContainer {
   private static PhoenixPIDController HeadingController = new PhoenixPIDController(5, 0, 0);
 
   private final SendableChooser<Command> m_autoChooser = new SendableChooser<Command>();
+
+  
   /* ======================================================================================== SWERVE DRIVE CONFIGURATION | END */
   
   private static double PercentGas = (1.0 - PercentLimit) > 0.0 ? 1.0 - PercentLimit : 0.0; // Make sure gas mulitplier doesn't become negative
@@ -142,7 +144,12 @@ public class RobotContainer {
 
   public RobotContainer() {
 
-    
+    m_autoChooser.setDefaultOption("Do nothing", new InstantCommand());
+    m_autoChooser.addOption("2 note cycle", m_SwerveDriveTrain.getAutoPath("2 note amp cycle"));
+    m_autoChooser.addOption("stop after amp", m_SwerveDriveTrain.getAutoPath("Amp"));
+    m_autoChooser.addOption("pick up center note", m_SwerveDriveTrain.getAutoPath("Amp to center"));
+    m_autoChooser.addOption("Forward", m_SwerveDriveTrain.getAutoPath("Forward"));
+
     m_ClawElevatorSubsystem.setDefaultCommand(m_ElevatorPosition);
     NamedCommands.registerCommand("toggleElevator", new autoElevatorPosition(m_ClawElevatorSubsystem, m_ClawRotationSubsystem));
     NamedCommands.registerCommand("shoot", new autoScoringCommand(m_ClawScoringSubsystem));
@@ -247,7 +254,7 @@ public class RobotContainer {
 
   public Command getAutonomousCommand() {
     //return new ampAuton(m_ClawElevatorSubsystem,m_ClawScoringSubsystem,m_SwerveDriveTrain,m_ClawRotationSubsystem);
-    return m_SwerveDriveTrain.getAutoPath("2 note amp cycle");
+    return m_autoChooser.getSelected();
     // return m_SwerveDriveTrain.applyRequest(
 
     //     operatorInput.getDriverController(), // provide controller inputs to know when to use FieldCentricFacingAngle
