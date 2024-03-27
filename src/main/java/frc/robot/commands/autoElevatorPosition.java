@@ -62,7 +62,7 @@ public class autoElevatorPosition extends Command {
   public boolean isFinished() {
 
     // if (targetPositionIsBottom) return m_elevatorSubsystem.getElevatorPosition() < 1;
-    return m_timer.get() > 2;
+    return m_timer.get() > 0.6;
 
   }
 }

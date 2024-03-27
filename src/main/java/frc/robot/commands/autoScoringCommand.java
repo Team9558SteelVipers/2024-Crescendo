@@ -48,6 +48,6 @@ public class autoScoringCommand extends Command {
   
   @Override
   public boolean isFinished() {
-    return m_Timer.get() > 1.5;
+    return m_Timer.get() > 0.3;
   }
 }

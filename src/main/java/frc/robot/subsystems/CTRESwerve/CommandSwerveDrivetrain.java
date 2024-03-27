@@ -78,14 +78,19 @@ public class CommandSwerveDrivetrain extends SwerveDrivetrain implements Subsyst
         return m_kinematics.toChassisSpeeds(getState().ModuleStates);
     }
 
+    public Rotation2d getOperatorForwardDirection()
+    {
+        return m_operatorForwardDirection;
+    }
+
     public Rotation2d getCurrentRobotHeading()
     {
-        return getState().Pose.getRotation();
+        return getState().Pose.getRotation().minus(m_fieldRelativeOffset);
     }
 
     public Rotation2d getHeadingToMaintain()
     {
-        return m_headingToMaintain.minus(m_fieldRelativeOffset);
+        return m_headingToMaintain;
     }
 
     public void setHeadingToMaintain(Rotation2d newHeading)

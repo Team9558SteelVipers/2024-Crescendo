@@ -21,7 +21,7 @@ public class ClimberSubsystem extends SubsystemBase {
   public ClimberSubsystem() {
     climberMotor = new TalonSRX(climberMotorPort);
     ratchetPiston = new DoubleSolenoid(Constants.PCM_ID, PneumaticsModuleType.CTREPCM, Constants.ClimberConstants.ratchetPistonPort[1], Constants.ClimberConstants.ratchetPistonPort[0]);
-    climberMotor.setInverted(true);
+    climberMotor.setInverted(false);
   }
 
   public void climberSpeed (double speed){

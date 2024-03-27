@@ -26,7 +26,7 @@ public final class Constants {
   public static class ClimberConstants {
     final public static int climberMotorPort = 20;
     final public static int[] ratchetPistonPort = {2,5};
-    final public static double maxSpeed = 0.3;
+    final public static double maxSpeed = 1;
   }
 
   public static class IntakeConstants {

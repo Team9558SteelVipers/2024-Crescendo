@@ -29,10 +29,12 @@ import frc.robot.commands.ElevatorPosition;
 import frc.robot.commands.IntakeCommand;
 import frc.robot.commands.InverseIntake;
 import frc.robot.commands.NearestTrapCommand;
+import frc.robot.commands.RatchetPistonDisengage;
+import frc.robot.commands.RatchetPistonEngage;
 import frc.robot.commands.ScoringCommand;
 import frc.robot.commands.autoElevatorPosition;
+import frc.robot.commands.autoIntakeCommand;
 import frc.robot.commands.autoScoringCommand;
-import frc.robot.commands.sequentialCommands.ampAuton;
 import frc.robot.subsystems.ClawElevatorSubsystem;
 import frc.robot.subsystems.ClawRotationSubsystem;
 import frc.robot.subsystems.ClawScoringSubsystem;
@@ -68,6 +70,8 @@ public class RobotContainer {
   public static final IntakeCommand m_IntakeCommand = new IntakeCommand(m_IntakeSubsystem, m_ClawScoringSubsystem);
   public static final InverseIntake m_InverseIntakeCommand = new InverseIntake(m_IntakeSubsystem, m_ClawScoringSubsystem);
   public static final NearestTrapCommand m_NearestTrapCommand = new NearestTrapCommand(m_SwerveDriveTrain);
+  public static final RatchetPistonEngage m_ratchetEngage = new RatchetPistonEngage(m_ClimberSubsystem);
+  public static final RatchetPistonDisengage m_ratchetDisengage = new RatchetPistonDisengage(m_ClimberSubsystem);
 
   /* ====================================================================================== SWERVE DRIVE CONFIGURATION | START */
   // PARAMETERS
@@ -115,7 +119,7 @@ public class RobotContainer {
     //reset the field-centric heading on left bumper press
     // operatorInput.getDriverController().leftBumper().onTrue(m_SwerveDriveTrain.runOnce(() -> m_SwerveDriveTrain.seedFieldRelative()));
     
-    //m_ClimberSubsystem.setDefaultCommand(m_ClimberCommand);
+    m_ClimberSubsystem.setDefaultCommand(m_ClimberCommand);
     operatorInput.getOperatorController().leftTrigger(0.5).whileTrue(m_IntakeCommand);
     operatorInput.getOperatorController().rightTrigger(0.5).whileTrue(m_InverseIntakeCommand);
     operatorInput.getOperatorController().x().onTrue(new InstantCommand(() ->
@@ -123,6 +127,9 @@ public class RobotContainer {
       m_ElevatorPosition.toggleElevatorPosition();
     }));
     operatorInput.getOperatorController().rightBumper().whileTrue(m_ScoringCommand);
+    operatorInput.getOperatorController().a().onTrue(m_ratchetEngage);
+    operatorInput.getOperatorController().b().onTrue(m_ratchetDisengage);
+    
     
     //operatorInput.getOperatorController().leftBumper().runOnce(m_ClawRotationCommand);
 
@@ -139,6 +146,7 @@ public class RobotContainer {
     m_ClawElevatorSubsystem.setDefaultCommand(m_ElevatorPosition);
     NamedCommands.registerCommand("toggleElevator", new autoElevatorPosition(m_ClawElevatorSubsystem, m_ClawRotationSubsystem));
     NamedCommands.registerCommand("shoot", new autoScoringCommand(m_ClawScoringSubsystem));
+    NamedCommands.registerCommand("intake", new autoIntakeCommand(m_IntakeSubsystem, m_ClawScoringSubsystem));
 
     configureBindings();
     configureDrivetrain();
@@ -160,19 +168,20 @@ public class RobotContainer {
     operatorInput.getDriverController().x().onTrue(m_SwerveDriveTrain.runOnce(() -> 
     {
       m_SwerveDriveTrain.seedFieldRelative();
+      m_SwerveDriveTrain.setHeadingToMaintain(m_SwerveDriveTrain.getCurrentRobotHeading());
     }
     ));
     
-    operatorInput.getDriverController().y().onTrue(m_SwerveDriveTrain.runOnce(() -> m_SwerveDriveTrain.setHeadingToMaintain(new Rotation2d(-1.0, 0.0))));
-    operatorInput.getDriverController().a().onTrue(m_SwerveDriveTrain.runOnce(() -> m_SwerveDriveTrain.setHeadingToMaintain(new Rotation2d(1.0, 0.0))));
+    operatorInput.getDriverController().y().onTrue(m_SwerveDriveTrain.runOnce(() -> m_SwerveDriveTrain.setHeadingToMaintain(m_SwerveDriveTrain.getOperatorForwardDirection())));
+    operatorInput.getDriverController().a().onTrue(m_SwerveDriveTrain.runOnce(() -> m_SwerveDriveTrain.setHeadingToMaintain(m_SwerveDriveTrain.getOperatorForwardDirection().rotateBy(new Rotation2d(-1.0, 0.0)))));
     operatorInput.getDriverController().b().onTrue(m_SwerveDriveTrain.runOnce(() -> 
     {
-      double val = -1.0;
+      double val = 1.0;
       if (DriverStation.getAlliance().get() == Alliance.Red)
       {
         val = -val;
       }
-      m_SwerveDriveTrain.setHeadingToMaintain(new Rotation2d(0.0, val));
+      m_SwerveDriveTrain.setHeadingToMaintain(m_SwerveDriveTrain.getOperatorForwardDirection().rotateBy(new Rotation2d(0.0, val)));
     }));
     
      // Boost
@@ -238,7 +247,7 @@ public class RobotContainer {
 
   public Command getAutonomousCommand() {
     //return new ampAuton(m_ClawElevatorSubsystem,m_ClawScoringSubsystem,m_SwerveDriveTrain,m_ClawRotationSubsystem);
-    return m_SwerveDriveTrain.getAutoPath("Amp");
+    return m_SwerveDriveTrain.getAutoPath("2 note amp cycle");
     // return m_SwerveDriveTrain.applyRequest(
 
     //     operatorInput.getDriverController(), // provide controller inputs to know when to use FieldCentricFacingAngle

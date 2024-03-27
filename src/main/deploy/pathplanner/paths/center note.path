@@ -3,25 +3,25 @@
   "waypoints": [
     {
       "anchor": {
-        "x": 1.6162826627647557,
-        "y": 2.1166419540816297
+        "x": 4.22,
+        "y": 7.81
       },
       "prevControl": null,
       "nextControl": {
-        "x": 2.616282662764756,
-        "y": 2.1166419540816297
+        "x": 5.4187145579574825,
+        "y": 7.81
       },
       "isLocked": false,
       "linkedName": null
     },
     {
       "anchor": {
-        "x": 3.5809006090946656,
-        "y": 2.1166419540816297
+        "x": 8.123871083690812,
+        "y": 7.8
       },
       "prevControl": {
-        "x": 2.5809006090946656,
-        "y": 2.1166419540816297
+        "x": 7.198714996574072,
+        "y": 7.961127976036265
       },
       "nextControl": null,
       "isLocked": false,
@@ -43,10 +43,10 @@
     "rotateFast": false
   },
   "reversed": false,
-  "folder": null,
+  "folder": "Amp Auton testing",
   "previewStartingState": {
     "rotation": 0,
-    "velocity": 0
+    "velocity": 4.0
   },
   "useDefaultConstraints": true
 }
