@@ -3,6 +3,7 @@ package frc.robot.subsystems.CTRESwerve;
 import java.util.function.Supplier;
 
 import com.ctre.phoenix6.Utils;
+import com.ctre.phoenix6.configs.CurrentLimitsConfigs;
 import com.ctre.phoenix6.mechanisms.swerve.SwerveDrivetrain;
 import com.ctre.phoenix6.mechanisms.swerve.SwerveDrivetrainConstants;
 import com.ctre.phoenix6.mechanisms.swerve.SwerveModuleConstants;
@@ -18,7 +19,6 @@ import edu.wpi.first.math.kinematics.ChassisSpeeds;
 import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.Notifier;
 import edu.wpi.first.wpilibj.RobotController;
-import edu.wpi.first.wpilibj.DriverStation.Alliance;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.Subsystem;
 import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
@@ -44,6 +44,8 @@ public class CommandSwerveDrivetrain extends SwerveDrivetrain implements Subsyst
         if (Utils.isSimulation()) {
             startSimThread();
         }
+
+        setAzimuthMotorsStatorCurrent();
     }
     public CommandSwerveDrivetrain(SwerveDrivetrainConstants driveTrainConstants, SwerveModuleConstants... modules) {
         super(driveTrainConstants, modules);
@@ -51,6 +53,8 @@ public class CommandSwerveDrivetrain extends SwerveDrivetrain implements Subsyst
         if (Utils.isSimulation()) {
             startSimThread();
         }
+
+        setAzimuthMotorsStatorCurrent();
     }
 
     private void configurePathPlanner() {
@@ -109,6 +113,16 @@ public class CommandSwerveDrivetrain extends SwerveDrivetrain implements Subsyst
 
     public Command applyRequest(Supplier<SwerveRequest> requestSupplier) {
         return run(() -> this.setControl(requestSupplier.get()));
+    }
+
+    public void setAzimuthMotorsStatorCurrent()
+    {
+        CurrentLimitsConfigs currentLimit = new CurrentLimitsConfigs().withStatorCurrentLimit(150).withStatorCurrentLimitEnable(true);
+
+        getModule(0).getSteerMotor().getConfigurator().apply(currentLimit);
+        getModule(1).getSteerMotor().getConfigurator().apply(currentLimit);
+        getModule(2).getSteerMotor().getConfigurator().apply(currentLimit);
+        getModule(3).getSteerMotor().getConfigurator().apply(currentLimit);
     }
 
     public Command applyRequest(CommandXboxController driverController, Supplier<SwerveRequest> requestSupplierWithControl, Supplier<SwerveRequest> requestSupplierWithHeading) {
