@@ -21,6 +21,7 @@ import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.DriverStation.Alliance;
 import edu.wpi.first.wpilibj.GenericHID.RumbleType;
 import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
+import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.InstantCommand;
 import frc.robot.commands.ClawRotationCommand;
@@ -104,7 +105,7 @@ public class RobotContainer {
       .withDeadband(MaxSpeed * PercentDeadband) // Add a 10% deadband
       .withDriveRequestType(DriveRequestType.OpenLoopVoltage);
   
-  private final Telemetry logger = new Telemetry(MaxSpeed);
+  //private final Telemetry logger = new Telemetry(MaxSpeed);
 
   private void configureBindings() {
     // m_SwerveDriveTrain.setDefaultCommand( // Drivetrain will execute this command periodically
@@ -139,21 +140,25 @@ public class RobotContainer {
     if (Utils.isSimulation()) {
       m_SwerveDriveTrain.seedFieldRelative(new Pose2d(new Translation2d(), Rotation2d.fromDegrees(90)));
     }
-    m_SwerveDriveTrain.registerTelemetry(logger::telemeterize);
+    //m_SwerveDriveTrain.registerTelemetry(logger::telemeterize);
   }
 
   public RobotContainer() {
+
+    
+
+    m_ClawElevatorSubsystem.setDefaultCommand(m_ElevatorPosition);
+    NamedCommands.registerCommand("toggleElevator", new autoElevatorPosition(m_ClawElevatorSubsystem, m_ClawRotationSubsystem));
+    NamedCommands.registerCommand("shoot", new autoScoringCommand(m_ClawScoringSubsystem));
+    NamedCommands.registerCommand("intake", new autoIntakeCommand(m_IntakeSubsystem, m_ClawScoringSubsystem));
 
     m_autoChooser.setDefaultOption("Do nothing", new InstantCommand());
     m_autoChooser.addOption("2 note cycle", m_SwerveDriveTrain.getAutoPath("2 note amp cycle"));
     m_autoChooser.addOption("stop after amp", m_SwerveDriveTrain.getAutoPath("Amp"));
     m_autoChooser.addOption("pick up center note", m_SwerveDriveTrain.getAutoPath("Amp to center"));
     m_autoChooser.addOption("Forward", m_SwerveDriveTrain.getAutoPath("Forward"));
-
-    m_ClawElevatorSubsystem.setDefaultCommand(m_ElevatorPosition);
-    NamedCommands.registerCommand("toggleElevator", new autoElevatorPosition(m_ClawElevatorSubsystem, m_ClawRotationSubsystem));
-    NamedCommands.registerCommand("shoot", new autoScoringCommand(m_ClawScoringSubsystem));
-    NamedCommands.registerCommand("intake", new autoIntakeCommand(m_IntakeSubsystem, m_ClawScoringSubsystem));
+    m_autoChooser.addOption("2 note + away", m_SwerveDriveTrain.getAutoPath("2 note and away"));
+    SmartDashboard.putData(m_autoChooser);
 
     configureBindings();
     configureDrivetrain();
@@ -180,7 +185,7 @@ public class RobotContainer {
     ));
     
     operatorInput.getDriverController().y().onTrue(m_SwerveDriveTrain.runOnce(() -> m_SwerveDriveTrain.setHeadingToMaintain(m_SwerveDriveTrain.getOperatorForwardDirection())));
-    operatorInput.getDriverController().a().onTrue(m_SwerveDriveTrain.runOnce(() -> m_SwerveDriveTrain.setHeadingToMaintain(m_SwerveDriveTrain.getOperatorForwardDirection().rotateBy(new Rotation2d(-1.0, 0.0)))));
+    //operatorInput.getDriverController().a().onTrue(m_SwerveDriveTrain.runOnce(() -> m_SwerveDriveTrain.setHeadingToMaintain(m_SwerveDriveTrain.getOperatorForwardDirection().rotateBy(new Rotation2d(-1.0, 0.0)))));
     operatorInput.getDriverController().b().onTrue(m_SwerveDriveTrain.runOnce(() -> 
     {
       double val = 1.0;

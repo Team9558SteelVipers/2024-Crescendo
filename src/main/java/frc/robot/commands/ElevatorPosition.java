@@ -7,6 +7,7 @@ package frc.robot.commands;
 import edu.wpi.first.wpilibj.Timer;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
+import frc.robot.Constants;
 import frc.robot.subsystems.ClawElevatorSubsystem;
 import frc.robot.subsystems.ClawRotationSubsystem;
 
@@ -47,11 +48,6 @@ public class ElevatorPosition extends Command {
         m_ClawRotationSubsystem.setClawRotationPiston(true);
       }
     } 
-
-    SmartDashboard.putBoolean("Target is bottom: ", targetPositionIsBottom);
-    SmartDashboard.putNumber("Encoder Position: ", m_elevatorSubsystem.getEncoderPosition());
-    SmartDashboard.putNumber("Timer Value: ", m_timer.get());
-    //SmartDashboard.putBoolean("Piston extended", )
   }
 
   

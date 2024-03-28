@@ -6,6 +6,7 @@ package frc.robot.commands;
 
 import edu.wpi.first.wpilibj.Timer;
 import edu.wpi.first.wpilibj2.command.Command;
+import frc.robot.Constants;
 import frc.robot.subsystems.ClawElevatorSubsystem;
 import frc.robot.subsystems.ClawRotationSubsystem;
 
@@ -29,10 +30,6 @@ public class autoElevatorPosition extends Command {
     targetPositionIsBottom = !targetPositionIsBottom;
      m_timer.reset();
     m_timer.start();
-  }
-
-  public void toggleElevatorPosition() {
-   
   }
 
   @Override
