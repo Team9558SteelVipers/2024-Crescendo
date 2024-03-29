@@ -42,7 +42,7 @@ public class ClawElevatorSubsystem extends SubsystemBase {
     elevatorPID.GravityType = GravityTypeValue.Elevator_Static;
     
     TalonFXConfiguration elevatorConfigs = new TalonFXConfiguration();
-    elevatorConfigs.CurrentLimits.StatorCurrentLimit = Constants.kStatorCurrentLimit;
+    elevatorConfigs.CurrentLimits.StatorCurrentLimit = Constants.kElevatorStatorCurrentLimit;
     elevatorConfigs.MotorOutput = motorConfig;
     elevatorConfigs.Slot0 = elevatorPID;
     

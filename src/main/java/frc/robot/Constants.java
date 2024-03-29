@@ -4,7 +4,7 @@ public final class Constants {
 
   final public static int PCM_ID = 30;
 
-  final public static double kStatorCurrentLimit = 30.0; // TODO: This is generally a good start. Double check on phoenix tuner the current required to move your elevator
+  final public static double kElevatorStatorCurrentLimit = 30.0; 
   
   public static class ElevatorConstants {
 
@@ -26,7 +26,7 @@ public final class Constants {
   public static class ClimberConstants {
     final public static int climberMotorPort = 20;
     final public static int[] ratchetPistonPort = {2,5};
-    final public static double maxSpeed = 1;
+    final public static double maxSpeed = 0.7;
   }
 
   public static class IntakeConstants {

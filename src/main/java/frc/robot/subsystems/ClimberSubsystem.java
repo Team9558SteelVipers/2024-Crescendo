@@ -4,8 +4,8 @@
 
 package frc.robot.subsystems;
 
-import com.ctre.phoenix.motorcontrol.ControlMode;
-import com.ctre.phoenix.motorcontrol.can.TalonSRX;
+import com.revrobotics.CANSparkMax;
+import com.revrobotics.CANSparkLowLevel.MotorType;
 
 import edu.wpi.first.wpilibj.DoubleSolenoid;
 import edu.wpi.first.wpilibj.PneumaticsModuleType;
@@ -15,21 +15,21 @@ import frc.robot.Constants;
 import static frc.robot.Constants.ClimberConstants.*;
 
 public class ClimberSubsystem extends SubsystemBase {
-  private final TalonSRX climberMotor; 
+  private CANSparkMax climberMotor; 
   private final DoubleSolenoid ratchetPiston;
-
+  
   public ClimberSubsystem() {
-    climberMotor = new TalonSRX(climberMotorPort);
+    climberMotor = new CANSparkMax(climberMotorPort, MotorType.kBrushless);
     ratchetPiston = new DoubleSolenoid(Constants.PCM_ID, PneumaticsModuleType.CTREPCM, Constants.ClimberConstants.ratchetPistonPort[1], Constants.ClimberConstants.ratchetPistonPort[0]);
     climberMotor.setInverted(false);
   }
 
   public void climberSpeed (double speed){
-    climberMotor.set(ControlMode.PercentOutput, speed*Constants.ClimberConstants.maxSpeed);
+    climberMotor.set(speed*Constants.ClimberConstants.maxSpeed);
   }
 
   public void climberStop (){
-    climberMotor.set(ControlMode.PercentOutput, 0);
+    climberMotor.set(0);
   }
 
   public void setRatchetPiston(boolean pistonValue) {

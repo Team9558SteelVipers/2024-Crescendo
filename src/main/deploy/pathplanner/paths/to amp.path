@@ -1,0 +1,52 @@
+{
+  "version": 1.0,
+  "waypoints": [
+    {
+      "anchor": {
+        "x": 3.41,
+        "y": 7.67
+      },
+      "prevControl": null,
+      "nextControl": {
+        "x": 2.9066934025469795,
+        "y": 7.670597937488245
+      },
+      "isLocked": false,
+      "linkedName": null
+    },
+    {
+      "anchor": {
+        "x": 1.7941639306977362,
+        "y": 7.67
+      },
+      "prevControl": {
+        "x": 2.21575404634404,
+        "y": 7.68230877403267
+      },
+      "nextControl": null,
+      "isLocked": false,
+      "linkedName": null
+    }
+  ],
+  "rotationTargets": [],
+  "constraintZones": [],
+  "eventMarkers": [],
+  "globalConstraints": {
+    "maxVelocity": 3.5,
+    "maxAcceleration": 1.75,
+    "maxAngularVelocity": 360.0,
+    "maxAngularAcceleration": 300.0
+  },
+  "goalEndState": {
+    "velocity": 0.0,
+    "rotation": 90.0,
+    "rotateFast": false
+  },
+  "reversed": false,
+  "folder": "Rush note 1",
+  "previewStartingState": {
+    "rotation": 90.0,
+    "velocity": 3.0
+  },
+  "useDefaultConstraints": true
+}

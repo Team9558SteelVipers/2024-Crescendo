@@ -4,7 +4,9 @@
 
 package frc.robot;
 
+import com.pathplanner.lib.commands.FollowPathCommand;
 import edu.wpi.first.wpilibj.TimedRobot;
+import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.CommandScheduler;
 
@@ -18,7 +20,7 @@ import edu.wpi.first.wpilibj2.command.CommandScheduler;
 public class Robot extends TimedRobot {
   private Command m_autonomousCommand;
 
-  private RobotContainer m_robotContainer;
+  private RobotContainer m_robotContainer = new RobotContainer();
   // private EventLoop m_loop = new EventLoop();
   // private BooleanEvent rumble = new BooleanEvent(m_loop, RobotContainer.m_ClawScoringSubsystem::getBeamBreak);
   
@@ -29,9 +31,9 @@ public class Robot extends TimedRobot {
 
   @Override
   public void robotInit() {
+    FollowPathCommand.warmupCommand().schedule();
     // Instantiate our RobotContainer.  This will perform all our button bindings, and put our
     // autonomous chooser on the dashboard.
-    m_robotContainer = new RobotContainer();
     
   }
 
@@ -94,13 +96,14 @@ public class Robot extends TimedRobot {
   @Override
   public void teleopPeriodic() {
     try {
+      //SmartDashboard.putNumber("climber encoder", m_robotContainer.m_ClimberSubsystem.getEncoder());
       // m_loop.poll();
       // rumble.rising().ifHigh(() -> {
       //   OI.driverController.getHID().setRumble(RumbleType.kBothRumble, 1);
       // });
       // rumble.rising().ifHigh(() -> {
       //   OI.operatorController.getHID().setRumble(RumbleType.kBothRumble, 1);
-      // });
+      // }); 
 
       // rumble.rising().ifHigh(() -> {
       //   OI.driverController.getHID().setRumble(RumbleType.kBothRumble, 0);

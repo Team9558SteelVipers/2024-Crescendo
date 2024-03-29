@@ -3,7 +3,8 @@
   "robotLength": 0.9906,
   "holonomicMode": true,
   "pathFolders": [
-    "Amp Auton testing"
+    "Amp Auton testing",
+    "Rush note 1"
   ],
   "autoFolders": [
     "AmpAutons"

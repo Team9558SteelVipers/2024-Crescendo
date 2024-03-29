@@ -43,7 +43,6 @@ import frc.robot.subsystems.ClimberSubsystem;
 import frc.robot.subsystems.IntakeSubsystem;
 import frc.robot.subsystems.VisionSubsystem;
 import frc.robot.subsystems.CTRESwerve.CommandSwerveDrivetrain;
-import frc.robot.subsystems.CTRESwerve.Telemetry;
 import frc.robot.subsystems.CTRESwerve.generated.TunerConstants;
 
 /**
@@ -136,7 +135,6 @@ public class RobotContainer {
     
     //operatorInput.getOperatorController().leftBumper().runOnce(m_ClawRotationCommand);
 
-
     if (Utils.isSimulation()) {
       m_SwerveDriveTrain.seedFieldRelative(new Pose2d(new Translation2d(), Rotation2d.fromDegrees(90)));
     }
@@ -153,11 +151,12 @@ public class RobotContainer {
     NamedCommands.registerCommand("intake", new autoIntakeCommand(m_IntakeSubsystem, m_ClawScoringSubsystem));
 
     m_autoChooser.setDefaultOption("Do nothing", new InstantCommand());
-    m_autoChooser.addOption("2 note cycle", m_SwerveDriveTrain.getAutoPath("2 note amp cycle"));
-    m_autoChooser.addOption("stop after amp", m_SwerveDriveTrain.getAutoPath("Amp"));
-    m_autoChooser.addOption("pick up center note", m_SwerveDriveTrain.getAutoPath("Amp to center"));
+    m_autoChooser.addOption("2 note cycle", m_SwerveDriveTrain.getAutoPath("2 notes"));
+    m_autoChooser.addOption("stop after amp", m_SwerveDriveTrain.getAutoPath("1 note"));
+    m_autoChooser.addOption("pick up center note", m_SwerveDriveTrain.getAutoPath("1.5 notes"));
     m_autoChooser.addOption("Forward", m_SwerveDriveTrain.getAutoPath("Forward"));
-    m_autoChooser.addOption("2 note + away", m_SwerveDriveTrain.getAutoPath("2 note and away"));
+    m_autoChooser.addOption("drop the glove", m_SwerveDriveTrain.getAutoPath("Drop the glove"));
+    m_autoChooser.addOption("2.5 notes", m_SwerveDriveTrain.getAutoPath("2.5 notes"));
     SmartDashboard.putData(m_autoChooser);
 
     configureBindings();
