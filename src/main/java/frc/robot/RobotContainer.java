@@ -135,9 +135,9 @@ public class RobotContainer {
     
     //operatorInput.getOperatorController().leftBumper().runOnce(m_ClawRotationCommand);
 
-    if (Utils.isSimulation()) {
-      m_SwerveDriveTrain.seedFieldRelative(new Pose2d(new Translation2d(), Rotation2d.fromDegrees(90)));
-    }
+    // if (Utils.isSimulation()) {
+    //   m_SwerveDriveTrain.seedFieldRelative(new Pose2d(new Translation2d(), Rotation2d.fromDegrees(90)));
+    // }
     //m_SwerveDriveTrain.registerTelemetry(logger::telemeterize);
   }
 
@@ -212,7 +212,7 @@ public class RobotContainer {
     m_SwerveDriveTrain.setDefaultCommand( // Drivetrain will execute this command periodically
       m_SwerveDriveTrain.applyRequest(
 
-        operatorInput.getDriverController(), // provide controller inputs to know when to use FieldCentricFacingAngle
+        // operatorInput.getDriverController(), // provide controller inputs to know when to use FieldCentricFacingAngle
 
         () -> drive
           .withVelocityX(
@@ -231,27 +231,27 @@ public class RobotContainer {
               - (operatorInput.getDriverController().getLeftTriggerAxis()*PercentBrake)) // Left Trigger to decrease to min speed
             )
           ) 
-          .withRotationalRate(-operatorInput.getDriverController().getRightX()*MaxAngularRate), // Drive counterclockwise with negative X (left)
+          .withRotationalRate(-operatorInput.getDriverController().getRightX()*MaxAngularRate) // Drive counterclockwise with negative X (left)
        
        
-          () -> driveFacing
-          .withVelocityX(
-            xVelRateLimited.calculate( // control acceleration
-              (-operatorInput.getDriverController().getLeftY() * MaxSpeed) // Drive forward with negative Y (forward)
-              * (PercentLimit // limit base speed
-              + (operatorInput.getDriverController().getRightTriggerAxis()*PercentGas) // Right Trigger to increase to max speed
-              - (operatorInput.getDriverController().getLeftTriggerAxis()*PercentBrake)) // Left Trigger to decrease to min speed
-            )
-          )
-          .withVelocityY(
-            yVelRateLimited.calculate(
-              (-operatorInput.getDriverController().getLeftX() * MaxSpeed) // Drive left with negative X (left)
-              * (PercentLimit // limit base speed
-              + (operatorInput.getDriverController().getRightTriggerAxis()*PercentGas) // Right Trigger to increase to max speed
-              - (operatorInput.getDriverController().getLeftTriggerAxis()*PercentBrake)) // Left Trigger to decrease to min speed
-            )
-          ) 
-          .withTargetDirection(m_SwerveDriveTrain.getHeadingToMaintain()) // Maintain last known heading
+          // () -> driveFacing
+          // .withVelocityX(
+          //   xVelRateLimited.calculate( // control acceleration
+          //     (-operatorInput.getDriverController().getLeftY() * MaxSpeed) // Drive forward with negative Y (forward)
+          //     * (PercentLimit // limit base speed
+          //     + (operatorInput.getDriverController().getRightTriggerAxis()*PercentGas) // Right Trigger to increase to max speed
+          //     - (operatorInput.getDriverController().getLeftTriggerAxis()*PercentBrake)) // Left Trigger to decrease to min speed
+          //   )
+          // )
+          // .withVelocityY(
+          //   yVelRateLimited.calculate(
+          //     (-operatorInput.getDriverController().getLeftX() * MaxSpeed) // Drive left with negative X (left)
+          //     * (PercentLimit // limit base speed
+          //     + (operatorInput.getDriverController().getRightTriggerAxis()*PercentGas) // Right Trigger to increase to max speed
+          //     - (operatorInput.getDriverController().getLeftTriggerAxis()*PercentBrake)) // Left Trigger to decrease to min speed
+          //   )
+          // ) 
+          // .withTargetDirection(m_SwerveDriveTrain.getHeadingToMaintain()) // Maintain last known heading
       )
     );
   }

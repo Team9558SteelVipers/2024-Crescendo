@@ -5,6 +5,8 @@
 package frc.robot;
 
 import com.pathplanner.lib.commands.FollowPathCommand;
+
+import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.TimedRobot;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
@@ -32,6 +34,7 @@ public class Robot extends TimedRobot {
   @Override
   public void robotInit() {
     FollowPathCommand.warmupCommand().schedule();
+    DriverStation.silenceJoystickConnectionWarning(true);
     // Instantiate our RobotContainer.  This will perform all our button bindings, and put our
     // autonomous chooser on the dashboard.
     
@@ -95,25 +98,7 @@ public class Robot extends TimedRobot {
   /** This function is called periodically during operator control. */
   @Override
   public void teleopPeriodic() {
-    try {
-      //SmartDashboard.putNumber("climber encoder", m_robotContainer.m_ClimberSubsystem.getEncoder());
-      // m_loop.poll();
-      // rumble.rising().ifHigh(() -> {
-      //   OI.driverController.getHID().setRumble(RumbleType.kBothRumble, 1);
-      // });
-      // rumble.rising().ifHigh(() -> {
-      //   OI.operatorController.getHID().setRumble(RumbleType.kBothRumble, 1);
-      // }); 
-
-      // rumble.rising().ifHigh(() -> {
-      //   OI.driverController.getHID().setRumble(RumbleType.kBothRumble, 0);
-      // });
-      // rumble.rising().negate().ifHigh(() -> {
-      //   OI.operatorController.getHID().setRumble(RumbleType.kBothRumble, 0);
-      // });
-    } catch (Exception e) {
-      
-    }
+   
   }
 
   @Override
