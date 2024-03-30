@@ -1,0 +1,52 @@
+{
+  "version": 1.0,
+  "waypoints": [
+    {
+      "anchor": {
+        "x": 4.22,
+        "y": 7.81
+      },
+      "prevControl": null,
+      "nextControl": {
+        "x": 5.476250952501905,
+        "y": 7.764795529591059
+      },
+      "isLocked": false,
+      "linkedName": null
+    },
+    {
+      "anchor": {
+        "x": 8.03276606553213,
+        "y": 7.639065278130556
+      },
+      "prevControl": {
+        "x": 8.256286512573023,
+        "y": 7.904495808991618
+      },
+      "nextControl": null,
+      "isLocked": false,
+      "linkedName": null
+    }
+  ],
+  "rotationTargets": [],
+  "constraintZones": [],
+  "eventMarkers": [],
+  "globalConstraints": {
+    "maxVelocity": 3.5,
+    "maxAcceleration": 1.75,
+    "maxAngularVelocity": 360.0,
+    "maxAngularAcceleration": 300.0
+  },
+  "goalEndState": {
+    "velocity": 0,
+    "rotation": -31.138972436978797,
+    "rotateFast": false
+  },
+  "reversed": false,
+  "folder": "Grief auton",
+  "previewStartingState": {
+    "rotation": 0,
+    "velocity": 4.0
+  },
+  "useDefaultConstraints": true
+}

@@ -4,10 +4,13 @@
   "holonomicMode": true,
   "pathFolders": [
     "Amp Auton testing",
+    "Grief auton",
     "Rush note 1"
   ],
   "autoFolders": [
-    "AmpAutons"
+    "AmpAutons",
+    "Grief Auton",
+    "Rush note 1"
   ],
   "defaultMaxVel": 3.5,
   "defaultMaxAccel": 1.75,
