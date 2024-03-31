@@ -16,7 +16,6 @@ public class ClawRotationSubsystem extends SubsystemBase {
   
   public ClawRotationSubsystem() {
     clawRotationPiston = new DoubleSolenoid(Constants.PCM_ID, PneumaticsModuleType.CTREPCM,Constants.ScoringConstants.ClawPistonPorts[0],Constants.ScoringConstants.ClawPistonPorts[1]);
-    
   }
 
   public void setClawRotationPiston(Boolean clawRotationPistonValue) {

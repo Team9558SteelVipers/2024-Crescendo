@@ -36,8 +36,6 @@ public class ClimberSubsystem extends SubsystemBase {
 
     if (!pistonValue) {ratchetPiston.set(DoubleSolenoid.Value.kReverse);}
     else if (pistonValue) {ratchetPiston.set(DoubleSolenoid.Value.kForward);}
-
-    
   }
 
   @Override

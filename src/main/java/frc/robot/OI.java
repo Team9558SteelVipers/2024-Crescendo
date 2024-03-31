@@ -1,10 +1,8 @@
 package frc.robot;
 
-
 import static frc.robot.Constants.oiConstants.*;
 
 import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
-
 
 public class OI {
 
@@ -14,8 +12,6 @@ public class OI {
     public OI(){
         driverController = new CommandXboxController(driverControllerPort);
         operatorController = new CommandXboxController(operatorControllerPort);
-        
-        
     }
 
     public CommandXboxController getDriverController() {
@@ -26,7 +22,3 @@ public class OI {
         return operatorController;
     }
 }
-
-
-
-//This is a test change part 2

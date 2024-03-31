@@ -7,16 +7,12 @@ package frc.robot;
 
 import com.ctre.phoenix6.mechanisms.swerve.SwerveModule.DriveRequestType;
 
-
-import com.ctre.phoenix6.Utils;
 import com.ctre.phoenix6.mechanisms.swerve.SwerveRequest;
 import com.ctre.phoenix6.mechanisms.swerve.utility.PhoenixPIDController;
 import com.pathplanner.lib.auto.NamedCommands;
 
 import edu.wpi.first.math.filter.SlewRateLimiter;
-import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Rotation2d;
-import edu.wpi.first.math.geometry.Translation2d;
 import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.DriverStation.Alliance;
 import edu.wpi.first.wpilibj.GenericHID.RumbleType;
@@ -121,7 +117,6 @@ public class RobotContainer {
     //reset the field-centric heading on left bumper press
     // operatorInput.getDriverController().leftBumper().onTrue(m_SwerveDriveTrain.runOnce(() -> m_SwerveDriveTrain.seedFieldRelative()));
     
-    m_ClimberSubsystem.setDefaultCommand(m_ClimberCommand);
     operatorInput.getOperatorController().leftTrigger(0.5).whileTrue(m_IntakeCommand);
     operatorInput.getOperatorController().rightTrigger(0.5).whileTrue(m_InverseIntakeCommand);
     operatorInput.getOperatorController().x().onTrue(new InstantCommand(() ->
@@ -143,9 +138,8 @@ public class RobotContainer {
 
   public RobotContainer() {
 
-    
-
     m_ClawElevatorSubsystem.setDefaultCommand(m_ElevatorPosition);
+    m_ClimberSubsystem.setDefaultCommand(m_ClimberCommand);
     NamedCommands.registerCommand("toggleElevator", new autoElevatorPosition(m_ClawElevatorSubsystem, m_ClawRotationSubsystem));
     NamedCommands.registerCommand("shoot", new autoScoringCommand(m_ClawScoringSubsystem));
     NamedCommands.registerCommand("intake", new autoIntakeCommand(m_IntakeSubsystem, m_ClawScoringSubsystem));
@@ -256,50 +250,14 @@ public class RobotContainer {
     );
   }
 
+  /**
+   * Use this to pass the autonomous command to the main {@link Robot} class.
+   *
+   * @return the command to run in autonomous
+   */
   public Command getAutonomousCommand() {
-    //return new ampAuton(m_ClawElevatorSubsystem,m_ClawScoringSubsystem,m_SwerveDriveTrain,m_ClawRotationSubsystem);
     return m_autoChooser.getSelected();
-    // return m_SwerveDriveTrain.applyRequest(
-
-    //     operatorInput.getDriverController(), // provide controller inputs to know when to use FieldCentricFacingAngle
-
-    //     () -> drive
-    //       .withVelocityX(
-    //         xVelRateLimited.calculate( // control acceleration
-    //           (speed* MaxSpeed) // Drive forward with negative Y (forward)
-    //           * (PercentLimit)// limit base speed
-
-    //         )
-    //       ) 
-    //       .withVelocityY(
-    //         yVelRateLimited.calculate(
-    //           (-0 * MaxSpeed) // Drive left with negative X (left)
-    //           * (PercentLimit) // limit base speed // Left Trigger to decrease to min speed
-    //         )
-    //       ) 
-    //       .withRotationalRate(-0*MaxAngularRate), // Drive counterclockwise with negative X (left)
-       
-       
-    //       () -> driveFacing
-    //       .withVelocityX(
-    //         xVelRateLimited.calculate( // control acceleration
-    //           (speed * MaxSpeed) // Drive forward with negative Y (forward)
-    //           * (PercentLimit) // limit base speed // Left Trigger to decrease to min speed
-    //         )
-    //       )
-    //       .withVelocityY(
-    //         yVelRateLimited.calculate(
-    //           (-0 * MaxSpeed) // Drive left with negative X (left)
-    //           * (PercentLimit) // limit base speed // Left Trigger to decrease to min speed
-    //         )
-    //       ) 
-    //       .withTargetDirection(m_SwerveDriveTrain.getHeadingToMaintain()) // Maintain last known heading
-    //   );
-   }
-  
-
-  // Replace with CommandPS4Controller or CommandJoystick if needed
-  
+   } 
 
   /** The  container for the robot. Contains subsystems, OI devices, and commands. */
 
@@ -311,13 +269,6 @@ public class RobotContainer {
    * https://3015rangerrobotics.github.io/pathplannerlib/PathplannerLib.jsonCommandXboxController Xbox}/{@link edu.wpi.first.wpilibj2.command.button.CommandPS4Controller
    * PS4} controllers or {@link edu.wpi.first.wpilibj2.command.button.CommandJoystick Flight
    * joysticks}.
-   */
- 
-
-  /**
-   * Use this to pass the autonomous command to the main {@link Robot} class.
-   *
-   * @return the command to run in autonomous
    */
   
 }

@@ -4,41 +4,45 @@
 
 package frc.robot.commands;
 
-import static frc.robot.Constants.ScoringConstants.motorScoringSpeed;
-
-import edu.wpi.first.wpilibj.Timer;
 import edu.wpi.first.wpilibj2.command.Command;
 import frc.robot.subsystems.ClawScoringSubsystem;
 
-public class autoScoringCommand extends Command {
+
+public class InverseScoringCommand extends Command {
   
+ 
   private static ClawScoringSubsystem m_clawScoringSubsystem;
-  private static Timer m_Timer = new Timer(); 
   
-  public autoScoringCommand(ClawScoringSubsystem clawScoringSubsystem){
+  public InverseScoringCommand(ClawScoringSubsystem clawScoringSubsystem){
     
     m_clawScoringSubsystem = clawScoringSubsystem;
     addRequirements(clawScoringSubsystem);
   }
+
   
   @Override
   public void initialize() {
-    m_Timer.reset();
-    m_Timer.start(); 
+
+    
   }
+
  
   @Override
   public void execute() {
-    m_clawScoringSubsystem.setIntakeMotorSpeed(motorScoringSpeed);
+
+    m_clawScoringSubsystem.setIntakeMotorSpeed(-1);
+
   }
+
   
   @Override
   public void end(boolean interrupted) {
     m_clawScoringSubsystem.setIntakeMotorSpeed(0.0);
   }
+
   
   @Override
   public boolean isFinished() {
-    return m_Timer.get() > 0.3;
+    return false;
   }
 }

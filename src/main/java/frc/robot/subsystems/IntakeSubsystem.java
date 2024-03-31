@@ -8,7 +8,6 @@ import com.ctre.phoenix6.hardware.TalonFX;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import static frc.robot.Constants.IntakeConstants.*;
 
-
 public class IntakeSubsystem extends SubsystemBase {
   
   TalonFX intakeMotor;
@@ -24,7 +23,6 @@ public class IntakeSubsystem extends SubsystemBase {
   public double getIntakeMotorSpeed() {
     return intakeMotor.get();
   }
-
 
   @Override
   public void periodic() {
