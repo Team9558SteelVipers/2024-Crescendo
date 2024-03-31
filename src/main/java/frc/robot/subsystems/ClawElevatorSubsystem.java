@@ -93,9 +93,6 @@ public class ClawElevatorSubsystem extends SubsystemBase {
     return currentPosition;
   }
 
-
-
-
   @Override
   public void periodic() {
     

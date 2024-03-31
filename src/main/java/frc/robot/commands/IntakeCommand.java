@@ -15,20 +15,14 @@ public class IntakeCommand extends Command {
   private static IntakeSubsystem m_intakeSubsystem;
   private static ClawScoringSubsystem m_clawScoringSubsystem;
 
-  
-
   public IntakeCommand(IntakeSubsystem intakeSubsystem, ClawScoringSubsystem clawScoringSubsystem){
     m_intakeSubsystem = intakeSubsystem;
     m_clawScoringSubsystem = clawScoringSubsystem;
     addRequirements(intakeSubsystem, clawScoringSubsystem);
   }
 
-  
   @Override
-  public void initialize() {
-      
-    
-  }
+  public void initialize() { }
 
  
   @Override

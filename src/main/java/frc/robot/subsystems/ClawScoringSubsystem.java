@@ -47,7 +47,6 @@ public class ClawScoringSubsystem extends SubsystemBase {
     return scoringMotor.getPosition().getValue() - encoderOffset;
   }
 
-
   @Override
   public void periodic() {
     // This method will be called once per scheduler run

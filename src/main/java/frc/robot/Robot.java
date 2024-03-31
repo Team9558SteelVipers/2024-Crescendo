@@ -5,8 +5,9 @@
 package frc.robot;
 
 import com.pathplanner.lib.commands.FollowPathCommand;
+
+import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.TimedRobot;
-import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.CommandScheduler;
 
@@ -31,10 +32,9 @@ public class Robot extends TimedRobot {
 
   @Override
   public void robotInit() {
-    FollowPathCommand.warmupCommand().schedule();
     // Instantiate our RobotContainer.  This will perform all our button bindings, and put our
     // autonomous chooser on the dashboard.
-    
+    FollowPathCommand.warmupCommand().schedule();    
   }
 
   /**
@@ -46,12 +46,12 @@ public class Robot extends TimedRobot {
    */
   @Override
   public void robotPeriodic() {
-
     // Runs the Scheduler.  This is responsible for polling buttons, adding newly-scheduled
     // commands, running already-scheduled commands, removing finished or interrupted commands,
     // and running subsystem periodic() methods.  This must be called from the robot's periodic
     // block in order for anything in the Command-based framework to work.
     CommandScheduler.getInstance().run();
+    DriverStation.silenceJoystickConnectionWarning(true);
   }
 
   /** This function is called once each time the robot enters Disabled mode. */
@@ -95,25 +95,7 @@ public class Robot extends TimedRobot {
   /** This function is called periodically during operator control. */
   @Override
   public void teleopPeriodic() {
-    try {
-      //SmartDashboard.putNumber("climber encoder", m_robotContainer.m_ClimberSubsystem.getEncoder());
-      // m_loop.poll();
-      // rumble.rising().ifHigh(() -> {
-      //   OI.driverController.getHID().setRumble(RumbleType.kBothRumble, 1);
-      // });
-      // rumble.rising().ifHigh(() -> {
-      //   OI.operatorController.getHID().setRumble(RumbleType.kBothRumble, 1);
-      // }); 
-
-      // rumble.rising().ifHigh(() -> {
-      //   OI.driverController.getHID().setRumble(RumbleType.kBothRumble, 0);
-      // });
-      // rumble.rising().negate().ifHigh(() -> {
-      //   OI.operatorController.getHID().setRumble(RumbleType.kBothRumble, 0);
-      // });
-    } catch (Exception e) {
-      
-    }
+   
   }
 
   @Override

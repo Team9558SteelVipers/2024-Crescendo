@@ -51,15 +51,13 @@ public class ElevatorPosition extends Command {
   
   @Override
   public void end(boolean interrupted) {
-    // m_elevatorSubsystem.setElevatorMotor(0);
-    // m_ClawRotationSubsystem.setClawRotationPiston(false);
+    
   }
   
 
   @Override
   public boolean isFinished() {
 
-    // if (targetPositionIsBottom) return m_elevatorSubsystem.getElevatorPosition() < 1;
     return false;
 
   }
