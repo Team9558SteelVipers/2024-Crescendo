@@ -53,23 +53,23 @@ public class RobotContainer {
   // The robot's subsystems and commands are defined here...
   public static OI operatorInput = new OI();
 
-  public static final CommandSwerveDrivetrain m_SwerveDriveTrain = TunerConstants.DriveTrain;
-  public static final IntakeSubsystem m_IntakeSubsystem = new IntakeSubsystem();
-  public static final ClimberSubsystem m_ClimberSubsystem = new ClimberSubsystem();
-  public static final ClawScoringSubsystem m_ClawScoringSubsystem = new ClawScoringSubsystem();
-  public static final ClawRotationSubsystem m_ClawRotationSubsystem = new ClawRotationSubsystem();
-  public static final ClawElevatorSubsystem m_ClawElevatorSubsystem = new ClawElevatorSubsystem();
-  public static final VisionSubsystem m_VisionSubsystem = new VisionSubsystem();
+  public final CommandSwerveDrivetrain m_SwerveDriveTrain = TunerConstants.DriveTrain;
+  public final IntakeSubsystem m_IntakeSubsystem = new IntakeSubsystem();
+  public final ClimberSubsystem m_ClimberSubsystem = new ClimberSubsystem();
+  public final ClawScoringSubsystem m_ClawScoringSubsystem = new ClawScoringSubsystem();
+  public final ClawRotationSubsystem m_ClawRotationSubsystem = new ClawRotationSubsystem();
+  public final ClawElevatorSubsystem m_ClawElevatorSubsystem = new ClawElevatorSubsystem();
+  public final VisionSubsystem m_VisionSubsystem = new VisionSubsystem();
 
-  public static final ClawRotationCommand m_ClawRotationCommand = new ClawRotationCommand(m_ClawRotationSubsystem);
-  public static final ScoringCommand m_ScoringCommand = new ScoringCommand(m_ClawScoringSubsystem);
-  public static final ClimberCommand m_ClimberCommand = new ClimberCommand(m_ClimberSubsystem);
-  public static final ElevatorPosition m_ElevatorPosition = new ElevatorPosition(m_ClawElevatorSubsystem, m_ClawRotationSubsystem);
-  public static final IntakeCommand m_IntakeCommand = new IntakeCommand(m_IntakeSubsystem, m_ClawScoringSubsystem);
-  public static final InverseIntake m_InverseIntakeCommand = new InverseIntake(m_IntakeSubsystem, m_ClawScoringSubsystem);
-  public static final NearestTrapCommand m_NearestTrapCommand = new NearestTrapCommand(m_SwerveDriveTrain);
-  public static final RatchetPistonEngage m_ratchetEngage = new RatchetPistonEngage(m_ClimberSubsystem);
-  public static final RatchetPistonDisengage m_ratchetDisengage = new RatchetPistonDisengage(m_ClimberSubsystem);
+  public final ClawRotationCommand m_ClawRotationCommand = new ClawRotationCommand(m_ClawRotationSubsystem);
+  public final ScoringCommand m_ScoringCommand = new ScoringCommand(m_ClawScoringSubsystem);
+  public final ClimberCommand m_ClimberCommand = new ClimberCommand(m_ClimberSubsystem);
+  public final ElevatorPosition m_ElevatorPosition = new ElevatorPosition(m_ClawElevatorSubsystem, m_ClawRotationSubsystem);
+  public final IntakeCommand m_IntakeCommand = new IntakeCommand(m_IntakeSubsystem, m_ClawScoringSubsystem);
+  public final InverseIntake m_InverseIntakeCommand = new InverseIntake(m_IntakeSubsystem, m_ClawScoringSubsystem);
+  public final NearestTrapCommand m_NearestTrapCommand = new NearestTrapCommand(m_SwerveDriveTrain);
+  public final RatchetPistonEngage m_ratchetEngage = new RatchetPistonEngage(m_ClimberSubsystem);
+  public final RatchetPistonDisengage m_ratchetDisengage = new RatchetPistonDisengage(m_ClimberSubsystem);
 
   /* ====================================================================================== SWERVE DRIVE CONFIGURATION | START */
   // PARAMETERS

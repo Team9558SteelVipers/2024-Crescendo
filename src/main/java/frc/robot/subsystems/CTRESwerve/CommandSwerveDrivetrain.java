@@ -2,6 +2,8 @@ package frc.robot.subsystems.CTRESwerve;
 
 import java.util.function.Supplier;
 
+import static edu.wpi.first.units.Units.Volts;
+import com.ctre.phoenix6.SignalLogger;
 import com.ctre.phoenix6.Utils;
 import com.ctre.phoenix6.configs.CurrentLimitsConfigs;
 import com.ctre.phoenix6.mechanisms.swerve.SwerveDrivetrain;
@@ -22,6 +24,7 @@ import edu.wpi.first.wpilibj.RobotController;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.Subsystem;
 import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
+import edu.wpi.first.wpilibj2.command.sysid.SysIdRoutine;
 import frc.robot.subsystems.CTRESwerve.generated.TunerConstants;
 
 /**
@@ -37,6 +40,65 @@ public class CommandSwerveDrivetrain extends SwerveDrivetrain implements Subsyst
 
     private final SwerveRequest.ApplyChassisSpeeds AutoRequest = new SwerveRequest.ApplyChassisSpeeds();
 
+    private final SwerveRequest.SysIdSwerveTranslation TranslationCharacterization = new SwerveRequest.SysIdSwerveTranslation();
+    private final SwerveRequest.SysIdSwerveRotation RotationCharacterization = new SwerveRequest.SysIdSwerveRotation();
+    private final SwerveRequest.SysIdSwerveSteerGains SteerCharacterization = new SwerveRequest.SysIdSwerveSteerGains();
+
+    private SysIdRoutine SysIdRoutineTranslation = new SysIdRoutine(
+            new SysIdRoutine.Config(
+                    null,
+                    Volts.of(4),
+                    null,
+                    (state) -> SignalLogger.writeString("state", state.toString())),
+            new SysIdRoutine.Mechanism(
+                    (volts) -> setControl(TranslationCharacterization.withVolts(volts)),
+                    null,
+                    this));
+    private final SysIdRoutine SysIdRoutineRotation = new SysIdRoutine(
+            new SysIdRoutine.Config(
+                    null,
+                    Volts.of(4),
+                    null,
+                    (state) -> SignalLogger.writeString("state", state.toString())),
+            new SysIdRoutine.Mechanism(
+                    (volts) -> setControl(RotationCharacterization.withVolts(volts)),
+                    null,
+                    this));
+    private final SysIdRoutine SysIdRoutineSteer = new SysIdRoutine(
+            new SysIdRoutine.Config(
+                    null,
+                    Volts.of(7),
+                    null,
+                    (state) -> SignalLogger.writeString("state", state.toString())),
+            new SysIdRoutine.Mechanism(
+                    (volts) -> setControl(SteerCharacterization.withVolts(volts)),
+                    null,
+                    this));
+
+    
+    public Command sysIdTranslationQuasistatic(SysIdRoutine.Direction direction) {
+        return SysIdRoutineTranslation.quasistatic(direction);
+    }
+
+    public Command sysIdTranslationDynamic(SysIdRoutine.Direction direction) {
+        return SysIdRoutineTranslation.dynamic(direction);
+    }
+    
+    public Command sysIdRotationQuasistatic(SysIdRoutine.Direction direction) {
+        return SysIdRoutineRotation.quasistatic(direction);
+    }
+
+    public Command sysIdRotationDynamic(SysIdRoutine.Direction direction) {
+        return SysIdRoutineRotation.dynamic(direction);
+    }
+
+    public Command sysIdSteerQuasistatic(SysIdRoutine.Direction direction) {
+        return SysIdRoutineSteer.quasistatic(direction);
+    }
+
+    public Command sysIdSteerDynamic(SysIdRoutine.Direction direction) {
+        return SysIdRoutineSteer.dynamic(direction);
+    }
 
     public CommandSwerveDrivetrain(SwerveDrivetrainConstants driveTrainConstants, double OdometryUpdateFrequency, SwerveModuleConstants... modules) {
         super(driveTrainConstants, OdometryUpdateFrequency, modules);
@@ -86,43 +148,9 @@ public class CommandSwerveDrivetrain extends SwerveDrivetrain implements Subsyst
     public Command getAutoPath(String pathName) {
         return new PathPlannerAuto(pathName);
     }
-    
-    public ChassisSpeeds getCurrentRobotChassisSpeeds() {
-        return m_kinematics.toChassisSpeeds(getState().ModuleStates);
-    }
-
-    public Rotation2d getOperatorForwardDirection()
-    {
-        return m_operatorForwardDirection;
-    }
-
-    public Rotation2d getCurrentRobotHeading()
-    {
-        return getState().Pose.getRotation().minus(m_fieldRelativeOffset);
-    }
-
-    public Rotation2d getHeadingToMaintain()
-    {
-        return m_headingToMaintain;
-    }
-
-    public void setHeadingToMaintain(Rotation2d newHeading)
-    {
-        m_headingToMaintain = newHeading;
-    }
 
     public Command applyRequest(Supplier<SwerveRequest> requestSupplier) {
         return run(() -> this.setControl(requestSupplier.get()));
-    }
-
-    public void setAzimuthMotorsStatorCurrent()
-    {
-        CurrentLimitsConfigs currentLimit = new CurrentLimitsConfigs().withStatorCurrentLimit(150).withStatorCurrentLimitEnable(true);
-
-        getModule(0).getSteerMotor().getConfigurator().apply(currentLimit);
-        getModule(1).getSteerMotor().getConfigurator().apply(currentLimit);
-        getModule(2).getSteerMotor().getConfigurator().apply(currentLimit);
-        getModule(3).getSteerMotor().getConfigurator().apply(currentLimit);
     }
 
     public Command applyRequest(CommandXboxController driverController, Supplier<SwerveRequest> requestSupplierWithControl, Supplier<SwerveRequest> requestSupplierWithHeading) {
@@ -148,6 +176,40 @@ public class CommandSwerveDrivetrain extends SwerveDrivetrain implements Subsyst
             this.setControl(activeRequest.get());
         });
 
+    }
+
+    public ChassisSpeeds getCurrentRobotChassisSpeeds() {
+        return m_kinematics.toChassisSpeeds(getState().ModuleStates);
+    }
+
+    public Rotation2d getOperatorForwardDirection()
+    {
+        return m_operatorForwardDirection;
+    }
+
+    public Rotation2d getCurrentRobotHeading()
+    {
+        return getState().Pose.getRotation().minus(m_fieldRelativeOffset);
+    }
+
+    public Rotation2d getHeadingToMaintain()
+    {
+        return m_headingToMaintain;
+    }
+
+    public void setHeadingToMaintain(Rotation2d newHeading)
+    {
+        m_headingToMaintain = newHeading;
+    }
+
+    public void setAzimuthMotorsStatorCurrent()
+    {
+        CurrentLimitsConfigs currentLimit = new CurrentLimitsConfigs().withStatorCurrentLimit(150).withStatorCurrentLimitEnable(true);
+
+        getModule(0).getSteerMotor().getConfigurator().apply(currentLimit);
+        getModule(1).getSteerMotor().getConfigurator().apply(currentLimit);
+        getModule(2).getSteerMotor().getConfigurator().apply(currentLimit);
+        getModule(3).getSteerMotor().getConfigurator().apply(currentLimit);
     }
 
     private void startSimThread() {

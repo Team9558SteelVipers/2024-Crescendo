@@ -21,7 +21,7 @@ import edu.wpi.first.wpilibj2.command.CommandScheduler;
 public class Robot extends TimedRobot {
   private Command m_autonomousCommand;
 
-  private RobotContainer m_robotContainer = new RobotContainer();
+  private RobotContainer m_robotContainer;
   // private EventLoop m_loop = new EventLoop();
   // private BooleanEvent rumble = new BooleanEvent(m_loop, RobotContainer.m_ClawScoringSubsystem::getBeamBreak);
   
@@ -34,7 +34,9 @@ public class Robot extends TimedRobot {
   public void robotInit() {
     // Instantiate our RobotContainer.  This will perform all our button bindings, and put our
     // autonomous chooser on the dashboard.
-    FollowPathCommand.warmupCommand().schedule();    
+    m_robotContainer = new RobotContainer();
+    m_robotContainer.m_SwerveDriveTrain.getDaqThread().setThreadPriority(99);    
+    FollowPathCommand.warmupCommand().schedule();
   }
 
   /**
@@ -89,7 +91,7 @@ public class Robot extends TimedRobot {
     if (m_autonomousCommand != null) {
       m_autonomousCommand.cancel();
     }
-    RobotContainer.m_SwerveDriveTrain.setHeadingToMaintain(RobotContainer.m_SwerveDriveTrain.getCurrentRobotHeading());
+    m_robotContainer.m_SwerveDriveTrain.setHeadingToMaintain(m_robotContainer.m_SwerveDriveTrain.getCurrentRobotHeading());
   }
 
   /** This function is called periodically during operator control. */
