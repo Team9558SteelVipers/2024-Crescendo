@@ -6,6 +6,7 @@ package frc.robot;
 
 
 import com.ctre.phoenix6.mechanisms.swerve.SwerveModule.DriveRequestType;
+import com.ctre.phoenix.led.ColorFlowAnimation.Direction;
 import com.ctre.phoenix6.Utils;
 import com.ctre.phoenix6.mechanisms.swerve.SwerveRequest;
 import com.ctre.phoenix6.mechanisms.swerve.utility.PhoenixPIDController;
@@ -22,6 +23,7 @@ import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.InstantCommand;
+import edu.wpi.first.wpilibj2.command.sysid.SysIdRoutine;
 import frc.robot.commands.ClawRotationCommand;
 import frc.robot.commands.ClimberCommand;
 import frc.robot.commands.ElevatorPosition;
@@ -98,27 +100,40 @@ public class RobotContainer {
       .withDeadband(MaxSpeed * PercentDeadband).withRotationalDeadband(MaxAngularRate * PercentDeadband) // Add a 10% deadband
       .withDriveRequestType(DriveRequestType.OpenLoopVoltage);
 
-  private final SwerveRequest.FieldCentricFacingAngle driveFacing = new SwerveRequest.FieldCentricFacingAngle()
-      .withDeadband(MaxSpeed * PercentDeadband) // Add a 10% deadband
-      .withDriveRequestType(DriveRequestType.OpenLoopVoltage);
+  // ---------------------------------------- NEW SWERVE CODE --------------------------------------------
+  private final SwerveRequest.SwerveDriveBrake brake = new SwerveRequest.SwerveDriveBrake();
+  private final SwerveRequest.RobotCentric forwardStraight = new SwerveRequest.RobotCentric().withDriveRequestType(DriveRequestType.OpenLoopVoltage);
+  private final SwerveRequest.PointWheelsAt point = new SwerveRequest.PointWheelsAt();
+
+  // ------------------ this was here before, commenting out ---------------------------------------------------
+  // private final SwerveRequest.FieldCentricFacingAngle driveFacing = new SwerveRequest.FieldCentricFacingAngle()
+  //     .withDeadband(MaxSpeed * PercentDeadband) // Add a 10% deadband
+  //     .withDriveRequestType(DriveRequestType.OpenLoopVoltage);
   
   //private final Telemetry logger = new Telemetry(MaxSpeed);
 
   private void configureBindings() {
-    // m_SwerveDriveTrain.setDefaultCommand( // Drivetrain will execute this command periodically
-    //     m_SwerveDriveTrain.applyRequest(() -> drive.withVelocityX(-operatorInput.getDriverController().getLeftY() * MaxSpeed) // Drive forward with
-    //                                                                                        // negative Y (forward)
-    //         .withVelocityY(-operatorInput.getDriverController().getLeftX() * MaxSpeed) // Drive left with negative X (left)
-    //         .withRotationalRate(-operatorInput.getDriverController().getRightX() * MaxAngularRate) // Drive counterclockwise with negative X (left)
-    //     ));
 
-    // operatorInput.getDriverController().a().whileTrue(m_SwerveDriveTrain.applyRequest(() -> brake));
-    // operatorInput.getDriverController().b().whileTrue(m_SwerveDriveTrain
-    //     .applyRequest(() -> point.withModuleDirection(new Rotation2d(-operatorInput.getDriverController().getLeftY(), -operatorInput.getDriverController().getLeftX()))));
+    // ----------------------- generated/original swerve code ----------------------------------
+    m_SwerveDriveTrain.setDefaultCommand( // Drivetrain will execute this command periodically
+        m_SwerveDriveTrain.applyRequest(() -> drive.withVelocityX(-operatorInput.getDriverController().getLeftY() * MaxSpeed) // Drive forward with
+                                                                                           // negative Y (forward)
+            .withVelocityY(-operatorInput.getDriverController().getLeftX() * MaxSpeed) // Drive left with negative X (left)
+            .withRotationalRate(-operatorInput.getDriverController().getRightX() * MaxAngularRate) // Drive counterclockwise with negative X (left)
+        ));
 
-    //reset the field-centric heading on left bumper press
-    // operatorInput.getDriverController().leftBumper().onTrue(m_SwerveDriveTrain.runOnce(() -> m_SwerveDriveTrain.seedFieldRelative()));
+    operatorInput.getDriverController().a().whileTrue(m_SwerveDriveTrain.applyRequest(() -> brake));
+    operatorInput.getDriverController().b().whileTrue(m_SwerveDriveTrain
+        .applyRequest(() -> point.withModuleDirection(new Rotation2d(-operatorInput.getDriverController().getLeftY(), -operatorInput.getDriverController().getLeftX()))));
+
+    // reset the field-centric heading on left bumper press
+    operatorInput.getDriverController().leftBumper().onTrue(m_SwerveDriveTrain.runOnce(() -> m_SwerveDriveTrain.seedFieldRelative()));
     
+    // ------------ also new code ------------------
+    operatorInput.getDriverController().pov(0).whileTrue(m_SwerveDriveTrain.applyRequest(() -> forwardStraight.withVelocityX(0.5).withVelocityY(0)));
+    operatorInput.getDriverController().pov(180).whileTrue(m_SwerveDriveTrain.applyRequest(() -> forwardStraight.withVelocityX(-0.5).withVelocityY(0)));
+    // --------------------------------- end swerve code -----------------------------------------
+
     operatorInput.getOperatorController().leftTrigger(0.5).whileTrue(m_IntakeCommand);
     operatorInput.getOperatorController().rightTrigger(0.5).whileTrue(m_InverseIntakeCommand);
     operatorInput.getOperatorController().x().onTrue(new InstantCommand(() ->
@@ -126,11 +141,12 @@ public class RobotContainer {
       m_ElevatorPosition.toggleElevatorPosition();
     }));
     operatorInput.getOperatorController().rightBumper().whileTrue(m_ScoringCommand);
-    operatorInput.getOperatorController().a().onTrue(m_ratchetEngage);
-    operatorInput.getOperatorController().b().onTrue(m_ratchetDisengage);
+    // TODO: uncomment these after executing SysID tests
+    // operatorInput.getOperatorController().a().onTrue(m_ratchetEngage); 
+    // operatorInput.getOperatorController().b().onTrue(m_ratchetDisengage);
     
     
-    //operatorInput.getOperatorController().leftBumper().runOnce(m_ClawRotationCommand);
+    // operatorInput.getOperatorController().leftBumper().runOnce(m_ClawRotationCommand);
 
     if (Utils.isSimulation()) {
       m_SwerveDriveTrain.seedFieldRelative(new Pose2d(new Translation2d(), Rotation2d.fromDegrees(90)));
@@ -157,6 +173,7 @@ public class RobotContainer {
 
     configureBindings();
     configureDrivetrain();
+    configureSysIdBindings();
   }
    
   public static void rumbleControllers() {
@@ -170,66 +187,71 @@ public class RobotContainer {
   }
 
   private void configureDrivetrain() {
-    driveFacing.HeadingController = HeadingController;
+    // driveFacing.HeadingController = HeadingController;
     
-    operatorInput.getDriverController().x().onTrue(m_SwerveDriveTrain.runOnce(() -> 
-    {
-      m_SwerveDriveTrain.seedFieldRelative();
-      m_SwerveDriveTrain.setHeadingToMaintain(m_SwerveDriveTrain.getCurrentRobotHeading());
-    }
-    ));
+    // operatorInput.getDriverController().x().onTrue(m_SwerveDriveTrain.runOnce(() -> 
+    // {
+    //   m_SwerveDriveTrain.seedFieldRelative();
+    //   m_SwerveDriveTrain.setHeadingToMaintain(m_SwerveDriveTrain.getCurrentRobotHeading());
+    // }
+    // ));
     
-    operatorInput.getDriverController().y().onTrue(m_SwerveDriveTrain.runOnce(() -> m_SwerveDriveTrain.setHeadingToMaintain(m_SwerveDriveTrain.getOperatorForwardDirection())));
+    // operatorInput.getDriverController().y().onTrue(m_SwerveDriveTrain.runOnce(() -> m_SwerveDriveTrain.setHeadingToMaintain(m_SwerveDriveTrain.getOperatorForwardDirection())));
+
+    // -------------- THIS ONE WAS ALREADY COMMENTED OUT -------------
     //operatorInput.getDriverController().a().onTrue(m_SwerveDriveTrain.runOnce(() -> m_SwerveDriveTrain.setHeadingToMaintain(m_SwerveDriveTrain.getOperatorForwardDirection().rotateBy(new Rotation2d(-1.0, 0.0)))));
-    operatorInput.getDriverController().b().onTrue(m_SwerveDriveTrain.runOnce(() -> 
-    {
-      double val = 1.0;
-      if (DriverStation.getAlliance().get() == Alliance.Red)
-      {
-        val = -val;
-      }
-      m_SwerveDriveTrain.setHeadingToMaintain(m_SwerveDriveTrain.getOperatorForwardDirection().rotateBy(new Rotation2d(0.0, val)));
-    }));
-    
-     // Boost
-     operatorInput.getDriverController().rightBumper().onTrue(new InstantCommand(() ->
-     {
-       xVelRateLimited.reset(-operatorInput.getDriverController().getLeftY() * MaxSpeed * 1.33);
-       yVelRateLimited.reset(-operatorInput.getDriverController().getLeftX() * MaxSpeed * 1.33);
-     }));
+
+    // ---------- TODO: UNCOMMENT AFTER SYSID MAYBE ----------------
+    // operatorInput.getDriverController().b().onTrue(m_SwerveDriveTrain.runOnce(() -> 
+    // {
+    //   double val = 1.0;
+    //   if (DriverStation.getAlliance().get() == Alliance.Red)
+    //   {
+    //     val = -val;
+    //   }
+    //   m_SwerveDriveTrain.setHeadingToMaintain(m_SwerveDriveTrain.getOperatorForwardDirection().rotateBy(new Rotation2d(0.0, val)));
+    // }));
+    // ------- END UNCOMMENT
+    // --------------------- THE DRIVE CODE WE WERE USING ---------------
+    // Boost
+    //  operatorInput.getDriverController().rightBumper().onTrue(new InstantCommand(() ->
+    //  {
+    //    xVelRateLimited.reset(-operatorInput.getDriverController().getLeftY() * MaxSpeed * 1.33);
+    //    yVelRateLimited.reset(-operatorInput.getDriverController().getLeftX() * MaxSpeed * 1.33);
+    //  }));
  
-     // Stop
-     operatorInput.getDriverController().leftBumper().onTrue(new InstantCommand(() ->
-     {
-       xVelRateLimited.reset(0.0);
-       yVelRateLimited.reset(0.0);
-     }));
+    //  // Stop
+    //  operatorInput.getDriverController().leftBumper().onTrue(new InstantCommand(() ->
+    //  {
+    //    xVelRateLimited.reset(0.0);
+    //    yVelRateLimited.reset(0.0);
+    //  }));
 
-    m_SwerveDriveTrain.setDefaultCommand( // Drivetrain will execute this command periodically
-      m_SwerveDriveTrain.applyRequest(
+    // m_SwerveDriveTrain.setDefaultCommand( // Drivetrain will execute this command periodically
+    //   m_SwerveDriveTrain.applyRequest(
 
-        // operatorInput.getDriverController(), // provide controller inputs to know when to use FieldCentricFacingAngle
+    //     // operatorInput.getDriverController(), // provide controller inputs to know when to use FieldCentricFacingAngle
 
-        () -> drive
-          .withVelocityX(
-            xVelRateLimited.calculate( // control acceleration
-              (-operatorInput.getDriverController().getLeftY() * MaxSpeed) // Drive forward with negative Y (forward)
-              * (PercentLimit // limit base speed
-              + (operatorInput.getDriverController().getRightTriggerAxis()*PercentGas) // Right Trigger to increase to max speed
-              - (operatorInput.getDriverController().getLeftTriggerAxis()*PercentBrake)) // Left Trigger to decrease to min speed
-            )
-          ) 
-          .withVelocityY(
-            yVelRateLimited.calculate(
-              (-operatorInput.getDriverController().getLeftX() * MaxSpeed) // Drive left with negative X (left)
-              * (PercentLimit // limit base speed
-              + (operatorInput.getDriverController().getRightTriggerAxis()*PercentGas) // Right Trigger to increase to max speed
-              - (operatorInput.getDriverController().getLeftTriggerAxis()*PercentBrake)) // Left Trigger to decrease to min speed
-            )
-          ) 
-          .withRotationalRate(-operatorInput.getDriverController().getRightX()*MaxAngularRate) // Drive counterclockwise with negative X (left)
-       
-       
+    //     () -> drive
+    //       .withVelocityX(
+    //         xVelRateLimited.calculate( // control acceleration
+    //           (-operatorInput.getDriverController().getLeftY() * MaxSpeed) // Drive forward with negative Y (forward)
+    //           * (PercentLimit // limit base speed
+    //           + (operatorInput.getDriverController().getRightTriggerAxis()*PercentGas) // Right Trigger to increase to max speed
+    //           - (operatorInput.getDriverController().getLeftTriggerAxis()*PercentBrake)) // Left Trigger to decrease to min speed
+    //         )
+    //       ) 
+    //       .withVelocityY(
+    //         yVelRateLimited.calculate(
+    //           (-operatorInput.getDriverController().getLeftX() * MaxSpeed) // Drive left with negative X (left)
+    //           * (PercentLimit // limit base speed
+    //           + (operatorInput.getDriverController().getRightTriggerAxis()*PercentGas) // Right Trigger to increase to max speed
+    //           - (operatorInput.getDriverController().getLeftTriggerAxis()*PercentBrake)) // Left Trigger to decrease to min speed
+    //         )
+    //       ) 
+    //       .withRotationalRate(-operatorInput.getDriverController().getRightX()*MaxAngularRate) // Drive counterclockwise with negative X (left)
+          
+          // -------------------------- OTHER VERSION OF MODIFIED SWERVE CODE -----------------------------
           // () -> driveFacing
           // .withVelocityX(
           //   xVelRateLimited.calculate( // control acceleration
@@ -248,8 +270,9 @@ public class RobotContainer {
           //   )
           // ) 
           // .withTargetDirection(m_SwerveDriveTrain.getHeadingToMaintain()) // Maintain last known heading
-      )
-    );
+          // ---------------- END ALTERNATIVE VERSION
+      // )
+    // );
   }
 
   /**
@@ -259,7 +282,22 @@ public class RobotContainer {
    */
   public Command getAutonomousCommand() {
     return m_autoChooser.getSelected();
-   } 
+  } 
+
+  // translation on driver controller, steer on operator controller
+  // forward on start, reverse on back
+  // dynamic on a, quasistatic on b
+  public void configureSysIdBindings() {
+    operatorInput.getDriverController().start().and(operatorInput.getDriverController().a()).whileTrue(m_SwerveDriveTrain.sysIdTranslationDynamic(SysIdRoutine.Direction.kForward));
+    operatorInput.getDriverController().back().and(operatorInput.getDriverController().a()).whileTrue(m_SwerveDriveTrain.sysIdTranslationDynamic(SysIdRoutine.Direction.kReverse));
+    operatorInput.getDriverController().start().and(operatorInput.getDriverController().b()).whileTrue(m_SwerveDriveTrain.sysIdTranslationQuasistatic(SysIdRoutine.Direction.kForward));
+    operatorInput.getDriverController().back().and(operatorInput.getDriverController().b()).whileTrue(m_SwerveDriveTrain.sysIdTranslationQuasistatic(SysIdRoutine.Direction.kReverse));
+    operatorInput.getOperatorController().start().and(operatorInput.getDriverController().a()).whileTrue(m_SwerveDriveTrain.sysIdSteerDynamic(SysIdRoutine.Direction.kForward));
+    operatorInput.getOperatorController().back().and(operatorInput.getDriverController().a()).whileTrue(m_SwerveDriveTrain.sysIdSteerDynamic(SysIdRoutine.Direction.kReverse));
+    operatorInput.getOperatorController().start().and(operatorInput.getDriverController().b()).whileTrue(m_SwerveDriveTrain.sysIdSteerQuasistatic(SysIdRoutine.Direction.kForward));
+    operatorInput.getOperatorController().back().and(operatorInput.getDriverController().b()).whileTrue(m_SwerveDriveTrain.sysIdSteerQuasistatic(SysIdRoutine.Direction.kReverse));
+    
+  }
 
   /** The  container for the robot. Contains subsystems, OI devices, and commands. */
 
