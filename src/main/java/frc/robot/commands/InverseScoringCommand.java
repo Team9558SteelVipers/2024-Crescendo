@@ -30,7 +30,7 @@ public class InverseScoringCommand extends Command {
   @Override
   public void execute() {
 
-    m_clawScoringSubsystem.setIntakeMotorSpeed(-1);
+    m_clawScoringSubsystem.setIntakeMotorSpeed(1);
 
   }
 

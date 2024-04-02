@@ -27,6 +27,7 @@ import frc.robot.commands.ClimberCommand;
 import frc.robot.commands.ElevatorPosition;
 import frc.robot.commands.IntakeCommand;
 import frc.robot.commands.InverseIntake;
+import frc.robot.commands.InverseScoringCommand;
 import frc.robot.commands.NearestTrapCommand;
 import frc.robot.commands.RatchetPistonDisengage;
 import frc.robot.commands.RatchetPistonEngage;
@@ -67,6 +68,7 @@ public class RobotContainer {
   public static final ElevatorPosition m_ElevatorPosition = new ElevatorPosition(m_ClawElevatorSubsystem, m_ClawRotationSubsystem);
   public static final IntakeCommand m_IntakeCommand = new IntakeCommand(m_IntakeSubsystem, m_ClawScoringSubsystem);
   public static final InverseIntake m_InverseIntakeCommand = new InverseIntake(m_IntakeSubsystem, m_ClawScoringSubsystem);
+  public static final InverseScoringCommand m_InverseScoringCommand = new InverseScoringCommand(m_ClawScoringSubsystem);
   public static final NearestTrapCommand m_NearestTrapCommand = new NearestTrapCommand(m_SwerveDriveTrain);
   public static final RatchetPistonEngage m_ratchetEngage = new RatchetPistonEngage(m_ClimberSubsystem);
   public static final RatchetPistonDisengage m_ratchetDisengage = new RatchetPistonDisengage(m_ClimberSubsystem);
@@ -126,6 +128,7 @@ public class RobotContainer {
       m_ElevatorPosition.toggleElevatorPosition();
     }));
     operatorInput.getOperatorController().rightBumper().whileTrue(m_ScoringCommand);
+    operatorInput.getOperatorController().leftBumper().whileTrue(m_InverseScoringCommand);
     operatorInput.getOperatorController().a().onTrue(m_ratchetEngage);
     operatorInput.getOperatorController().b().onTrue(m_ratchetDisengage);
     
