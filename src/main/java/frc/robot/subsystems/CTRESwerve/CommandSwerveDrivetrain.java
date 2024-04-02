@@ -114,7 +114,7 @@ public class CommandSwerveDrivetrain extends SwerveDrivetrain implements Subsyst
         if (Utils.isSimulation()) {
             startSimThread();
         }
-
+        SignalLogger.start();
         setAzimuthMotorsStatorCurrent();
     }
     public CommandSwerveDrivetrain(SwerveDrivetrainConstants driveTrainConstants, SwerveModuleConstants... modules) {
@@ -124,7 +124,12 @@ public class CommandSwerveDrivetrain extends SwerveDrivetrain implements Subsyst
             startSimThread();
         }
 
+        SignalLogger.start();
         setAzimuthMotorsStatorCurrent();
+    }
+
+    public void stopLogger() {
+        SignalLogger.stop();
     }
 
     private void configurePathPlanner() {

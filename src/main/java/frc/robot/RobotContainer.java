@@ -7,6 +7,7 @@ package frc.robot;
 
 import com.ctre.phoenix6.mechanisms.swerve.SwerveModule.DriveRequestType;
 import com.ctre.phoenix.led.ColorFlowAnimation.Direction;
+import com.ctre.phoenix6.SignalLogger;
 import com.ctre.phoenix6.Utils;
 import com.ctre.phoenix6.mechanisms.swerve.SwerveRequest;
 import com.ctre.phoenix6.mechanisms.swerve.utility.PhoenixPIDController;
@@ -43,6 +44,7 @@ import frc.robot.subsystems.ClimberSubsystem;
 import frc.robot.subsystems.IntakeSubsystem;
 import frc.robot.subsystems.VisionSubsystem;
 import frc.robot.subsystems.CTRESwerve.CommandSwerveDrivetrain;
+import frc.robot.subsystems.CTRESwerve.Telemetry;
 import frc.robot.subsystems.CTRESwerve.generated.TunerConstants;
 
 /**
@@ -110,7 +112,7 @@ public class RobotContainer {
   //     .withDeadband(MaxSpeed * PercentDeadband) // Add a 10% deadband
   //     .withDriveRequestType(DriveRequestType.OpenLoopVoltage);
   
-  //private final Telemetry logger = new Telemetry(MaxSpeed);
+  // private final Telemetry logger = new Telemetry(MaxSpeed);
 
   private void configureBindings() {
 
@@ -122,9 +124,9 @@ public class RobotContainer {
             .withRotationalRate(-operatorInput.getDriverController().getRightX() * MaxAngularRate) // Drive counterclockwise with negative X (left)
         ));
 
-    operatorInput.getDriverController().a().whileTrue(m_SwerveDriveTrain.applyRequest(() -> brake));
-    operatorInput.getDriverController().b().whileTrue(m_SwerveDriveTrain
-        .applyRequest(() -> point.withModuleDirection(new Rotation2d(-operatorInput.getDriverController().getLeftY(), -operatorInput.getDriverController().getLeftX()))));
+    // operatorInput.getDriverController().a().whileTrue(m_SwerveDriveTrain.applyRequest(() -> brake));
+    // operatorInput.getDriverController().b().whileTrue(m_SwerveDriveTrain
+    //     .applyRequest(() -> point.withModuleDirection(new Rotation2d(-operatorInput.getDriverController().getLeftY(), -operatorInput.getDriverController().getLeftX()))));
 
     // reset the field-centric heading on left bumper press
     operatorInput.getDriverController().leftBumper().onTrue(m_SwerveDriveTrain.runOnce(() -> m_SwerveDriveTrain.seedFieldRelative()));
@@ -140,6 +142,7 @@ public class RobotContainer {
     {
       m_ElevatorPosition.toggleElevatorPosition();
     }));
+    operatorInput.getDriverController().y().onTrue(new InstantCommand(() -> {SignalLogger.stop();}));
     operatorInput.getOperatorController().rightBumper().whileTrue(m_ScoringCommand);
     // TODO: uncomment these after executing SysID tests
     // operatorInput.getOperatorController().a().onTrue(m_ratchetEngage); 
@@ -151,13 +154,13 @@ public class RobotContainer {
     if (Utils.isSimulation()) {
       m_SwerveDriveTrain.seedFieldRelative(new Pose2d(new Translation2d(), Rotation2d.fromDegrees(90)));
     }
-    //m_SwerveDriveTrain.registerTelemetry(logger::telemeterize);
+    // m_SwerveDriveTrain.registerTelemetry(logger::telemeterize);
   }
 
   public RobotContainer() {
 
     m_ClawElevatorSubsystem.setDefaultCommand(m_ElevatorPosition);
-    m_ClimberSubsystem.setDefaultCommand(m_ClimberCommand);
+    // m_ClimberSubsystem.setDefaultCommand(m_ClimberCommand);
     NamedCommands.registerCommand("toggleElevator", new autoElevatorPosition(m_ClawElevatorSubsystem, m_ClawRotationSubsystem));
     NamedCommands.registerCommand("shoot", new autoScoringCommand(m_ClawScoringSubsystem));
     NamedCommands.registerCommand("intake", new autoIntakeCommand(m_IntakeSubsystem, m_ClawScoringSubsystem));
@@ -292,10 +295,10 @@ public class RobotContainer {
     operatorInput.getDriverController().back().and(operatorInput.getDriverController().a()).whileTrue(m_SwerveDriveTrain.sysIdTranslationDynamic(SysIdRoutine.Direction.kReverse));
     operatorInput.getDriverController().start().and(operatorInput.getDriverController().b()).whileTrue(m_SwerveDriveTrain.sysIdTranslationQuasistatic(SysIdRoutine.Direction.kForward));
     operatorInput.getDriverController().back().and(operatorInput.getDriverController().b()).whileTrue(m_SwerveDriveTrain.sysIdTranslationQuasistatic(SysIdRoutine.Direction.kReverse));
-    operatorInput.getOperatorController().start().and(operatorInput.getDriverController().a()).whileTrue(m_SwerveDriveTrain.sysIdSteerDynamic(SysIdRoutine.Direction.kForward));
-    operatorInput.getOperatorController().back().and(operatorInput.getDriverController().a()).whileTrue(m_SwerveDriveTrain.sysIdSteerDynamic(SysIdRoutine.Direction.kReverse));
-    operatorInput.getOperatorController().start().and(operatorInput.getDriverController().b()).whileTrue(m_SwerveDriveTrain.sysIdSteerQuasistatic(SysIdRoutine.Direction.kForward));
-    operatorInput.getOperatorController().back().and(operatorInput.getDriverController().b()).whileTrue(m_SwerveDriveTrain.sysIdSteerQuasistatic(SysIdRoutine.Direction.kReverse));
+    // operatorInput.getDriverController().start().and(operatorInput.getDriverController().a()).whileTrue(m_SwerveDriveTrain.sysIdSteerDynamic(SysIdRoutine.Direction.kForward));
+    // operatorInput.getDriverController().back().and(operatorInput.getDriverController().a()).whileTrue(m_SwerveDriveTrain.sysIdSteerDynamic(SysIdRoutine.Direction.kReverse));
+    // operatorInput.getDriverController().start().and(operatorInput.getDriverController().b()).whileTrue(m_SwerveDriveTrain.sysIdSteerQuasistatic(SysIdRoutine.Direction.kForward));
+    // operatorInput.getDriverController().back().and(operatorInput.getDriverController().b()).whileTrue(m_SwerveDriveTrain.sysIdSteerQuasistatic(SysIdRoutine.Direction.kReverse));
     
   }
 
