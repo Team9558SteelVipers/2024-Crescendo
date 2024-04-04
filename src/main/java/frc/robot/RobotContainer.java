@@ -163,14 +163,13 @@ public class RobotContainer {
     // m_ClimberSubsystem.setDefaultCommand(m_ClimberCommand);
     NamedCommands.registerCommand("toggleElevator", new autoElevatorPosition(m_ClawElevatorSubsystem, m_ClawRotationSubsystem));
     NamedCommands.registerCommand("shoot", new autoScoringCommand(m_ClawScoringSubsystem));
-    NamedCommands.registerCommand("intake", new autoIntakeCommand(m_IntakeSubsystem, m_ClawScoringSubsystem));
+    NamedCommands.registerCommand("intake", new autoIntakeCommand(m_IntakeSubsystem, m_ClawScoringSubsystem).withTimeout(4));
 
     m_autoChooser.setDefaultOption("Do nothing", new InstantCommand());
     m_autoChooser.addOption("2 note cycle", m_SwerveDriveTrain.getAutoPath("2 notes"));
     m_autoChooser.addOption("stop after amp", m_SwerveDriveTrain.getAutoPath("1 note"));
     m_autoChooser.addOption("pick up center note", m_SwerveDriveTrain.getAutoPath("1.5 notes"));
     m_autoChooser.addOption("Forward", m_SwerveDriveTrain.getAutoPath("Forward"));
-    m_autoChooser.addOption("drop the glove", m_SwerveDriveTrain.getAutoPath("Drop the glove"));
     m_autoChooser.addOption("2.5 notes", m_SwerveDriveTrain.getAutoPath("2.5 notes"));
     SmartDashboard.putData(m_autoChooser);
 
