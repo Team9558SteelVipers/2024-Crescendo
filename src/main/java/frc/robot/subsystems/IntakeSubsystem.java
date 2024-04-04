@@ -4,6 +4,7 @@
 
 package frc.robot.subsystems;
 
+import com.ctre.phoenix6.configs.CurrentLimitsConfigs;
 import com.ctre.phoenix6.hardware.TalonFX;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import static frc.robot.Constants.IntakeConstants.*;
@@ -11,9 +12,13 @@ import static frc.robot.Constants.IntakeConstants.*;
 public class IntakeSubsystem extends SubsystemBase {
   
   TalonFX intakeMotor;
+
+  CurrentLimitsConfigs intakeConfigs = new CurrentLimitsConfigs().withStatorCurrentLimit(30);
   
   public IntakeSubsystem() {
     intakeMotor = new TalonFX(intakeMotorPort, "Canivore");
+        intakeMotor.getConfigurator().apply(intakeConfigs);
+
   }
 
   public void setIntakeMotorSpeed(double speed) {

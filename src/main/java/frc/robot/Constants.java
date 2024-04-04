@@ -10,13 +10,13 @@ public final class Constants {
 
     // The elevator heights will contain the encoder values for each of the heights
     final public static int clawElevatorPort = 23;
-    final public static double maxHeight = 22;
+    final public static double maxHeight = 20.5;
     final public static double minHeight = 0;
     final public static double maxElevatorSpeed = 0.5;
     final public static double maxReverseElevatorSpeed = -0.5;
 
     
-    public static final double kElevatorP = 0.35;
+    public static final double kElevatorP = 0.6;
     public static final double kElevatorI = 0;
     public static final double kElevatorD = 0.0;
     public static final double kElevatorG = 0.3; //motor output required to hold elevator at constant height, fights gravity

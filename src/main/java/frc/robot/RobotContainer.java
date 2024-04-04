@@ -34,6 +34,7 @@ import frc.robot.commands.RatchetPistonEngage;
 import frc.robot.commands.ScoringCommand;
 import frc.robot.commands.autoElevatorPosition;
 import frc.robot.commands.autoIntakeCommand;
+import frc.robot.commands.autoInverseIntakeCommand;
 import frc.robot.commands.autoScoringCommand;
 import frc.robot.subsystems.ClawElevatorSubsystem;
 import frc.robot.subsystems.ClawRotationSubsystem;
@@ -148,6 +149,7 @@ public class RobotContainer {
     NamedCommands.registerCommand("toggleElevator", new autoElevatorPosition(m_ClawElevatorSubsystem, m_ClawRotationSubsystem));
     NamedCommands.registerCommand("shoot", new autoScoringCommand(m_ClawScoringSubsystem));
     NamedCommands.registerCommand("intake", new autoIntakeCommand(m_IntakeSubsystem, m_ClawScoringSubsystem).withTimeout(4));
+    NamedCommands.registerCommand("inverseIntake", new autoInverseIntakeCommand(m_IntakeSubsystem, m_ClawScoringSubsystem).withTimeout(2));
 
     m_autoChooser.setDefaultOption("Do nothing", new InstantCommand());
     m_autoChooser.addOption("2 note cycle", m_SwerveDriveTrain.getAutoPath("2 notes"));

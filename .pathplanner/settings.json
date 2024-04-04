@@ -5,11 +5,13 @@
   "pathFolders": [
     "Amp Auton testing",
     "Grief auton",
+    "4 note testing",
     "Rush note 1"
   ],
   "autoFolders": [
     "AmpAutons",
     "Grief Auton",
+    "4  note testing",
     "Rush note 1"
   ],
   "defaultMaxVel": 3.5,

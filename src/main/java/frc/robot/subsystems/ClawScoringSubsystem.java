@@ -4,6 +4,7 @@
 
 package frc.robot.subsystems;
 
+import com.ctre.phoenix6.configs.CurrentLimitsConfigs;
 import com.ctre.phoenix6.hardware.TalonFX;
 
 import edu.wpi.first.wpilibj.DigitalInput;
@@ -17,11 +18,12 @@ public class ClawScoringSubsystem extends SubsystemBase {
   public DigitalInput beamBreak;
 
   public double encoderOffset = 0;
+  CurrentLimitsConfigs clawConfigs = new CurrentLimitsConfigs().withStatorCurrentLimit(30);
 
-  
   public ClawScoringSubsystem() {
     scoringMotor = new TalonFX(scoringMotorPort, "Canivore");
     beamBreak = new DigitalInput(beamBreakMotorPort);
+    scoringMotor.getConfigurator().apply(clawConfigs);
   }
 
   public void setIntakeMotorSpeed(double speed) {

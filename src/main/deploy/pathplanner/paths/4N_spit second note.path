@@ -16,12 +16,12 @@
     },
     {
       "anchor": {
-        "x": 5.377679913705047,
-        "y": 7.22558614874719
+        "x": 3.7732953069329804,
+        "y": 7.506646225845947
       },
       "prevControl": {
-        "x": 6.689293606832578,
-        "y": 7.260718658384534
+        "x": 5.0853794403760535,
+        "y": 7.506646225845947
       },
       "nextControl": null,
       "isLocked": false,
@@ -32,21 +32,21 @@
   "constraintZones": [],
   "eventMarkers": [],
   "globalConstraints": {
-    "maxVelocity": 3.5,
-    "maxAcceleration": 1.75,
+    "maxVelocity": 4.0,
+    "maxAcceleration": 2.5,
     "maxAngularVelocity": 360.0,
     "maxAngularAcceleration": 300.0
   },
   "goalEndState": {
     "velocity": 0,
-    "rotation": -45.0,
+    "rotation": 0.0,
     "rotateFast": true
   },
   "reversed": false,
-  "folder": "Amp Auton testing",
+  "folder": "4 note testing",
   "previewStartingState": {
     "rotation": -40.24000000000001,
     "velocity": 0
   },
-  "useDefaultConstraints": true
+  "useDefaultConstraints": false
 }

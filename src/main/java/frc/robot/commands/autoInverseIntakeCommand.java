@@ -5,48 +5,46 @@
 package frc.robot.commands;
 
 import edu.wpi.first.wpilibj2.command.Command;
-import frc.robot.RobotContainer;
 import frc.robot.subsystems.ClawScoringSubsystem;
 import frc.robot.subsystems.IntakeSubsystem;
 import static frc.robot.Constants.IntakeConstants.*;
 
-public class IntakeCommand extends Command {
+public class autoInverseIntakeCommand extends Command {
   
   private static IntakeSubsystem m_intakeSubsystem;
   private static ClawScoringSubsystem m_clawScoringSubsystem;
 
-  public IntakeCommand(IntakeSubsystem intakeSubsystem, ClawScoringSubsystem clawScoringSubsystem){
+  
+
+  public autoInverseIntakeCommand(IntakeSubsystem intakeSubsystem, ClawScoringSubsystem clawScoringSubsystem){
     m_intakeSubsystem = intakeSubsystem;
     m_clawScoringSubsystem = clawScoringSubsystem;
     addRequirements(intakeSubsystem, clawScoringSubsystem);
   }
 
+  
   @Override
-  public void initialize() { }
+  public void initialize() {
+      
+    
+  }
 
  
   @Override
   public void execute() {
-    if (!RobotContainer.m_ClawElevatorSubsystem.isAtBottom()){
-      return;
-    }
 
     if (!m_clawScoringSubsystem.getBeamBreak()) {
-      m_intakeSubsystem.setIntakeMotorSpeed(intakeMotorSpeed);
-      m_clawScoringSubsystem.setIntakeMotorSpeed(clawIntakeSpeed);
+      m_clawScoringSubsystem.setIntakeMotorSpeed(clawIntakeSpeed*-2);
     }
     else
     {
-      RobotContainer.rumbleControllers();
       m_intakeSubsystem.setIntakeMotorSpeed(0.0);
-      m_clawScoringSubsystem.setIntakeMotorSpeed(0.0);
     }
   }
 
   
   @Override
   public void end(boolean interrupted) {
-      RobotContainer.stopRumbleControllers();
       m_intakeSubsystem.setIntakeMotorSpeed(0.0);
       m_clawScoringSubsystem.setIntakeMotorSpeed(0.0);
   }
@@ -54,6 +52,6 @@ public class IntakeCommand extends Command {
   
   @Override
   public boolean isFinished() {
-    return false;
+    return m_clawScoringSubsystem.getBeamBreak();
   }
 }
