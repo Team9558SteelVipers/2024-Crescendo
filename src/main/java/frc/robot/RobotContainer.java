@@ -147,7 +147,7 @@ public class RobotContainer {
     m_ClimberSubsystem.setDefaultCommand(m_ClimberCommand);
     NamedCommands.registerCommand("toggleElevator", new autoElevatorPosition(m_ClawElevatorSubsystem, m_ClawRotationSubsystem));
     NamedCommands.registerCommand("shoot", new autoScoringCommand(m_ClawScoringSubsystem));
-    NamedCommands.registerCommand("intake", new autoIntakeCommand(m_IntakeSubsystem, m_ClawScoringSubsystem));
+    NamedCommands.registerCommand("intake", new autoIntakeCommand(m_IntakeSubsystem, m_ClawScoringSubsystem).withTimeout(4));
 
     m_autoChooser.setDefaultOption("Do nothing", new InstantCommand());
     m_autoChooser.addOption("2 note cycle", m_SwerveDriveTrain.getAutoPath("2 notes"));
