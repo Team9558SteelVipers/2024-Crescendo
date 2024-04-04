@@ -141,6 +141,10 @@ public class CommandSwerveDrivetrain extends SwerveDrivetrain implements Subsyst
                 }
                 else
                 {
+                    if (Math.abs(m_headingToMaintain.getRadians() - getCurrentRobotHeading().getRadians()) > 6)
+                    {
+                        m_headingToMaintain = getCurrentRobotHeading();
+                    } else {/* do nothing */}
                     activeRequest = requestSupplierWithHeading;
                 }
             }
