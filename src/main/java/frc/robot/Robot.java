@@ -53,6 +53,7 @@ public class Robot extends TimedRobot {
     // block in order for anything in the Command-based framework to work.
     CommandScheduler.getInstance().run();
     DriverStation.silenceJoystickConnectionWarning(true);
+    RobotContainer.m_SwerveDriveTrain.getDaqThread().setThreadPriority(99);
     //SmartDashboard.putNumber("PSI:")
   }
 
