@@ -25,24 +25,24 @@ import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.InstantCommand;
 import edu.wpi.first.wpilibj2.command.sysid.SysIdRoutine;
-import frc.robot.commands.ClawRotationCommand;
-import frc.robot.commands.ClimberCommand;
-import frc.robot.commands.ElevatorPosition;
-import frc.robot.commands.IntakeCommand;
-import frc.robot.commands.InverseIntake;
-import frc.robot.commands.NearestTrapCommand;
-import frc.robot.commands.RatchetPistonDisengage;
-import frc.robot.commands.RatchetPistonEngage;
-import frc.robot.commands.ScoringCommand;
-import frc.robot.commands.autoElevatorPosition;
-import frc.robot.commands.autoIntakeCommand;
-import frc.robot.commands.autoScoringCommand;
-import frc.robot.subsystems.ClawElevatorSubsystem;
-import frc.robot.subsystems.ClawRotationSubsystem;
-import frc.robot.subsystems.ClawScoringSubsystem;
-import frc.robot.subsystems.ClimberSubsystem;
-import frc.robot.subsystems.IntakeSubsystem;
-import frc.robot.subsystems.VisionSubsystem;
+// import frc.robot.commands.ClawRotationCommand;
+// import frc.robot.commands.ClimberCommand;
+// import frc.robot.commands.ElevatorPosition;
+// import frc.robot.commands.IntakeCommand;
+// import frc.robot.commands.InverseIntake;
+// import frc.robot.commands.NearestTrapCommand;
+// import frc.robot.commands.RatchetPistonDisengage;
+// import frc.robot.commands.RatchetPistonEngage;
+// import frc.robot.commands.ScoringCommand;
+// import frc.robot.commands.autoElevatorPosition;
+// import frc.robot.commands.autoIntakeCommand;
+// import frc.robot.commands.autoScoringCommand;
+// import frc.robot.subsystems.ClawElevatorSubsystem;
+// import frc.robot.subsystems.ClawRotationSubsystem;
+// import frc.robot.subsystems.ClawScoringSubsystem;
+// import frc.robot.subsystems.ClimberSubsystem;
+// import frc.robot.subsystems.IntakeSubsystem;
+// import frc.robot.subsystems.VisionSubsystem;
 import frc.robot.subsystems.CTRESwerve.CommandSwerveDrivetrain;
 import frc.robot.subsystems.CTRESwerve.Telemetry;
 import frc.robot.subsystems.CTRESwerve.generated.TunerConstants;
@@ -58,22 +58,22 @@ public class RobotContainer {
   public static OI operatorInput = new OI();
 
   public final CommandSwerveDrivetrain m_SwerveDriveTrain = TunerConstants.DriveTrain;
-  public final IntakeSubsystem m_IntakeSubsystem = new IntakeSubsystem();
-  public final ClimberSubsystem m_ClimberSubsystem = new ClimberSubsystem();
-  public final ClawScoringSubsystem m_ClawScoringSubsystem = new ClawScoringSubsystem();
-  public final ClawRotationSubsystem m_ClawRotationSubsystem = new ClawRotationSubsystem();
-  public final ClawElevatorSubsystem m_ClawElevatorSubsystem = new ClawElevatorSubsystem();
-  public final VisionSubsystem m_VisionSubsystem = new VisionSubsystem();
+  // public final IntakeSubsystem m_IntakeSubsystem = new IntakeSubsystem();
+  // public final ClimberSubsystem m_ClimberSubsystem = new ClimberSubsystem();
+  // public final ClawScoringSubsystem m_ClawScoringSubsystem = new ClawScoringSubsystem();
+  // public final ClawRotationSubsystem m_ClawRotationSubsystem = new ClawRotationSubsystem();
+  // public final ClawElevatorSubsystem m_ClawElevatorSubsystem = new ClawElevatorSubsystem();
+  // public final VisionSubsystem m_VisionSubsystem = new VisionSubsystem();
 
-  public final ClawRotationCommand m_ClawRotationCommand = new ClawRotationCommand(m_ClawRotationSubsystem);
-  public final ScoringCommand m_ScoringCommand = new ScoringCommand(m_ClawScoringSubsystem);
-  public final ClimberCommand m_ClimberCommand = new ClimberCommand(m_ClimberSubsystem);
-  public final ElevatorPosition m_ElevatorPosition = new ElevatorPosition(m_ClawElevatorSubsystem, m_ClawRotationSubsystem);
-  public final IntakeCommand m_IntakeCommand = new IntakeCommand(m_IntakeSubsystem, m_ClawScoringSubsystem);
-  public final InverseIntake m_InverseIntakeCommand = new InverseIntake(m_IntakeSubsystem, m_ClawScoringSubsystem);
-  public final NearestTrapCommand m_NearestTrapCommand = new NearestTrapCommand(m_SwerveDriveTrain);
-  public final RatchetPistonEngage m_ratchetEngage = new RatchetPistonEngage(m_ClimberSubsystem);
-  public final RatchetPistonDisengage m_ratchetDisengage = new RatchetPistonDisengage(m_ClimberSubsystem);
+  // public final ClawRotationCommand m_ClawRotationCommand = new ClawRotationCommand(m_ClawRotationSubsystem);
+  // public final ScoringCommand m_ScoringCommand = new ScoringCommand(m_ClawScoringSubsystem);
+  // public final ClimberCommand m_ClimberCommand = new ClimberCommand(m_ClimberSubsystem);
+  // public final ElevatorPosition m_ElevatorPosition = new ElevatorPosition(m_ClawElevatorSubsystem, m_ClawRotationSubsystem);
+  // public final IntakeCommand m_IntakeCommand = new IntakeCommand(m_IntakeSubsystem, m_ClawScoringSubsystem);
+  // public final InverseIntake m_InverseIntakeCommand = new InverseIntake(m_IntakeSubsystem, m_ClawScoringSubsystem);
+  // public final NearestTrapCommand m_NearestTrapCommand = new NearestTrapCommand(m_SwerveDriveTrain);
+  // public final RatchetPistonEngage m_ratchetEngage = new RatchetPistonEngage(m_ClimberSubsystem);
+  // public final RatchetPistonDisengage m_ratchetDisengage = new RatchetPistonDisengage(m_ClimberSubsystem);
 
   /* ====================================================================================== SWERVE DRIVE CONFIGURATION | START */
   // PARAMETERS
@@ -136,14 +136,14 @@ public class RobotContainer {
     operatorInput.getDriverController().pov(180).whileTrue(m_SwerveDriveTrain.applyRequest(() -> forwardStraight.withVelocityX(-0.5).withVelocityY(0)));
     // --------------------------------- end swerve code -----------------------------------------
 
-    operatorInput.getOperatorController().leftTrigger(0.5).whileTrue(m_IntakeCommand);
-    operatorInput.getOperatorController().rightTrigger(0.5).whileTrue(m_InverseIntakeCommand);
-    operatorInput.getOperatorController().x().onTrue(new InstantCommand(() ->
-    {
-      m_ElevatorPosition.toggleElevatorPosition();
-    }));
+    // operatorInput.getOperatorController().leftTrigger(0.5).whileTrue(m_IntakeCommand);
+    // operatorInput.getOperatorController().rightTrigger(0.5).whileTrue(m_InverseIntakeCommand);
+    // operatorInput.getOperatorController().x().onTrue(new InstantCommand(() ->
+    // {
+    //   m_ElevatorPosition.toggleElevatorPosition();
+    // }));
     operatorInput.getDriverController().y().onTrue(new InstantCommand(() -> {SignalLogger.stop();}));
-    operatorInput.getOperatorController().rightBumper().whileTrue(m_ScoringCommand);
+    // operatorInput.getOperatorController().rightBumper().whileTrue(m_ScoringCommand);
     // TODO: uncomment these after executing SysID tests
     // operatorInput.getOperatorController().a().onTrue(m_ratchetEngage); 
     // operatorInput.getOperatorController().b().onTrue(m_ratchetDisengage);
@@ -159,19 +159,19 @@ public class RobotContainer {
 
   public RobotContainer() {
 
-    m_ClawElevatorSubsystem.setDefaultCommand(m_ElevatorPosition);
+    // m_ClawElevatorSubsystem.setDefaultCommand(m_ElevatorPosition);
     // m_ClimberSubsystem.setDefaultCommand(m_ClimberCommand);
-    NamedCommands.registerCommand("toggleElevator", new autoElevatorPosition(m_ClawElevatorSubsystem, m_ClawRotationSubsystem));
-    NamedCommands.registerCommand("shoot", new autoScoringCommand(m_ClawScoringSubsystem));
-    NamedCommands.registerCommand("intake", new autoIntakeCommand(m_IntakeSubsystem, m_ClawScoringSubsystem).withTimeout(4));
+    // NamedCommands.registerCommand("toggleElevator", new autoElevatorPosition(m_ClawElevatorSubsystem, m_ClawRotationSubsystem));
+    // NamedCommands.registerCommand("shoot", new autoScoringCommand(m_ClawScoringSubsystem));
+    // NamedCommands.registerCommand("intake", new autoIntakeCommand(m_IntakeSubsystem, m_ClawScoringSubsystem).withTimeout(4));
 
-    m_autoChooser.setDefaultOption("Do nothing", new InstantCommand());
-    m_autoChooser.addOption("2 note cycle", m_SwerveDriveTrain.getAutoPath("2 notes"));
-    m_autoChooser.addOption("stop after amp", m_SwerveDriveTrain.getAutoPath("1 note"));
-    m_autoChooser.addOption("pick up center note", m_SwerveDriveTrain.getAutoPath("1.5 notes"));
-    m_autoChooser.addOption("Forward", m_SwerveDriveTrain.getAutoPath("Forward"));
-    m_autoChooser.addOption("2.5 notes", m_SwerveDriveTrain.getAutoPath("2.5 notes"));
-    SmartDashboard.putData(m_autoChooser);
+    // m_autoChooser.setDefaultOption("Do nothing", new InstantCommand());
+    // m_autoChooser.addOption("2 note cycle", m_SwerveDriveTrain.getAutoPath("2 notes"));
+    // m_autoChooser.addOption("stop after amp", m_SwerveDriveTrain.getAutoPath("1 note"));
+    // m_autoChooser.addOption("pick up center note", m_SwerveDriveTrain.getAutoPath("1.5 notes"));
+    // m_autoChooser.addOption("Forward", m_SwerveDriveTrain.getAutoPath("Forward"));
+    // m_autoChooser.addOption("2.5 notes", m_SwerveDriveTrain.getAutoPath("2.5 notes"));
+    // SmartDashboard.putData(m_autoChooser);
 
     configureBindings();
     configureDrivetrain();
