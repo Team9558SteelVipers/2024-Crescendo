@@ -24,10 +24,10 @@ public class ClimberCommand extends Command {
 
   @Override
   public void execute() {
-    if (OI.operatorController.getLeftY() > 0.1){
-      m_subsystem.climberSpeed(OI.operatorController.getLeftY());
-    } else {
-      m_subsystem.climberSpeed(0);
+if (Math.abs(OI.operatorController.getLeftY()) < 0.1){
+    m_subsystem.climberSpeed(0);
+} else {
+      m_subsystem.climberSpeed(OI.operatorController.getLeftY()*0.5);
     }
     
   }

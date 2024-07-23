@@ -132,6 +132,7 @@ public class RobotContainer {
     operatorInput.getOperatorController().leftBumper().whileTrue(m_InverseScoringCommand);
     operatorInput.getOperatorController().a().onTrue(m_ratchetEngage);
     operatorInput.getOperatorController().b().onTrue(m_ratchetDisengage);
+    operatorInput.getOperatorController().leftStick().whileTrue(m_ClimberCommand);
     
     
     //operatorInput.getOperatorController().leftBumper().runOnce(m_ClawRotationCommand);
