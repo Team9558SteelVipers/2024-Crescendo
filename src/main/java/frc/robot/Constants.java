@@ -1,6 +1,18 @@
 package frc.robot;
 
 public final class Constants {
+
+  final public static class cam1 {
+    //in meters, relative to robot geometric center
+    final public static double xOffset = 0.00;
+    final public static double yOffset = 0.00;
+    final public static double zOffset = 0.00;
+
+    //in degrees, relative to robot's "forward" direction
+    final public static double rollOffset = 0.00;
+    final public static double pitchOffset = 0.00;
+    final public static double yawOffset = 0.00;
+  }
   
   public static class ElevatorConstants {
     // The elevator heights will contain the encoder values for each of the heights
