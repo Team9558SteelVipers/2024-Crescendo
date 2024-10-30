@@ -1,7 +1,7 @@
-package main.java.frc.robot.subsystems;
+package frc.robot.subsystems;
 
 import frc.robot.Constants.cam1;
-import frc.robot.Constants.cam2;
+// import frc.robot.Constants.cam2;
 
 import edu.wpi.first.apriltag.AprilTagFieldLayout;
 import edu.wpi.first.apriltag.AprilTagFieldLayout.OriginPosition;
@@ -32,7 +32,7 @@ import org.photonvision.PhotonPoseEstimator.PoseStrategy;
 import org.photonvision.targeting.PhotonTrackedTarget;
 
 
-public class VisionSubsystem extends Thread {
+public class oneCamSubsystem extends Thread {
 
 	// Vision Variables
 	AprilTagFieldLayout aprilTagFieldLayout;
@@ -56,7 +56,7 @@ public class VisionSubsystem extends Thread {
 	// A constructor is called to initialize an object
 	// ex Square s = new Square(10);
 	// calls the constructor of the Square class with the parameter "10" 
-	public VisionSubsystem() {
+	public oneCamSubsystem() {
 		// initialize thread
 		super();
 
@@ -74,7 +74,7 @@ public class VisionSubsystem extends Thread {
 		// PoseStrategy
 		// Use all visible tags to compute a single pose estimate on coprocessor. This option needs to be enabled on the PhotonVision web UI as well.
 		backLeftPhotonPoseEstimator = new PhotonPoseEstimator(aprilTagFieldLayout,
-				PoseStrategy.MULTI_TAG_PNP_ON_COPROCESSOR, backLeftCam, robotToBackLeftCam);
+				PoseStrategy.MULTI_TAG_PNP_ON_COPROCESSOR, robotToBackLeftCam);
 
 		setVisionWeights(.2, .2, 10);
 	}
@@ -82,7 +82,7 @@ public class VisionSubsystem extends Thread {
 	// Vision Methods
 
 	public Optional<EstimatedRobotPose> getEstimatedBackLeftGlobalPose() {
-		return backLeftPhotonPoseEstimator.update();
+		return backLeftPhotonPoseEstimator.update(backLeftCam.getLatestResult());
 	}
 
 	public void useVision(boolean useVision) {

@@ -5,11 +5,15 @@
 package frc.robot;
 
 
+import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
+import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
 import edu.wpi.first.wpilibj2.command.button.Trigger;
 
-import frc.robot.CommandSwerveDrivetrain;
+import frc.robot.subsystems.CTRESwerve.CommandSwerveDrivetrain;
+
+import frc.robot.subsystems.CTRESwerve.generated.TunerConstants;
 
 
 /**
@@ -21,14 +25,16 @@ import frc.robot.CommandSwerveDrivetrain;
 public class RobotContainer {
   // The robot's subsystems and commands are defined here...
   public static final CommandSwerveDrivetrain m_SwerveDriveTrain = TunerConstants.DriveTrain;
-
+  private final SendableChooser<Command> m_autoChooser = new SendableChooser<Command>();
   // Replace with CommandPS4Controller or CommandJoystick if needed
   
 
   /** The container for the robot. Contains subsystems, OI devices, and commands. */
   public RobotContainer() {
 
-   
+    m_autoChooser.addOption("Test Path", m_SwerveDriveTrain.getAutoPath("Test Auto"));
+    SmartDashboard.putData(m_autoChooser);
+
     // Configure the trigger bindings
     configureBindings();
   }
