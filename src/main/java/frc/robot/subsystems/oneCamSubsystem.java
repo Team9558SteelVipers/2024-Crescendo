@@ -90,7 +90,7 @@ public class VisionSubsystem extends Thread {
 	}
 
 	public void setVisionWeights(double visionX, double visionY, double visionDeg) {
-		RobotContainer.drivetrainSubsystem
+		RobotContainer.m_SwerveDriveTrain
 				.setVisionMeasurementStdDevs(VecBuilder.fill(visionX, visionY, Units.degreesToRadians(visionDeg)));
 	}
 
@@ -100,7 +100,7 @@ public class VisionSubsystem extends Thread {
 	}
 
 	public void addVisionMeasurement(Pose2d pose, double timestampSeconds, Matrix<N3, N1> weights) {
-		RobotContainer.drivetrainSubsystem.addVisionMeasurement(pose, timestampSeconds, weights);
+		RobotContainer.m_SwerveDriveTrain.addVisionMeasurement(pose, timestampSeconds, weights);
 	}
 
 	public void log() {
@@ -182,7 +182,7 @@ public class VisionSubsystem extends Thread {
 						// log robot weights
 						SmartDashboard.putString("/Vision/BackLeftWeights", weights.toString());
 						// add location to drive system
-						RobotContainer.drivetrainSubsystem.addVisionMeasurement(
+						RobotContainer.m_SwerveDriveTrain.addVisionMeasurement(
 								camPoseBackLeft.estimatedPose.toPose2d(), backLeftTimeStamp, weights);
 					}
 					// update last time stamp
