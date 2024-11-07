@@ -5,16 +5,25 @@
 package frc.robot;
 
 
+import com.ctre.phoenix6.mechanisms.swerve.SwerveModule.DriveRequestType;
+import com.ctre.phoenix6.Utils;
+import com.ctre.phoenix6.mechanisms.swerve.SwerveRequest;
+import com.ctre.phoenix6.mechanisms.swerve.utility.PhoenixPIDController;
+import com.pathplanner.lib.auto.NamedCommands;
+
+import edu.wpi.first.math.filter.SlewRateLimiter;
+import edu.wpi.first.math.geometry.Pose2d;
+import edu.wpi.first.math.geometry.Rotation2d;
+import edu.wpi.first.math.geometry.Translation2d;
+import edu.wpi.first.wpilibj.DriverStation;
+import edu.wpi.first.wpilibj.DriverStation.Alliance;
+import edu.wpi.first.wpilibj.GenericHID.RumbleType;
 import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
-import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
-import edu.wpi.first.wpilibj2.command.button.Trigger;
-
+import edu.wpi.first.wpilibj2.command.InstantCommand;
 import frc.robot.subsystems.CTRESwerve.CommandSwerveDrivetrain;
-
 import frc.robot.subsystems.CTRESwerve.generated.TunerConstants;
-
 
 /**
  * This class is where the bulk of the robot should be declared. Since Command-based is a
@@ -24,37 +33,168 @@ import frc.robot.subsystems.CTRESwerve.generated.TunerConstants;
  */
 public class RobotContainer {
   // The robot's subsystems and commands are defined here...
+  public static OI operatorInput = new OI();
+
   public static final CommandSwerveDrivetrain m_SwerveDriveTrain = TunerConstants.DriveTrain;
+
+  /* ====================================================================================== SWERVE DRIVE CONFIGURATION | START */
+  // PARAMETERS
+  private static double MaxSpeed = TunerConstants.kSpeedAt12VoltsMps; // kSpeedAt12VoltsMps desired top speed
+  private static double PercentMinSpeed = 0.2;
+  private static double MaxAngularRate = 1.5 * Math.PI; // 3/4 of a rotation per second max angular velocity
+  private static double PercentLimit = 0.60; // base speed is percent of maxspeed
+  private static double ZeroToMaxTime = 0.7; // time to reach max speed in seconds
+  private static double PercentDeadband = 0.1;
+
+  private static PhoenixPIDController HeadingController = new PhoenixPIDController(5, 0, 0);
+
   private final SendableChooser<Command> m_autoChooser = new SendableChooser<Command>();
-  // Replace with CommandPS4Controller or CommandJoystick if needed
+
   
+  /* ======================================================================================== SWERVE DRIVE CONFIGURATION | END */
+  
+  private static double PercentGas = (1.0 - PercentLimit) > 0.0 ? 1.0 - PercentLimit : 0.0; // Make sure gas mulitplier doesn't become negative
+  private static double PercentBrake = (PercentLimit - PercentMinSpeed) > 0.0 ? PercentLimit - PercentMinSpeed : 0.0; // Make sure PercentLimit >= PercentMinSpeed;
+  private static double Acceleration = MaxSpeed/ZeroToMaxTime;
+  
+  private static SlewRateLimiter xVelRateLimited = new SlewRateLimiter(Acceleration);
+  private static SlewRateLimiter yVelRateLimited = new SlewRateLimiter(Acceleration);
+  
+  private final SwerveRequest.FieldCentric drive = new SwerveRequest.FieldCentric()
+      .withDeadband(MaxSpeed * PercentDeadband).withRotationalDeadband(MaxAngularRate * PercentDeadband) // Add a 10% deadband
+      .withDriveRequestType(DriveRequestType.OpenLoopVoltage);
 
-  /** The container for the robot. Contains subsystems, OI devices, and commands. */
-  public RobotContainer() {
+  private final SwerveRequest.FieldCentricFacingAngle driveFacing = new SwerveRequest.FieldCentricFacingAngle()
+      .withDeadband(MaxSpeed * PercentDeadband) // Add a 10% deadband
+      .withDriveRequestType(DriveRequestType.OpenLoopVoltage);
+  
+  //private final Telemetry logger = new Telemetry(MaxSpeed);
 
-    m_autoChooser.addOption("Test Path", m_SwerveDriveTrain.getAutoPath("Test Auto"));
-    SmartDashboard.putData(m_autoChooser);
+  private void configureBindings() {
+    // m_SwerveDriveTrain.setDefaultCommand( // Drivetrain will execute this command periodically
+    //     m_SwerveDriveTrain.applyRequest(() -> drive.withVelocityX(-operatorInput.getDriverController().getLeftY() * MaxSpeed) // Drive forward with
+    //                                                                                        // negative Y (forward)
+    //         .withVelocityY(-operatorInput.getDriverController().getLeftX() * MaxSpeed) // Drive left with negative X (left)
+    //         .withRotationalRate(-operatorInput.getDriverController().getRightX() * MaxAngularRate) // Drive counterclockwise with negative X (left)
+    //     ));
 
-    // Configure the trigger bindings
-    configureBindings();
+    // operatorInput.getDriverController().a().whileTrue(m_SwerveDriveTrain.applyRequest(() -> brake));
+    // operatorInput.getDriverController().b().whileTrue(m_SwerveDriveTrain
+    //     .applyRequest(() -> point.withModuleDirection(new Rotation2d(-operatorInput.getDriverController().getLeftY(), -operatorInput.getDriverController().getLeftX()))));
+
+    //reset the field-centric heading on left bumper press
+    // operatorInput.getDriverController().leftBumper().onTrue(m_SwerveDriveTrain.runOnce(() -> m_SwerveDriveTrain.seedFieldRelative()));
+    
+    
+    
+    //operatorInput.getOperatorController().leftBumper().runOnce(m_ClawRotationCommand);
+
+    if (Utils.isSimulation()) {
+      m_SwerveDriveTrain.seedFieldRelative(new Pose2d(new Translation2d(), Rotation2d.fromDegrees(90)));
+    }
+    //m_SwerveDriveTrain.registerTelemetry(logger::telemeterize);
   }
 
-  /**
-   * Use this method to define your trigger->command mappings. Triggers can be created via the
-   * {@link Trigger#Trigger(java.util.function.BooleanSupplier)} constructor with an arbitrary
-   * predicate, or via the named factories in {@link
-   * edu.wpi.first.wpilibj2.command.button.CommandGenericHID}'s subclasses for {@link
-   * CommandXboxController Xbox}/{@link edu.wpi.first.wpilibj2.command.button.CommandPS4Controller
-   * PS4} controllers or {@link edu.wpi.first.wpilibj2.command.button.CommandJoystick Flight
-   * joysticks}.
-   */
-  private void configureBindings() {
-    // Schedule `ExampleCommand` when `exampleCondition` changes to `true`
-    
+  public RobotContainer() {
+    m_autoChooser.setDefaultOption("Do nothing", new InstantCommand());
+    m_autoChooser.addOption("Forward", m_SwerveDriveTrain.getAutoPath("Forward"));
+    SmartDashboard.putData(m_autoChooser);
 
-    // Schedule `exampleMethodCommand` when the Xbox controller's B button is pressed,
-    // cancelling on release.
+    configureBindings();
+    configureDrivetrain();
+  }
+   
+  public static void rumbleControllers() {
+    operatorInput.getDriverController().getHID().setRumble(RumbleType.kBothRumble, 1.0);
+    operatorInput.getOperatorController().getHID().setRumble(RumbleType.kBothRumble, 1.0);
+  }
+
+  public static void stopRumbleControllers() {
+    operatorInput.getDriverController().getHID().setRumble(RumbleType.kBothRumble, 0);
+    operatorInput.getOperatorController().getHID().setRumble(RumbleType.kBothRumble, 0);
+  }
+
+  private void configureDrivetrain() {
+    driveFacing.HeadingController = HeadingController;
     
+    operatorInput.getDriverController().x().onTrue(m_SwerveDriveTrain.runOnce(() -> 
+    {
+      m_SwerveDriveTrain.seedFieldRelative();
+      m_SwerveDriveTrain.setHeadingToMaintain(m_SwerveDriveTrain.getCurrentRobotHeading());
+    }
+    ));
+    
+    // operatorInput.getDriverController().y().onTrue(m_SwerveDriveTrain.runOnce(() -> m_SwerveDriveTrain.setHeadingToMaintain(m_SwerveDriveTrain.getOperatorForwardDirection())));
+    // //operatorInput.getDriverController().a().onTrue(m_SwerveDriveTrain.runOnce(() -> m_SwerveDriveTrain.setHeadingToMaintain(m_SwerveDriveTrain.getOperatorForwardDirection().rotateBy(new Rotation2d(-1.0, 0.0)))));
+    // operatorInput.getDriverController().b().onTrue(m_SwerveDriveTrain.runOnce(() -> 
+    // {
+    //   double val = 1.0;
+    //   if (DriverStation.getAlliance().get() == Alliance.Red)
+    //   {
+    //     val = -val;
+    //   }
+    //   // m_SwerveDriveTrain.setHeadingToMaintain(m_SwerveDriveTrain.getOperatorForwardDirection().rotateBy(new Rotation2d(0.0, val)));
+    // }));
+    
+     // Boost
+     operatorInput.getDriverController().rightBumper().onTrue(new InstantCommand(() ->
+     {
+       xVelRateLimited.reset(-operatorInput.getDriverController().getLeftY() * MaxSpeed * 1.33);
+       yVelRateLimited.reset(-operatorInput.getDriverController().getLeftX() * MaxSpeed * 1.33);
+     }));
+ 
+     // Stop
+     operatorInput.getDriverController().leftBumper().onTrue(new InstantCommand(() ->
+     {
+       xVelRateLimited.reset(0.0);
+       yVelRateLimited.reset(0.0);
+     }));
+
+    m_SwerveDriveTrain.setDefaultCommand( // Drivetrain will execute this command periodically
+      m_SwerveDriveTrain.applyRequest(
+
+        // operatorInput.getDriverController(), // provide controller inputs to know when to use FieldCentricFacingAngle
+
+        () -> drive
+          .withVelocityX(
+            xVelRateLimited.calculate( // control acceleration
+              (-operatorInput.getDriverController().getLeftY() * MaxSpeed) // Drive forward with negative Y (forward)
+              * (PercentLimit // limit base speed
+              + (operatorInput.getDriverController().getRightTriggerAxis()*PercentGas) // Right Trigger to increase to max speed
+              - (operatorInput.getDriverController().getLeftTriggerAxis()*PercentBrake)) // Left Trigger to decrease to min speed
+            )
+          ) 
+          .withVelocityY(
+            yVelRateLimited.calculate(
+              (-operatorInput.getDriverController().getLeftX() * MaxSpeed) // Drive left with negative X (left)
+              * (PercentLimit // limit base speed
+              + (operatorInput.getDriverController().getRightTriggerAxis()*PercentGas) // Right Trigger to increase to max speed
+              - (operatorInput.getDriverController().getLeftTriggerAxis()*PercentBrake)) // Left Trigger to decrease to min speed
+            )
+          ) 
+          .withRotationalRate(-operatorInput.getDriverController().getRightX()*MaxAngularRate) // Drive counterclockwise with negative X (left)
+       
+       
+          // () -> driveFacing
+          // .withVelocityX(
+          //   xVelRateLimited.calculate( // control acceleration
+          //     (-operatorInput.getDriverController().getLeftY() * MaxSpeed) // Drive forward with negative Y (forward)
+          //     * (PercentLimit // limit base speed
+          //     + (operatorInput.getDriverController().getRightTriggerAxis()*PercentGas) // Right Trigger to increase to max speed
+          //     - (operatorInput.getDriverController().getLeftTriggerAxis()*PercentBrake)) // Left Trigger to decrease to min speed
+          //   )
+          // )
+          // .withVelocityY(
+          //   yVelRateLimited.calculate(
+          //     (-operatorInput.getDriverController().getLeftX() * MaxSpeed) // Drive left with negative X (left)
+          //     * (PercentLimit // limit base speed
+          //     + (operatorInput.getDriverController().getRightTriggerAxis()*PercentGas) // Right Trigger to increase to max speed
+          //     - (operatorInput.getDriverController().getLeftTriggerAxis()*PercentBrake)) // Left Trigger to decrease to min speed
+          //   )
+          // ) 
+          // .withTargetDirection(m_SwerveDriveTrain.getHeadingToMaintain()) // Maintain last known heading
+      )
+    );
   }
 
   /**
@@ -63,7 +203,19 @@ public class RobotContainer {
    * @return the command to run in autonomous
    */
   public Command getAutonomousCommand() {
-    // An example command will be run in autonomous
-    return null;
-  }
+    return m_autoChooser.getSelected();
+   } 
+
+  /** The  container for the robot. Contains subsystems, OI devices, and commands. */
+
+  /**
+   * Use this method to define your trigger->command mappings. Triggers can be created via the
+   * {@link Trigger#Trigger(java.util.function.BooleanSupplier)} constructor with an arbitrary
+   * predicate, or via the named factories in {@link
+   * edu.wpi.first.wpilibj2.command.button.CommandGenericHID}'s subclasses for {@link
+   * https://3015rangerrobotics.github.io/pathplannerlib/PathplannerLib.jsonCommandXboxController Xbox}/{@link edu.wpi.first.wpilibj2.command.button.CommandPS4Controller
+   * PS4} controllers or {@link edu.wpi.first.wpilibj2.command.button.CommandJoystick Flight
+   * joysticks}.
+   */
+  
 }
