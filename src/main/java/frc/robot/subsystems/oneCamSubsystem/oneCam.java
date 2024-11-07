@@ -1,4 +1,4 @@
-package frc.robot.subsystems;
+package frc.robot.subsystems.oneCamSubsystem;
 
 import frc.robot.Constants.cam1;
 // import frc.robot.Constants.cam2;
@@ -32,7 +32,7 @@ import org.photonvision.PhotonPoseEstimator.PoseStrategy;
 import org.photonvision.targeting.PhotonTrackedTarget;
 
 
-public class oneCamSubsystem extends Thread {
+public class oneCam extends Thread {
 
 	// Vision Variables
 	AprilTagFieldLayout aprilTagFieldLayout;
@@ -56,7 +56,7 @@ public class oneCamSubsystem extends Thread {
 	// A constructor is called to initialize an object
 	// ex Square s = new Square(10);
 	// calls the constructor of the Square class with the parameter "10" 
-	public oneCamSubsystem() {
+	public oneCam() {
 		// initialize thread
 		super();
 
