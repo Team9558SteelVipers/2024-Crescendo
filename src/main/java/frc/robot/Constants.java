@@ -2,7 +2,7 @@ package frc.robot;
 
 public final class Constants {
 
-  final public static class cam1 {
+  final public static class MonoCam1 {
     //in meters, relative to robot geometric center
     final public static double xOffset = 0.00;
     final public static double yOffset = 0.00;

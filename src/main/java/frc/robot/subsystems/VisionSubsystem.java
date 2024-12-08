@@ -1,265 +1,207 @@
-// package main.java.frc.robot.subsystems;
+package frc.robot.subsystems;
 
-// import frc.robot.Constants.cam1;
-// import frc.robot.Constants.cam2;
+import frc.robot.Constants.MonoCam1;
+import frc.robot.Constants.MonoCam2;
 
-// import edu.wpi.first.apriltag.AprilTagFieldLayout;
-// import edu.wpi.first.apriltag.AprilTagFieldLayout.OriginPosition;
-// import edu.wpi.first.apriltag.AprilTagFields;
-// import edu.wpi.first.math.Matrix;
-// import edu.wpi.first.math.VecBuilder;
-// import edu.wpi.first.math.geometry.Pose2d;
-// import edu.wpi.first.math.geometry.Rotation3d;
-// import edu.wpi.first.math.geometry.Transform3d;
-// import edu.wpi.first.math.geometry.Translation2d;
-// import edu.wpi.first.math.geometry.Translation3d;
-// import edu.wpi.first.math.numbers.N1;
-// import edu.wpi.first.math.numbers.N3;
-// import edu.wpi.first.math.util.Units;
-// import edu.wpi.first.wpilibj.DriverStation;
-// import edu.wpi.first.wpilibj.Timer;
-// import edu.wpi.first.wpilibj.DriverStation.Alliance;
-// import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
+import edu.wpi.first.apriltag.AprilTagFieldLayout;
+import edu.wpi.first.apriltag.AprilTagFieldLayout.OriginPosition;
+import edu.wpi.first.apriltag.AprilTagFields;
+import edu.wpi.first.math.Matrix;
+import edu.wpi.first.math.VecBuilder;
+import edu.wpi.first.math.geometry.Pose2d;
+import edu.wpi.first.math.geometry.Rotation3d;
+import edu.wpi.first.math.geometry.Transform3d;
+import edu.wpi.first.math.geometry.Translation2d;
+import edu.wpi.first.math.geometry.Translation3d;
+import edu.wpi.first.math.numbers.N1;
+import edu.wpi.first.math.numbers.N3;
+import edu.wpi.first.math.util.Units;
+import edu.wpi.first.wpilibj.DriverStation;
+import edu.wpi.first.wpilibj.Timer;
+import edu.wpi.first.wpilibj.DriverStation.Alliance;
+import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 
-// import frc.robot.RobotContainer;
-// import java.io.IOException;
-// import java.util.Optional;
-// import org.ejml.simple.SimpleMatrix;
-// import org.photonvision.EstimatedRobotPose;
-// import org.photonvision.PhotonCamera;
-// import org.photonvision.PhotonPoseEstimator;
-// import org.photonvision.PhotonPoseEstimator.PoseStrategy;
-// import org.photonvision.targeting.PhotonTrackedTarget;
+import frc.robot.RobotContainer;
+import java.io.IOException;
+import java.util.List;
+import java.util.Optional;
+import org.ejml.simple.SimpleMatrix;
+import org.opencv.photo.Photo;
+import org.photonvision.EstimatedRobotPose;
+import org.photonvision.PhotonCamera;
+import org.photonvision.PhotonPoseEstimator;
+import org.photonvision.PhotonPoseEstimator.PoseStrategy;
+import org.photonvision.targeting.PhotonPipelineResult;
+import org.photonvision.targeting.PhotonTrackedTarget;
 
 
-// public class VisionSubsystem extends Thread {
+public class VisionSubsystem extends Thread {
+	boolean useVision = true;
+	Alliance lastAlliance = null;
+	AprilTagFieldLayout aprilTagFieldLayout;
 
-// 	// Vision Variables
-// 	AprilTagFieldLayout aprilTagFieldLayout;
+	public PhotonCamera Mono1;
+	Transform3d robotToMono1 = new Transform3d(
+            new Translation3d(MonoCam1.xOffset, MonoCam1.yOffset, MonoCam1.zOffset),
+			new Rotation3d(Math.toRadians(MonoCam1.rollOffset), Math.toRadians(MonoCam1.pitchOffset), Math.toRadians(MonoCam1.yawOffset)));
 
-// 	public PhotonCamera backLeftCam;
+	public PhotonCamera Mono2;
+	Transform3d robotToMono2 = new Transform3d(
+            new Translation3d(MonoCam2.xOffset, MonoCam2.yOffset, MonoCam2.zOffset),
+			new Rotation3d(Math.toRadians(MonoCam2.rollOffset), Math.toRadians(MonoCam2.pitchOffset), Math.toRadians(MonoCam2.yawOffset)));
 
-// 	// transform from the robots origin to the camera's position
-// 	Transform3d robotToBackLeftCam = new Transform3d(
-//             new Translation3d(-0.3302, 0.2286, 0.53975),
-// 			new Rotation3d(Math.toRadians(0), Math.toRadians(-16.5), Math.toRadians(180)));
+	public PhotonCamera Color1;
+	public PhotonCamera Color2;
 
-// 	public PhotonCamera backRightCam;
+	PhotonPoseEstimator Mono1PhotonPoseEstimator;
+	PhotonPoseEstimator Mono2PhotonPoseEstimator;
 
-// 	// transform from the robots origin to the camera's position
-// 	Transform3d robotToBackRightCam = new Transform3d(
-//             new Translation3d(-0.3302, -0.2286, 0.53975),
-// 			new Rotation3d(Math.toRadians(0), Math.toRadians(-16.3), Math.toRadians(180)));
+	Optional<EstimatedRobotPose> resultMono1;
+	Optional<EstimatedRobotPose> resultMono2;
+	
+	double Mono1LastTimeStamp = 0;
+	double Mono2LastTimeStamp = 0;
 
-// 	public PhotonCamera frontNoteCam;
-// 	public PhotonCamera backNoteCam;
 
-// 	PhotonPoseEstimator backLeftPhotonPoseEstimator;
-// 	PhotonPoseEstimator backRightPhotonPoseEstimator;
+	public VisionSubsystem() {
+		super();
+			try {
+				aprilTagFieldLayout = AprilTagFieldLayout.loadFromResource(AprilTagFields.k2024Crescendo.m_resourceFile);
+			} catch (Exception e) {
+				aprilTagFieldLayout = null;
+			}
 
-// 	Optional<EstimatedRobotPose> resultBackLeft;
-// 	Optional<EstimatedRobotPose> resultBackRight;
+			Mono1 = new PhotonCamera("Mono 1"); //TODO rename to corresponding namae is photonision UI
+			Mono1PhotonPoseEstimator = new PhotonPoseEstimator(aprilTagFieldLayout, PoseStrategy.MULTI_TAG_PNP_ON_COPROCESSOR, robotToMono1);
 
-// 	boolean useVision = true;
-//     Alliance lastAlliance = null;
+			Mono2 = new PhotonCamera("Mono 2"); //TODO rename to corresponding namae is photonision UI
+			Mono2PhotonPoseEstimator = new PhotonPoseEstimator(aprilTagFieldLayout, PoseStrategy.MULTI_TAG_PNP_ON_COPROCESSOR, robotToMono2);
 
-// 	double backLeftLastTimeStamp = 0;
-// 	double backRightLastTimeStamp = 0;
-    
-// 	double visionRatio = 10;
+			setVisionWeights(0.2, 0.2, 10);
+	}
 
-// 	// constructor of VisionSubsystem
-// 	// A constructor is called to initialize an object
-// 	// ex Square s = new Square(10);
-// 	// calls the constructor of the Square class with the parameter "10" 
-// 	public VisionSubsystem() {
-// 		// initialize thread
-// 		super();
 
-// 		// Load Field Layout w/ known tags
-// 		try {
-// 			aprilTagFieldLayout = AprilTagFieldLayout.loadFromResource(AprilTagFields.k2024Crescendo.m_resourceFile);
+	public Optional<EstimatedRobotPose> getEstimatedMono1GlobalPose() {
+		List<PhotonPipelineResult> r = Mono1.getAllUnreadResults();
+		return Mono1PhotonPoseEstimator.update(r.get(r.size() - 1));
+	}
 
-// 		// should only catch IOEXCEPTION, other exceptions not handled and should cause failure
-// 		} catch (IOException e) {
-// 			System.out.println("ERROR Loading April Tag DATA");
-// 			aprilTagFieldLayout = null;
-// 		}
+	public Optional<EstimatedRobotPose> getEstimatedMono2GlobalPose() {
+		List<PhotonPipelineResult> r = Mono1.getAllUnreadResults();
+		return Mono2PhotonPoseEstimator.update(r.get(r.size() - 1));
+	}
 
-// 		backLeftCam = new PhotonCamera("BackLeft");
-// 		// PoseStrategy
-// 		// Use all visible tags to compute a single pose estimate on coprocessor. This option needs to be enabled on the PhotonVision web UI as well.
-// 		backLeftPhotonPoseEstimator = new PhotonPoseEstimator(aprilTagFieldLayout,
-// 				PoseStrategy.MULTI_TAG_PNP_ON_COPROCESSOR, backLeftCam, robotToBackLeftCam);
+	public void setVisionWeights(double visionX, double visionY, double visionDeg){
+		RobotContainer.m_SwerveDriveTrain.setVisionMeasurementStdDevs(VecBuilder.fill(visionX, visionY, Units.degreesToRadians(visionDeg)));
+	}
 
-// 		backRightCam = new PhotonCamera("BackRight");
-// 		backRightPhotonPoseEstimator = new PhotonPoseEstimator(aprilTagFieldLayout,
-// 				PoseStrategy.MULTI_TAG_PNP_ON_COPROCESSOR, backRightCam, robotToBackRightCam);
+	public Matrix<N3, N1> getVisionWeights(double distanceRatio, int numTargets) {
+		double targetMultiplier = 1;
+		double visionCutOffDistance = 4;
+		distanceRatio = 0.1466 * Math.pow(1.6903, distanceRatio);
+		if (numTargets == 1) {
+			if (distanceRatio > visionCutOffDistance) {
+				return new Matrix<N3, N1>(new SimpleMatrix(new double[]{99999, 99999, 99999}));
+			}
+			targetMultiplier = 3;
+		}
+		Matrix<N3, N1> weights = new Matrix<N3, N1>(new SimpleMatrix(new double[]{distanceRatio * targetMultiplier, distanceRatio * targetMultiplier, 3 + 15 * distanceRatio * targetMultiplier}));
+		return weights;
+	}
 
-// 		frontNoteCam = new PhotonCamera("FrontNoteCam");
-// 		backNoteCam = new PhotonCamera("BackNoteCam");
+	public void addVisionMeasurement(Pose2d pose, double timestampSeconds, Matrix<N3, N1> weights) {
+		RobotContainer.m_SwerveDriveTrain.addVisionMeasurement(pose, timestampSeconds, weights);
+	}
 
-// 		setVisionWeights(.2, .2, 10);
-// 	}
+	public PhotonTrackedTarget getBestFrontNote() { //depending on which camera is placed on forward direction of
+		var result = Color1.getLatestResult();		//robot, change the camera "Color1" to "Color2" if color2 is 
+		var bestTarget = result.getBestTarget();	//placed on front
+		return bestTarget;
+	}
 
-// 	// Vision Methods
+	public PhotonTrackedTarget getBestBackNote() {
+		var result = Color2.getLatestResult();
+		var bestTarget = result.getBestTarget();
+		return bestTarget;
+	}
 
-// 	public Optional<EstimatedRobotPose> getEstimatedBackLeftGlobalPose() {
-// 		return backLeftPhotonPoseEstimator.update();
-// 	}
+	@Override
+	public void run() {
+		while(true) {
+			try{
+				Thread.sleep(10);
+			} catch (InterruptedException e) {
+				//TODO auto-generated catch block
+				e.printStackTrace();
+			}
 
-// 	public Optional<EstimatedRobotPose> getEstimatedBackRightGlobalPose() {
-// 		return backRightPhotonPoseEstimator.update();
-// 	}
+			//vision calculations
 
-// 	public void useVision(boolean useVision) {
-// 		this.useVision = useVision;
-// 	}
+			if(DriverStation.getAlliance().isPresent()) {
+				if(DriverStation.getAlliance().get() == Alliance.Blue && lastAlliance != Alliance.Blue){
+					lastAlliance = Alliance.Blue;
+					aprilTagFieldLayout.setOrigin(OriginPosition.kBlueAllianceWallRightSide);
+				}
+				if(DriverStation.getAlliance().get() == Alliance.Red && lastAlliance != Alliance.Red) {
+					lastAlliance = Alliance.Red;
+					aprilTagFieldLayout.setOrigin(OriginPosition.kRedAllianceWallRightSide);
+				}
+			}
 
-// 	public void setVisionWeights(double visionX, double visionY, double visionDeg) {
-// 		RobotContainer.drivetrainSubsystem
-// 				.setVisionMeasurementStdDevs(VecBuilder.fill(visionX, visionY, Units.degreesToRadians(visionDeg)));
-// 	}
+			Mono1PhotonPoseEstimator.setFieldTags(aprilTagFieldLayout);
+			Mono2PhotonPoseEstimator.setFieldTags(aprilTagFieldLayout);
 
-// 	public static void publishPose2d(String key, Pose2d pose) {
-// 		SmartDashboard.putNumberArray(key, new double[]{pose.getTranslation().getX(), pose.getTranslation().getY(),
-// 				pose.getRotation().getRadians()});
-// 	}
+			this.resultMono1 = getEstimatedMono1GlobalPose();
+			this.resultMono2 = getEstimatedMono2GlobalPose();
 
-// 	public void addVisionMeasurement(Pose2d pose, double timestampSeconds, Matrix<N3, N1> weights) {
-// 		RobotContainer.drivetrainSubsystem.addVisionMeasurement(pose, timestampSeconds, weights);
-// 	}
+			if(useVision) {
+				
+				if(resultMono1.isPresent()) {
+					EstimatedRobotPose camPoseMono1 = resultMono1.get();
+					double Mono1TimeStamp = camPoseMono1.timestampSeconds;
+					if(Mono1TimeStamp > Timer.getFPGATimestamp()) {
+						Mono1TimeStamp = Timer.getFPGATimestamp();
+					}
 
-// 	public void log() {
-// 		SmartDashboard.putBoolean("/Vision/BackLeft/Connected", backLeftCam.isConnected());
-// 		SmartDashboard.putBoolean("/Vision/BackRight/Connected", backRightCam.isConnected());
+					double sum = 0;
+					for(PhotonTrackedTarget target : camPoseMono1.targetsUsed){
+						Translation2d tagPosition = aprilTagFieldLayout.getTagPose(target.getFiducialId()).get().getTranslation().toTranslation2d();
+						sum += resultMono1.get().estimatedPose.toPose2d().getTranslation().getDistance(tagPosition);
+					}
+					sum /= camPoseMono1.targetsUsed.size();
+					double distanceRatio = sum;
+					Matrix<N3, N1> weights = getVisionWeights(distanceRatio, camPoseMono1.targetsUsed.size());
 
-// 		SmartDashboard.putBoolean("/Vision/FrontNoteCam/Connected", frontNoteCam.isConnected());
-// 		SmartDashboard.putBoolean("/Vision/BackNoteCam/Connected", backNoteCam.isConnected());
+					if(Mono1TimeStamp != Mono1LastTimeStamp) {
+						RobotContainer.m_SwerveDriveTrain.addVisionMeasurement(camPoseMono1.estimatedPose.toPose2d(), Mono1TimeStamp, weights);
+					}
+					Mono1LastTimeStamp = Mono1TimeStamp;
+				}
 
-// 	}
-// 	public Matrix<N3, N1> getVisionWeights(double distanceRatio, int numTargets) {
-// 		double targetMultiplier = 1;
-// 		double visionCutOffDistance = 4;
-// 		distanceRatio = 0.1466 * Math.pow(1.6903, distanceRatio);
-// 		if (numTargets == 1) {
-// 			if (distanceRatio > visionCutOffDistance) {
-// 				return new Matrix<N3, N1>(new SimpleMatrix(new double[]{99999, 99999, 99999}));
-// 			}
-// 			targetMultiplier = 3;
-// 		}
-// 		Matrix<N3, N1> weights = new Matrix<N3, N1>(new SimpleMatrix(new double[]{distanceRatio * targetMultiplier,
-// 				distanceRatio * targetMultiplier, 3 + 15 * distanceRatio * targetMultiplier}));
-// 		return weights;
-// 	}
-// 	public PhotonTrackedTarget getBestFrontNote() {
-// 		var result = frontNoteCam.getLatestResult();
-// 		var bestTarget = result.getBestTarget();
-// 		return bestTarget;
-// 	}
-// 	public PhotonTrackedTarget getBestBackNote() {
-// 		var result = backNoteCam.getLatestResult();
-// 		var bestTarget = result.getBestTarget();
-// 		return bestTarget;
-// 	}
-// 	@Override
-// 	public void run() {
-// 		/* Run as fast as possible, our signals will control the timing */
-// 		while (true) {
-// 			// take 10ms wait at beginning of every loop
-// 			try {
-// 				Thread.sleep(10);
-// 			} catch (InterruptedException e) {
-// 				// TODO Auto-generated catch block
-// 				e.printStackTrace();
-// 			}
-			
-// 			// Vision Calculations
-// 			if (DriverStation.getAlliance().isPresent()) {
-// 				if (DriverStation.getAlliance().get() == Alliance.Blue && lastAlliance != Alliance.Blue) {
-// 					lastAlliance = Alliance.Blue;
-// 					aprilTagFieldLayout.setOrigin(OriginPosition.kBlueAllianceWallRightSide);
-// 				}
-// 				if (DriverStation.getAlliance().get() == Alliance.Red && lastAlliance != Alliance.Red) {
 
-// 					lastAlliance = Alliance.Red;
-// 					aprilTagFieldLayout.setOrigin(OriginPosition.kRedAllianceWallRightSide);
-// 				}
-// 			}
+				if(resultMono2.isPresent()) {
+					EstimatedRobotPose camPoseMono2 = resultMono2.get();
+					double Mono2TimeStamp = camPoseMono2.timestampSeconds;
+					if(Mono2TimeStamp > Timer.getFPGATimestamp()) {
+						Mono2TimeStamp = Timer.getFPGATimestamp();
+					}
 
-// 			backLeftPhotonPoseEstimator.setFieldTags(aprilTagFieldLayout);
-// 			backRightPhotonPoseEstimator.setFieldTags(aprilTagFieldLayout);
+					double sum = 0;
+					for(PhotonTrackedTarget target : camPoseMono2.targetsUsed){
+						Translation2d tagPosition = aprilTagFieldLayout.getTagPose(target.getFiducialId()).get().getTranslation().toTranslation2d();
+						sum += resultMono2.get().estimatedPose.toPose2d().getTranslation().getDistance(tagPosition);
+					}
+					sum /= camPoseMono2.targetsUsed.size();
+					double distanceRatio = sum;
+					Matrix<N3, N1> weights = getVisionWeights(distanceRatio, camPoseMono2.targetsUsed.size());
 
-// 			this.resultBackLeft = getEstimatedBackLeftGlobalPose();
-// 			this.resultBackRight = getEstimatedBackRightGlobalPose();
+					if(Mono2TimeStamp != Mono2LastTimeStamp) {
+						RobotContainer.m_SwerveDriveTrain.addVisionMeasurement(camPoseMono2.estimatedPose.toPose2d(), Mono2TimeStamp, weights);
+					}
+					Mono2LastTimeStamp = Mono2TimeStamp;
+				}
 
-// 			if (useVision) {
-
-// 				if (resultBackLeft.isPresent()) {
-// 					EstimatedRobotPose camPoseBackLeft = resultBackLeft.get();
-// 					double backLeftTimeStamp = camPoseBackLeft.timestampSeconds;
-// 					if (backLeftTimeStamp > Timer.getFPGATimestamp()) {
-// 						backLeftTimeStamp = Timer.getFPGATimestamp();
-// 					}
-
-// 					double sum = 0;
-
-// 					// for every april tag
-// 					for (PhotonTrackedTarget target : camPoseBackLeft.targetsUsed) {
-// 						// get position of tag
-// 						Translation2d tagPosition = aprilTagFieldLayout.getTagPose(target.getFiducialId()).get()
-// 								.getTranslation().toTranslation2d();
-// 						// add the distance to sum
-// 						sum += resultBackLeft.get().estimatedPose.toPose2d().getTranslation().getDistance(tagPosition);
-// 					}
-// 					// divide by all targets used to get average distance to a tag
-// 					sum /= camPoseBackLeft.targetsUsed.size();
-// 					double distanceRatio = sum;
-// 					Matrix<N3, N1> weights = getVisionWeights(distanceRatio, camPoseBackLeft.targetsUsed.size());
-
-// 					// if new data
-// 					if (backLeftTimeStamp != backLeftLastTimeStamp) {
-// 						// log robot estimated position
-// 						publishPose2d("/DriveTrain/BackLeftCamPose", camPoseBackLeft.estimatedPose.toPose2d());
-// 						// log robot weights
-// 						SmartDashboard.putString("/Vision/BackLeftWeights", weights.toString());
-// 						// add location to drive system
-// 						RobotContainer.drivetrainSubsystem.addVisionMeasurement(
-// 								camPoseBackLeft.estimatedPose.toPose2d(), backLeftTimeStamp, weights);
-// 					}
-// 					// update last time stamp
-// 					backLeftLastTimeStamp = backLeftTimeStamp;
-// 				}
-
-// 				// same thing but for back right instead of back left
-// 				if (resultBackRight.isPresent()) {
-// 					EstimatedRobotPose camPoseBackRight = resultBackRight.get();
-// 					double backRightTimeStamp = camPoseBackRight.timestampSeconds;
-
-// 					if (backRightTimeStamp > Timer.getFPGATimestamp()) {
-// 						backRightTimeStamp = Timer.getFPGATimestamp();
-// 					}
-
-// 					double sum = 0;
-// 					for (PhotonTrackedTarget target : camPoseBackRight.targetsUsed) {
-// 						Translation2d tagPosition = aprilTagFieldLayout.getTagPose(target.getFiducialId()).get()
-// 								.getTranslation().toTranslation2d();
-// 						sum += resultBackRight.get().estimatedPose.toPose2d().getTranslation().getDistance(tagPosition);
-// 					}
-// 					sum /= camPoseBackRight.targetsUsed.size();
-// 					double distanceRatio = sum;
-// 					Matrix<N3, N1> weights = getVisionWeights(distanceRatio, camPoseBackRight.targetsUsed.size());
-
-// 					if (backRightTimeStamp != backRightLastTimeStamp) {
-// 						publishPose2d("/DriveTrain/BackRightCamPose", camPoseBackRight.estimatedPose.toPose2d());
-// 						SmartDashboard.putString("/Vision/BackRightWeights", weights.toString());
-// 						RobotContainer.drivetrainSubsystem.addVisionMeasurement(
-// 								camPoseBackRight.estimatedPose.toPose2d(), backRightTimeStamp, weights);
-// 					}
-// 					backRightLastTimeStamp = backRightTimeStamp;
-// 				}
-
-// 			}
-// 		}
-// 	}
-// }
+			}
+		}
+	}
+}

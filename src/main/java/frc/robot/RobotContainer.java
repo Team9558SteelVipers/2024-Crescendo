@@ -10,6 +10,8 @@ import com.ctre.phoenix6.mechanisms.swerve.SwerveRequest;
 import com.ctre.phoenix6.mechanisms.swerve.utility.PhoenixPIDController;
 
 import edu.wpi.first.math.filter.SlewRateLimiter;
+import edu.wpi.first.wpilibj.event.BooleanEvent;
+import edu.wpi.first.wpilibj.event.EventLoop;
 import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
@@ -19,6 +21,7 @@ import edu.wpi.first.wpilibj2.command.button.Trigger;
 import frc.robot.subsystems.CTRESwerve.CommandSwerveDrivetrain;
 
 import frc.robot.subsystems.CTRESwerve.generated.TunerConstants;
+import frc.robot.Robot;
 
 
 /**
@@ -31,7 +34,7 @@ public class RobotContainer {
   // The robot's subsystems and commands are defined here...
   public static OI operatorInput = new OI();
 
-  public static final CommandSwerveDrivetrain m_SwerveDriveTrain = TunerConstants.DriveTrain;
+  public static CommandSwerveDrivetrain m_SwerveDriveTrain = TunerConstants.DriveTrain;
   // Replace with CommandPS4Controller or CommandJoystick if needed
 
   /* ====================================================================================== SWERVE DRIVE CONFIGURATION | START */
@@ -84,7 +87,29 @@ public class RobotContainer {
    */
   private void configureBindings() {
     // Schedule `ExampleCommand` when `exampleCondition` changes to `true`
+    BooleanEvent LT = operatorInput.getDriverController().leftTrigger(0.5, Robot.inputLoop); //left trigger
+    BooleanEvent RT = operatorInput.getDriverController().rightTrigger(0.5, Robot.inputLoop); //right trigger
+    BooleanEvent LB = operatorInput.getDriverController().leftBumper(Robot.inputLoop); //left bumper
+    BooleanEvent RB = operatorInput.getDriverController().leftBumper(Robot.inputLoop); //right bumper
+
+    //Left Trigger binding for front left module rotation
+    LT.falling().ifHigh( () -> TunerConstants.updateDriveTrain("default")); //should reset rotation origin to center of robot
+    LT.rising().ifHigh( () -> TunerConstants.updateDriveTrain("fl"));
+
+    //Right Trigger binding for front right module rotation
+    RT.falling().ifHigh( () -> TunerConstants.updateDriveTrain("default") );
+    RT.rising().ifHigh( () -> TunerConstants.updateDriveTrain("fr") );
+
+    //Left Bumper binding for back left module rotation
+    LB.falling().ifHigh( () -> TunerConstants.updateDriveTrain("default"));
+    LB.rising().ifHigh( () -> TunerConstants.updateDriveTrain("bl"));
+
+    //Right Bumper binding for back right module rotation
+    RB.falling().ifHigh( () -> TunerConstants.updateDriveTrain("default"));
+    RB.rising().ifHigh( () -> TunerConstants.updateDriveTrain("br"));
+
     
+
 
     // Schedule `exampleMethodCommand` when the Xbox controller's B button is pressed,
     // cancelling on release.
