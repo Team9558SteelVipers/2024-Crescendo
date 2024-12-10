@@ -93,8 +93,8 @@ public class RobotContainer {
     BooleanEvent RB = operatorInput.getDriverController().leftBumper(Robot.inputLoop); //right bumper
 
     //Left Trigger binding for front left module rotation
-    LT.falling().ifHigh( () -> TunerConstants.updateDriveTrain("default")); //should reset rotation origin to center of robot
-    LT.rising().ifHigh( () -> TunerConstants.updateDriveTrain("fl"));
+    LT.falling().ifHigh( () -> TunerConstants.updateDriveTrain("default")); //should reset rotation origin to center of robot when button released
+    LT.rising().ifHigh( () -> TunerConstants.updateDriveTrain("fl")); //should change center of rotation to corresponding module key
 
     //Right Trigger binding for front right module rotation
     RT.falling().ifHigh( () -> TunerConstants.updateDriveTrain("default") );

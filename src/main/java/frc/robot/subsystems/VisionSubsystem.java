@@ -87,7 +87,7 @@ public class VisionSubsystem extends Thread {
 	}
 
 	public Optional<EstimatedRobotPose> getEstimatedMono2GlobalPose() {
-		List<PhotonPipelineResult> r = Mono1.getAllUnreadResults();
+		List<PhotonPipelineResult> r = Mono2.getAllUnreadResults();
 		return Mono2PhotonPoseEstimator.update(r.get(r.size() - 1));
 	}
 
