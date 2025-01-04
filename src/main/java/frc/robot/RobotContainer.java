@@ -90,23 +90,123 @@ public class RobotContainer {
     BooleanEvent LT = operatorInput.getDriverController().leftTrigger(0.5, Robot.inputLoop); //left trigger
     BooleanEvent RT = operatorInput.getDriverController().rightTrigger(0.5, Robot.inputLoop); //right trigger
     BooleanEvent LB = operatorInput.getDriverController().leftBumper(Robot.inputLoop); //left bumper
-    BooleanEvent RB = operatorInput.getDriverController().leftBumper(Robot.inputLoop); //right bumper
+    BooleanEvent RB = operatorInput.getDriverController().rightBumper(Robot.inputLoop); //right bumper
 
     //Left Trigger binding for front left module rotation
-    LT.falling().ifHigh( () -> TunerConstants.updateDriveTrain("default")); //should reset rotation origin to center of robot when button released
-    LT.rising().ifHigh( () -> TunerConstants.updateDriveTrain("fl")); //should change center of rotation to corresponding module key
+    LT.negate().ifHigh( () -> {
+      TunerConstants.updateDriveTrain("default");
+      configureDriveTrain();
+  }); //should reset rotation origin to center of robot when button released
+    LT.ifHigh( () -> {
+      int direction = ( (int)Math.round(m_SwerveDriveTrain.getNormalizedYaw()/90) ) % 4; //return either 0, 1, 2, or 3 depending on the rotation of the robot
+      switch (direction) {
+        case 0: //forward
+            TunerConstants.updateDriveTrain("fl");
+            configureDriveTrain();
+          break;
+        case 1: //right
+            TunerConstants.updateDriveTrain("bl");
+            configureDriveTrain();
+          break;
+        case 2: //down
+            TunerConstants.updateDriveTrain("br");
+            configureDriveTrain();
+          break;
+        case 3: //left
+            TunerConstants.updateDriveTrain("fr");
+            configureDriveTrain();
+          break;
+        default:
+          break;
+      }
+  }); //should change center of rotation to corresponding module key
 
     //Right Trigger binding for front right module rotation
-    RT.falling().ifHigh( () -> TunerConstants.updateDriveTrain("default") );
-    RT.rising().ifHigh( () -> TunerConstants.updateDriveTrain("fr") );
+    RT.negate().ifHigh( () -> {
+      TunerConstants.updateDriveTrain("default");
+      configureDriveTrain();
+  });
+    RT.ifHigh( () -> {
+      int direction = ( (int)Math.round(m_SwerveDriveTrain.getNormalizedYaw()/90) ) % 4; //return either 0, 1, 2, or 3 depending on the rotation of the robot
+      switch (direction) {
+        case 0: //forward
+            TunerConstants.updateDriveTrain("fr");
+            configureDriveTrain();
+          break;
+        case 1: //right
+            TunerConstants.updateDriveTrain("fl");
+            configureDriveTrain();
+          break;
+        case 2: //down
+            TunerConstants.updateDriveTrain("bl");
+            configureDriveTrain();
+          break;
+        case 3: //left
+            TunerConstants.updateDriveTrain("br");
+            configureDriveTrain();
+          break;
+        default:
+          break;
+      }
+  });
 
     //Left Bumper binding for back left module rotation
-    LB.falling().ifHigh( () -> TunerConstants.updateDriveTrain("default"));
-    LB.rising().ifHigh( () -> TunerConstants.updateDriveTrain("bl"));
+    LB.negate().ifHigh( () -> {
+      TunerConstants.updateDriveTrain("default");
+      configureDriveTrain();
+  });
+    LB.ifHigh( () -> {
+      int direction = ( (int)Math.round(m_SwerveDriveTrain.getNormalizedYaw()/90) ) % 4; //return either 0, 1, 2, or 3 depending on the rotation of the robot
+      switch (direction) {
+        case 0: //forward
+            TunerConstants.updateDriveTrain("bl");
+            configureDriveTrain();
+          break;
+        case 1: //right
+            TunerConstants.updateDriveTrain("br");
+            configureDriveTrain();
+          break;
+        case 2: //down
+            TunerConstants.updateDriveTrain("fr");
+            configureDriveTrain();
+          break;
+        case 3: //left
+            TunerConstants.updateDriveTrain("fl");
+            configureDriveTrain();
+          break;
+        default:
+          break;
+      }
+  });
 
     //Right Bumper binding for back right module rotation
-    RB.falling().ifHigh( () -> TunerConstants.updateDriveTrain("default"));
-    RB.rising().ifHigh( () -> TunerConstants.updateDriveTrain("br"));
+    RB.negate().ifHigh( () -> {
+      TunerConstants.updateDriveTrain("default");
+      configureDriveTrain();
+  });
+    RB.ifHigh( () -> {
+      int direction = ( (int)Math.round(m_SwerveDriveTrain.getNormalizedYaw()/90) ) % 4; //return either 0, 1, 2, or 3 depending on the rotation of the robot
+      switch (direction) {
+        case 0: //forward
+            TunerConstants.updateDriveTrain("br");
+            configureDriveTrain();
+          break;
+        case 1: //right
+            TunerConstants.updateDriveTrain("fr");
+            configureDriveTrain();
+          break;
+        case 2: //down
+            TunerConstants.updateDriveTrain("fl");
+            configureDriveTrain();
+          break;
+        case 3: //left
+            TunerConstants.updateDriveTrain("bl");
+            configureDriveTrain();
+          break;
+        default:
+          break;
+      }
+  });
 
     
 
@@ -117,6 +217,8 @@ public class RobotContainer {
   }
 
   private void configureDriveTrain() {
+    m_SwerveDriveTrain = TunerConstants.DriveTrain;
+    
     m_SwerveDriveTrain.setDefaultCommand( // Drivetrain will execute this command periodically
       m_SwerveDriveTrain.applyRequest(
 

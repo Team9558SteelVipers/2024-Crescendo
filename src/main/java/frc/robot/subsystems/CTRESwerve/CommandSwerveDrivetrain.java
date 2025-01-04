@@ -1,5 +1,7 @@
 package frc.robot.subsystems.CTRESwerve;
 
+import java.util.HashMap;
+import java.util.Map;
 import java.util.function.Supplier;
 
 import com.ctre.phoenix6.Utils;
@@ -14,11 +16,14 @@ import com.pathplanner.lib.util.PIDConstants;
 import com.pathplanner.lib.util.ReplanningConfig;
 
 import edu.wpi.first.math.kinematics.ChassisSpeeds;
+import edu.wpi.first.math.util.Units;
 import edu.wpi.first.wpilibj.Notifier;
 import edu.wpi.first.wpilibj.RobotController;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.Subsystem;
-// import frc.robot.generated.TunerConstants;
+
+import static frc.robot.subsystems.CTRESwerve.generated.TunerConstants.*;
+import frc.robot.RobotContainer;
 
 /**
  * Class that extends the Phoenix SwerveDrivetrain class and implements subsystem
@@ -91,5 +96,14 @@ public class CommandSwerveDrivetrain extends SwerveDrivetrain implements Subsyst
             updateSimState(deltaTime, RobotController.getBatteryVoltage());
         });
         m_simNotifier.startPeriodic(kSimLoopPeriod);
+    }
+
+    public Double getNormalizedYaw() {
+        Double robotAngle = m_yawGetter.refresh().getValue() % 360;
+
+        if(robotAngle < 0){
+            robotAngle = 360 + robotAngle;
+        } 
+        return robotAngle;
     }
 }

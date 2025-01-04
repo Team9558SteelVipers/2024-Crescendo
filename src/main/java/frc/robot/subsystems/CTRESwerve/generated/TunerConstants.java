@@ -1,13 +1,11 @@
 package frc.robot.subsystems.CTRESwerve.generated;
 
-import org.opencv.objdetect.Dictionary;
-
 import com.ctre.phoenix6.configs.Slot0Configs;
 import com.ctre.phoenix6.mechanisms.swerve.SwerveDrivetrainConstants;
-import com.ctre.phoenix6.mechanisms.swerve.SwerveModuleConstants;
-import com.ctre.phoenix6.mechanisms.swerve.SwerveModuleConstantsFactory;
 import com.ctre.phoenix6.mechanisms.swerve.SwerveModule.ClosedLoopOutputType;
+import com.ctre.phoenix6.mechanisms.swerve.SwerveModuleConstants;
 import com.ctre.phoenix6.mechanisms.swerve.SwerveModuleConstants.SteerFeedbackType;
+import com.ctre.phoenix6.mechanisms.swerve.SwerveModuleConstantsFactory;
 
 import edu.wpi.first.math.util.Units;
 import frc.robot.RobotContainer;
@@ -55,9 +53,9 @@ public class TunerConstants {
     private static final double kSteerGearRatio = 13.371428571428572;
     private static final double kWheelRadiusInches = 2;
 
-    private static final boolean kSteerMotorReversed = true;
-    private static final boolean kInvertLeftSide = false;
-    private static final boolean kInvertRightSide = true;
+    public static final boolean kSteerMotorReversed = true;
+    public static final boolean kInvertLeftSide = false;
+    public static final boolean kInvertRightSide = true;
 
     private static final String kCANbusName = "Canivore";
     private static final int kPigeonId = 9;
@@ -70,11 +68,11 @@ public class TunerConstants {
     private static final double kSteerFrictionVoltage = 0.25;
     private static final double kDriveFrictionVoltage = 0.25;
 
-    private static final SwerveDrivetrainConstants DrivetrainConstants = new SwerveDrivetrainConstants()
+    public static final SwerveDrivetrainConstants DrivetrainConstants = new SwerveDrivetrainConstants()
             .withPigeon2Id(kPigeonId)
             .withCANbusName(kCANbusName);
 
-    private static final SwerveModuleConstantsFactory ConstantCreator = new SwerveModuleConstantsFactory()
+    public static final SwerveModuleConstantsFactory ConstantCreator = new SwerveModuleConstantsFactory()
             .withDriveMotorGearRatio(kDriveGearRatio)
             .withSteerMotorGearRatio(kSteerGearRatio)
             .withWheelRadius(kWheelRadiusInches)
@@ -94,104 +92,40 @@ public class TunerConstants {
 
 
     // Front Left
-    private static final int kFrontLeftDriveMotorId = 1;
-    private static final int kFrontLeftSteerMotorId = 2;
-    private static final int kFrontLeftEncoderId = 10;
-    private static final double kFrontLeftEncoderOffset = -0.096435546875;
+    public static final int kFrontLeftDriveMotorId = 1;
+    public static final int kFrontLeftSteerMotorId = 2;
+    public static final int kFrontLeftEncoderId = 10;
+    public static final double kFrontLeftEncoderOffset = -0.096435546875;
 
-    private static final Map<String, Double> kFrontLeftXPosInchesHashMap = new HashMap<>(){{
-		put("fr", 0.0);
-        put("fl", 0.0); //TODO input correct value for corresponding rotation: fl,br,bl
-        put("br", 19.25); //
-        put("bl", 19.25); //
-		put("default", 9.625);
-	}};
-
-    private static final Map<String, Double> kFrontLeftYPosInchesHashMap = new HashMap<>(){{
-		put("fr", 19.25);
-        put("fl", 0.0); //TODO input correct value for corresponding rotation: fl,br,bl
-        put("br", 19.25); //
-        put("bl", 0.0); //
-		put("default", 9.625);
-	}};
-
-    private static final double kFrontLeftXPosInches = 9.625; //9.625 default | FR rotation = 0
-    private static final double kFrontLeftYPosInches = 9.625; //9.625 default | FR rotation = 19.25
+    public static final double kFrontLeftXPosInches = 9.625; //9.625 default | FR rotation = 0
+    public static final double kFrontLeftYPosInches = 9.625; //9.625 default | FR rotation = 19.25
 
     // Front Right
-    private static final int kFrontRightDriveMotorId = 3;
-    private static final int kFrontRightSteerMotorId = 4;
-    private static final int kFrontRightEncoderId = 11;
-    private static final double kFrontRightEncoderOffset = 0.1298828125;
+    public static final int kFrontRightDriveMotorId = 3;
+    public static final int kFrontRightSteerMotorId = 4;
+    public static final int kFrontRightEncoderId = 11;
+    public static final double kFrontRightEncoderOffset = 0.1298828125;
 
-    private static final Map<String, Double> kFrontRightXPosInchesHashMap = new HashMap<>(){{
-		put("fr", 0.0);
-        put("fl", 0.0); //TODO input correct value for corresponding rotation: fl,br,bl
-        put("br", 19.25); //
-        put("bl", -19.25); //
-		put("default", 9.625);
-	}};
-
-    private static final Map<String, Double> kFrontRightYPosInchesHashMap = new HashMap<>(){{
-		put("fr", 0.0);
-        put("fl", -19.25); //TODO input correct value for corresponding rotation: fl,br,bl
-        put("br", 0.0); //
-        put("bl", -19.25); //
-		put("default", -9.625);
-	}};
-
-    private static final double kFrontRightXPosInches = 9.625; //9.625 default | FR rotation = 0
-    private static final double kFrontRightYPosInches = -9.625; //-9.625 default | FR rotation = 0
+    public static final double kFrontRightXPosInches = 9.625; //9.625 default | FR rotation = 0
+    public static final double kFrontRightYPosInches = -9.625; //-9.625 default | FR rotation = 0
 
     // Back Left
-    private static final int kBackLeftDriveMotorId = 5;
-    private static final int kBackLeftSteerMotorId = 6;
-    private static final int kBackLeftEncoderId = 12;
-    private static final double kBackLeftEncoderOffset = -0.47021484375;
+    public static final int kBackLeftDriveMotorId = 5;
+    public static final int kBackLeftSteerMotorId = 6;
+    public static final int kBackLeftEncoderId = 12;
+    public static final double kBackLeftEncoderOffset = -0.47021484375;
 
-	private static final Map<String, Double> kBackLeftXPosInchesHashMap = new HashMap<>(){{
-		put("fr", -19.25);
-        put("fl", -19.25); //TODO input correct value for corresponding rotation: fl,br,bl
-        put("br", 0.0); //
-        put("bl", 0.0); //
-		put("default", -9.625);
-	}};
-
-    private static final Map<String, Double> kBackLeftYPosInchesHashMap = new HashMap<>(){{
-		put("fr", 19.25);
-        put("fl", 0.0); //TODO input correct value for corresponding rotation: fl,br,bl
-        put("br", 19.25); //
-        put("bl", 0.0); //
-		put("default", 9.625);
-	}};
-
-    private static final double kBackLeftXPosInches = -9.625; //-9.625 default | FR rotation = -19.25
-    private static final double kBackLeftYPosInches = 9.625; //9.625 default | FR rotation = 19.25
+    public static final double kBackLeftXPosInches = -9.625; //-9.625 default | FR rotation = -19.25
+    public static final double kBackLeftYPosInches = 9.625; //9.625 default | FR rotation = 19.25
 
     // Back Right
-    private static final int kBackRightDriveMotorId = 7;
-    private static final int kBackRightSteerMotorId = 8;
-    private static final int kBackRightEncoderId = 13;
-    private static final double kBackRightEncoderOffset = 0.352294921875;
+    public static final int kBackRightDriveMotorId = 7;
+    public static final int kBackRightSteerMotorId = 8;
+    public static final int kBackRightEncoderId = 13;
+    public static final double kBackRightEncoderOffset = 0.352294921875;
 
-    private static final Map<String, Double> kBackRightXPosInchesHashMap = new HashMap<>(){{
-		put("fr", -19.25);
-        put("fl", -19.25); //TODO input correct value for corresponding rotation: fl,br,bl
-        put("br", 0.0); //
-        put("bl", 0.0); //
-		put("default", -9.625);
-	}};
-
-    private static final Map<String, Double> kBackRightYPosInchesHashMap = new HashMap<>(){{
-		put("fr", 0.0);
-        put("fl", -19.25); //TODO input correct value for corresponding rotation: fl,br,bl
-        put("br", 0.0); //
-        put("bl", -19.25); //
-		put("default", 9.625);
-	}};
-
-    private static final double kBackRightXPosInches = -9.625; //-9.625 default | FR rotation = -19.25
-    private static final double kBackRightYPosInches = -9.625; //-9.625 default | FR rotation = 0
+    public static final double kBackRightXPosInches = -9.625; //-9.625 default | FR rotation = -19.25
+    public static final double kBackRightYPosInches = -9.625; //-9.625 default | FR rotation = 0
 
 
     private static final SwerveModuleConstants FrontLeft = ConstantCreator.createModuleConstants(
@@ -206,7 +140,72 @@ public class TunerConstants {
     public static CommandSwerveDrivetrain DriveTrain = new CommandSwerveDrivetrain(DrivetrainConstants, FrontLeft,
             FrontRight, BackLeft, BackRight);
 
+    private static final Map<String, Double> kFrontLeftXPosInchesHashMap = new HashMap<>(){{
+		put("fr", 0.0);
+        put("fl", 0.0);
+        put("br", 19.25);
+        put("bl", 19.25);
+		put("default", 9.625);
+	}};
+
+    private static final Map<String, Double> kFrontLeftYPosInchesHashMap = new HashMap<>(){{
+		put("fr", 19.25);
+        put("fl", 0.0);
+        put("br", 19.25);
+        put("bl", 0.0);
+		put("default", 9.625);
+	}};
+
+    private static final Map<String, Double> kFrontRightXPosInchesHashMap = new HashMap<>(){{
+		put("fr", 0.0);
+        put("fl", 0.0);
+        put("br", 19.25);
+        put("bl", -19.25);
+		put("default", 9.625);
+	}};
+
+    private static final Map<String, Double> kFrontRightYPosInchesHashMap = new HashMap<>(){{
+		put("fr", 0.0);
+        put("fl", -19.25);
+        put("br", 0.0);
+        put("bl", -19.25);
+		put("default", -9.625);
+	}};
+
+    private static final Map<String, Double> kBackLeftXPosInchesHashMap = new HashMap<>(){{
+		put("fr", -19.25);
+        put("fl", -19.25);
+        put("br", 0.0);
+        put("bl", 0.0);
+		put("default", -9.625);
+	}};
+
+    private static final Map<String, Double> kBackLeftYPosInchesHashMap = new HashMap<>(){{
+		put("fr", 19.25);
+        put("fl", 0.0);
+        put("br", 19.25);
+        put("bl", 0.0);
+		put("default", 9.625);
+	}};
+    
+    private static final Map<String, Double> kBackRightXPosInchesHashMap = new HashMap<>(){{
+		put("fr", -19.25);
+        put("fl", -19.25);
+        put("br", 0.0);
+        put("bl", 0.0);
+		put("default", -9.625);
+	}};
+
+    private static final Map<String, Double> kBackRightYPosInchesHashMap = new HashMap<>(){{
+		put("fr", 0.0);
+        put("fl", -19.25);
+        put("br", 0.0); 
+        put("bl", -19.25);
+		put("default", 9.625);
+	}};
+
     public static void updateDriveTrain(String pos) {
+        //SwerveDrivetrain
         if (!kFrontLeftXPosInchesHashMap.containsKey(pos)){
             return;
         }

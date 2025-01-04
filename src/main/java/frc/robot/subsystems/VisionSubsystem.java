@@ -113,16 +113,20 @@ public class VisionSubsystem extends Thread {
 		RobotContainer.m_SwerveDriveTrain.addVisionMeasurement(pose, timestampSeconds, weights);
 	}
 
-	public PhotonTrackedTarget getBestFrontNote() { //depending on which camera is placed on forward direction of
-		var result = Color1.getLatestResult();		//robot, change the camera "Color1" to "Color2" if color2 is 
-		var bestTarget = result.getBestTarget();	//placed on front
-		return bestTarget;
+	public Optional<PhotonTrackedTarget> getBestFrontNote() { //depending on which camera is placed on forward direction of
+		var result = Color1.getLatestResult();			//robot, change the camera "Color1" to "Color2"
+		if(result.hasTargets()){
+			return Optional.of(result.getBestTarget());
+		}
+		return Optional.empty();
 	}
 
-	public PhotonTrackedTarget getBestBackNote() {
+	public Optional<PhotonTrackedTarget> getBestBackNote() {
 		var result = Color2.getLatestResult();
-		var bestTarget = result.getBestTarget();
-		return bestTarget;
+		if(result.hasTargets()){
+			return Optional.of(result.getBestTarget());
+		}
+		return Optional.empty();
 	}
 
 	@Override
@@ -168,6 +172,7 @@ public class VisionSubsystem extends Thread {
 						Translation2d tagPosition = aprilTagFieldLayout.getTagPose(target.getFiducialId()).get().getTranslation().toTranslation2d();
 						sum += resultMono1.get().estimatedPose.toPose2d().getTranslation().getDistance(tagPosition);
 					}
+					
 					sum /= camPoseMono1.targetsUsed.size();
 					double distanceRatio = sum;
 					Matrix<N3, N1> weights = getVisionWeights(distanceRatio, camPoseMono1.targetsUsed.size());
@@ -191,6 +196,7 @@ public class VisionSubsystem extends Thread {
 						Translation2d tagPosition = aprilTagFieldLayout.getTagPose(target.getFiducialId()).get().getTranslation().toTranslation2d();
 						sum += resultMono2.get().estimatedPose.toPose2d().getTranslation().getDistance(tagPosition);
 					}
+
 					sum /= camPoseMono2.targetsUsed.size();
 					double distanceRatio = sum;
 					Matrix<N3, N1> weights = getVisionWeights(distanceRatio, camPoseMono2.targetsUsed.size());
